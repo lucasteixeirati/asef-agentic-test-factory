@@ -11,6 +11,11 @@
 - relatório de sucesso ou falha produzido;
 - cancelamento e ao menos um budget demonstrados;
 - nenhuma dependência do core em pytest além do adapter.
+- QualityContext validado e snapshot sanitizado;
+- skill `unit` selecionada por capability;
+- espera humana retomada sem repetir nós concluídos;
+- exit codes distinguem input, espera, falha, policy, budget e infraestrutura;
+- critérios detalhados em `docs/project/gates/gate-04-acceptance-plan.md`.
 
 ## Alpha Python — Gate 5 futuro
 
@@ -73,4 +78,3 @@ Além da matriz obrigatória do Planejamento Mestre:
 - ADRs de fronteiras, adapters e independência do oracle aceitos;
 - critérios de aceite dos alphas e v0.1 documentados;
 - nenhuma decisão de implementação da Etapa 3 antecipada como fato.
-

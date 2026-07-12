@@ -1,0 +1,47 @@
+# Gate 4 — Plano de aceite do Walking Skeleton
+
+- **Estado:** critérios planejados; evidências ainda não produzidas
+- **Responsável pela decisão:** Lucas
+
+## Critérios obrigatórios
+
+| ID | Critério | Evidência esperada | Estado |
+|---|---|---|---|
+| G4-01 | Clone limpo executa modo demo documentado | CI + sessão de instalação | Pendente |
+| G4-02 | QualityContext é validado antes de LLM/Docker | testes WS-003 + eventos | Pendente |
+| G4-03 | Skill `unit` é selecionada por sistema/capability | snapshot + contract test | Pendente |
+| G4-04 | Teste real é gerado apenas no workspace efêmero | artifact + hash + path test | Pendente |
+| G4-05 | Validação determinística precede execução | static result + sequência de eventos | Pendente |
+| G4-06 | Docker executa sem rede, secrets ou escrita no original | integration tests + manifest | Pendente |
+| G4-07 | Run de sucesso é reproduzível | WS-001 repetido com mesmos fatos essenciais | Pendente |
+| G4-08 | Espera humana persiste e retoma sem repetir nós concluídos | WS-002 + checkpoint | Pendente |
+| G4-09 | Falhas de input, policy, budget e infraestrutura são distintas | WS-003 a WS-006 | Pendente |
+| G4-10 | Cancelamento encerra de forma explicável | WS-007 | Pendente |
+| G4-11 | Eventos, state, manifest, contexto e reports são consistentes | schema/contract tests | Pendente |
+| G4-12 | Exit codes e stdout/stderr seguem o contrato público | CLI end-to-end | Pendente |
+| G4-13 | Nenhum secret ou dado privado aparece nos artifacts | secret scan + fixtures públicas | Pendente |
+| G4-14 | Core não depende diretamente de OpenAI, LangGraph ou Docker | dependency/import test ou revisão | Pendente |
+| G4-15 | Quickstart descreve limitações e funciona sem API key | README + execução CI | Pendente |
+
+## Critérios informativos
+
+- duração por etapa e run;
+- overhead Docker observado no fluxo real;
+- tamanho dos artifacts;
+- chamadas/tokens gravados;
+- retrabalho e falhas introduzidas pela IA;
+- diferença entre previsão e duração real.
+
+## Não exigido para aprovação
+
+- modo live;
+- pytest, coverage ou mutation;
+- MCP real;
+- mais de uma skill;
+- TypeScript ou Java end-to-end;
+- interface gráfica;
+- suporte de produção.
+
+## Regra de decisão
+
+Todos os critérios obrigatórios precisam estar atendidos ou possuir risco explicitamente aceito que não invalide o objetivo do walking skeleton. O responsável aprova o gate; CI verde sozinha não constitui aprovação.

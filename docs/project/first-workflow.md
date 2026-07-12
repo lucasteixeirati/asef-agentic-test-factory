@@ -5,7 +5,7 @@
 - **ID:** WF-001
 - **Nome de trabalho:** Test Generation & Evaluation
 - **Caso de uso principal:** UC-001
-- **Status:** selecionado para detalhamento na Etapa 2
+- **Status:** selecionado para implementação vertical na Etapa 4
 - **Primeiro perfil:** Python
 
 ## Problema
@@ -76,6 +76,10 @@ Avaliação das evidências
 - um provider no modo live;
 - modo demo por respostas gravadas.
 
+## Recorte anterior ao alpha — Walking Skeleton
+
+O walking skeleton implementará somente um SUT controlado, skill `unit`, `unittest`, dois outputs gravados, execução Docker e evidências mínimas completas. Pytest, coverage, mutation, correção completa e múltiplos perfis continuam pertencendo ao alpha ou a etapas posteriores. Plano: `docs/project/stage-04-walking-skeleton-plan.md`.
+
 ## Independência da avaliação
 
 - o SUT existente não será gerado pelo mesmo passo que cria os testes;
@@ -111,4 +115,3 @@ Avaliação das evidências
 - contrato dos adaptadores;
 - formato definitivo do relatório;
 - topologia de persistência e retomada.
-
