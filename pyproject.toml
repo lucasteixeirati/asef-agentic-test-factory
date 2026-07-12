@@ -3,18 +3,25 @@ requires = ["hatchling>=1.27"]
 build-backend = "hatchling.build"
 
 [project]
-name = "asef-spike"
-version = "0.0.1"
-description = "Architectural spikes for the Agentic Test Factory"
+name = "asef-agentic-test-factory"
+version = "0.1.0a1"
+description = "Context-aware, policy-controlled Agentic Test Factory for Quality Engineering"
+readme = "README.md"
+license = "MIT"
+authors = [{ name = "Lucas Teixeira" }]
 requires-python = ">=3.13"
 dependencies = []
 
 [project.scripts]
 asef-spike = "asef_spike.cli:main"
 
+[project.urls]
+Homepage = "https://github.com/lucasteixeirati/asef-agentic-test-factory"
+Repository = "https://github.com/lucasteixeirati/asef-agentic-test-factory"
+Issues = "https://github.com/lucasteixeirati/asef-agentic-test-factory/issues"
+
 [tool.hatch.build.targets.wheel]
-packages = ["src/asef_spike"]
+packages = ["src/asef", "src/asef_spike"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-

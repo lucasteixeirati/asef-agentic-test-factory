@@ -737,7 +737,7 @@ As datas serão estimadas após a baseline das primeiras sessões. Os gates são
 - [ ] Nenhuma etapa essencial depende apenas de logs informais?
 - [ ] É possível explicar qual contexto, skill, MCP/model policy e aprovação orientaram a run?
 
-**Status:** planejamento concluído em 2026-07-12; implementação aguarda aprovação do plano pelo responsável.
+**Status:** planejamento aprovado; incremento 4.1 implementado em 2026-07-12 e aguardando checkpoint da ADR-007. Progresso: `docs/project/stage-04-progress.md`.
 
 ### Etapa 5 — Alpha Python de referência
 
@@ -1073,10 +1073,10 @@ Estas questões serão decididas nas etapas indicadas, não agora:
 
 ## 27. Próxima decisão
 
-Revisar e aprovar o plano executável da Etapa 4 — Walking skeleton:
+Revisar o checkpoint do incremento 4.1 da Etapa 4:
 
-1. aprovar escopo, contratos, cenários e critérios do Gate 4;
-2. carregar e validar um `QualityContext` mínimo;
+1. aceitar, rejeitar ou ajustar ADR-007 e os contratos v1/estado v2;
+2. após aceite, carregar e validar um `QualityContext` mínimo;
 3. selecionar a skill `unit` para o perfil Python;
 4. integrar LangGraph, gateway direto, Docker e evidências sob o runtime ASEF;
 5. executar os caminhos demo de sucesso, falha e espera humana;

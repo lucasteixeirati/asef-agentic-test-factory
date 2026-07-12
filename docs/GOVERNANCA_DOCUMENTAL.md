@@ -46,6 +46,7 @@ Toda mudança relevante deve verificar impactos em:
 | `docs/project/stage-03-spikes-progress.md` | Progresso e pendências experimentais da Etapa 3 |
 | `docs/project/pre-stage-04-readiness.md` | Preparação pública e contextual antes da Etapa 4 |
 | `docs/project/stage-04-walking-skeleton-plan.md` | Plano executável aprovado/pendente da Etapa 4 |
+| `docs/project/stage-04-progress.md` | Progresso e checkpoints da implementação do skeleton |
 | `docs/project/gates/gate-04-acceptance-plan.md` | Critérios objetivos previstos para o Gate 4 |
 | `docs/project/requirements-v01.md` | Requisitos e atributos de qualidade pretendidos para v0.1 |
 | `docs/project/language-matrix.md` | Níveis de suporte e toolchains candidatos |
@@ -69,6 +70,7 @@ Toda mudança relevante deve verificar impactos em:
 | `docs/context/` | Contratos e governança do contexto operacional |
 | `docs/skills/` | Catálogo e contratos planejados das skills ASEF |
 | `docs/architecture/walking-skeleton-architecture.md` | Arquitetura planejada, substituída pela arquitetura real após implementação |
+| `docs/architecture/contracts/walking-skeleton-schemas.md` | Contratos concretos e versionamento do skeleton |
 | `examples/context/` | Exemplos fictícios e sanitizados de contexto |
 | `README.md` | Entrada pública do projeto; não substitui o Planejamento Mestre |
 | `concepcao/` | História da origem do projeto |

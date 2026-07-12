@@ -1,6 +1,6 @@
 # Arquitetura planejada do Walking Skeleton
 
-- **Estado:** planejada; deve ser atualizada após a implementação real
+- **Estado:** contratos 4.1 implementados; adapters ainda planejados
 - **Etapa:** 4
 
 ## Componentes e autoridade
@@ -59,6 +59,15 @@ O relatório identifica a natureza de cada afirmação e sua evidência relacion
 - cassettes continuam em fixtures e possuem schema/versionamento;
 - PydanticAI não entra no caminho padrão;
 - `unittest` reduz dependências no skeleton; pytest retorna no alpha Python conforme o profile.
+
+## Realizado no incremento 4.1
+
+- package `asef` criado sem imports de frameworks;
+- contratos `1.0.0` e estado `2.0.0`;
+- status, classificações e exit codes separados;
+- estado `1.x` dos spikes explicitamente incompatível;
+- budgets e evidências serializáveis em tipos primitivos;
+- ADR-007 submetida ao checkpoint humano.
 
 ## Questões que a implementação deve responder
 

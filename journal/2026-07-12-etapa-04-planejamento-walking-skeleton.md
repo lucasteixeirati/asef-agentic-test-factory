@@ -4,7 +4,7 @@
 
 - **Dia do projeto:** Dia 2
 - **Etapa:** Etapa 4 — Walking Skeleton
-- **Situação:** planejamento concluído; implementação não iniciada
+- **Situação:** planejamento aprovado; incremento 4.1 implementado
 - **Tipo de registro:** contemporâneo
 
 ## Contexto
@@ -46,4 +46,23 @@ Após a aprovação do Gate 3 e publicação do repositório, o responsável aut
 
 ## Próximo passo
 
-Submeter o plano ao responsável. Após aprovação, iniciar o incremento 4.1 — contratos e estado, sem integrar frameworks antes do primeiro checkpoint humano.
+Submeter ADR-007 e os contratos do incremento 4.1 ao checkpoint humano. Após aceite, iniciar 4.2 — intake contextual e fixture controlada.
+
+## Implementação 4.1
+
+- novo package público `asef`, mantendo `asef_spike` como baseline;
+- contratos de request, artifact, snapshot, evidence e execução;
+- estado v2, budgets, classificações e exit codes;
+- 19 testes próprios e regressão local aprovada;
+- nenhuma integração de LangGraph, OpenAI ou Docker nesta rodada.
+
+### Falhas e correções assistidas por IA
+
+1. A primeira chamada do harness tentou importar o path do teste como módulo; foi corrigida para discovery.
+2. A execução revelou dois `ResourceWarning` em um teste que lia arquivos sem fechar handles; a leitura passou a usar `Path.read_text`.
+3. Uma revisão após os primeiros testes adicionou validação de budget persistido e bloqueio de marcadores sensíveis em comandos.
+4. A primeira build continha o novo package, mas ainda gerava wheel `asef-spike 0.0.1`; o metadata foi corrigido para representar o produto público antes do commit.
+
+### Decisão relevante
+
+Não migrar automaticamente estado `1.x` dos spikes. Ele não possui contexto e scopes suficientes; uma migração aparente produziria falsa continuidade. A proposta está formalizada na ADR-007.
