@@ -8,7 +8,7 @@ from typing import Any, Protocol
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
-from .budgets import BudgetController
+from ..runtime.budgets import BudgetController
 
 
 class GatewayError(RuntimeError):

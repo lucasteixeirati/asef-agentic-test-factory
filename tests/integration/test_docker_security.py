@@ -5,7 +5,7 @@ import os
 import unittest
 from pathlib import Path
 
-from asef_spike.docker_runner import DockerPolicy, DockerRunner
+from asef.adapters.docker import DockerPolicy, DockerRunner
 
 
 IMAGE = (

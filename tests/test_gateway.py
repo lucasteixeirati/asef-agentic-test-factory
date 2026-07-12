@@ -4,9 +4,9 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from asef_spike.budgets import BudgetController
-from asef_spike.domain import BudgetLimits, BudgetUsage
-from asef_spike.gateway import GatewayError, OpenAIResponsesGateway, RecordedModelGateway
+from asef.adapters.gateway import GatewayError, OpenAIResponsesGateway, RecordedModelGateway
+from asef.legacy.domain import BudgetLimits, BudgetUsage
+from asef.runtime.budgets import BudgetController
 
 
 class RecordedGatewayTests(unittest.TestCase):
@@ -40,4 +40,3 @@ class RecordedGatewayTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

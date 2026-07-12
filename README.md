@@ -70,7 +70,7 @@ Requisitos atuais: Python 3.13 e, para integrações, Docker Desktop.
 ```powershell
 $env:PYTHONPATH='src'
 python -m unittest discover -s tests -v
-python -m asef_spike.cli --mode demo --output .asef\runs
+python -m asef.legacy.cli --mode demo --output .asef\runs
 ```
 
 Testes Docker são opt-in:
@@ -85,7 +85,7 @@ Nunca coloque uma chave real em arquivos do repositório. O modo live exige `OPE
 
 ## Estrutura
 
-- `src/asef_spike/` — baseline executável e componentes experimentais;
+- `src/asef/` — contratos, runtime, adapters e baseline legada durante a consolidação;
 - `spikes/` — comparações descartáveis ou isoladas;
 - `tests/` — testes unitários e integrações Docker;
 - `docs/` — arquitetura, projeto, qualidade, contexto e experimentos;

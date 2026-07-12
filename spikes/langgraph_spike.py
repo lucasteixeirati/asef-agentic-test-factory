@@ -7,10 +7,10 @@ from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.graph import END, START, StateGraph
 from langgraph.types import Command, interrupt
 
-from asef_spike.budgets import BudgetController
-from asef_spike.domain import WorkflowRequest
-from asef_spike.gateway import ModelGateway
-from asef_spike.runner import RISK_SCHEMA
+from asef.adapters.gateway import ModelGateway
+from asef.legacy.domain import WorkflowRequest
+from asef.legacy.runner import RISK_SCHEMA
+from asef.runtime.budgets import BudgetController
 
 
 class GraphState(TypedDict):

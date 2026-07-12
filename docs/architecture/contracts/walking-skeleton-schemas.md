@@ -1,6 +1,6 @@
 # Contratos concretos do Walking Skeleton — Incremento 4.1
 
-- **Estado:** implementados e cobertos por testes; aguardam checkpoint humano
+- **Estado:** implementados como evidência; estado v2 não aceito e será revisado em 4.R2
 - **Implementação:** `src/asef/contracts.py` e `src/asef/outcomes.py`
 - **Distribuição:** `asef-agentic-test-factory 0.1.0a1`
 
@@ -13,6 +13,8 @@
 | Workflow | `0.1.0-skeleton` | identifica o fluxo da Etapa 4 |
 
 Estado `1.x` pertence aos spikes e não pode ser retomado. Ele não possui QualityContext, skill, scopes ou referências exigidas pelo skeleton. A execução deve iniciar uma nova run; nenhuma migração inventa esses campos.
+
+> Esta regra foi parte da ADR-007 rejeitada e não é decisão vigente. A direção aprovada é evoluir para estado `1.1`, importar fatos `1.0` como contexto não resolvido e revalidar antes de efeitos colaterais.
 
 ## `SkeletonRunRequest`
 

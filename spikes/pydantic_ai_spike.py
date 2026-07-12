@@ -7,8 +7,8 @@ from pydantic_ai import Agent
 from pydantic_ai.exceptions import UnexpectedModelBehavior
 from pydantic_ai.models import Model
 
-from asef_spike.budgets import BudgetController
-from asef_spike.gateway import GatewayError, InvalidStructuredOutput, ModelResult
+from asef.adapters.gateway import GatewayError, InvalidStructuredOutput, ModelResult
+from asef.runtime.budgets import BudgetController
 
 
 class RiskAnalysis(BaseModel):

@@ -737,7 +737,7 @@ As datas serão estimadas após a baseline das primeiras sessões. Os gates são
 - [ ] Nenhuma etapa essencial depende apenas de logs informais?
 - [ ] É possível explicar qual contexto, skill, MCP/model policy e aprovação orientaram a run?
 
-**Status:** em replanejamento. ADR-007 rejeitada pelo responsável em 2026-07-12; promoção para package único e estado `1.1` submetidos à decisão. Progresso: `docs/project/stage-04-progress.md`.
+**Status:** Opção C aprovada; 4.R1 concluído em 2026-07-12 com package único `asef`. Próximo: contexto e estado `1.1` em 4.R2. Progresso: `docs/project/stage-04-progress.md`.
 
 ### Etapa 5 — Alpha Python de referência
 
@@ -1073,11 +1073,11 @@ Estas questões serão decididas nas etapas indicadas, não agora:
 
 ## 27. Próxima decisão
 
-Revisar a reavaliação da Etapa 4 após rejeição da ADR-007:
+Executar 4.R2 da sequência revisada da Etapa 4:
 
-1. decidir sobre a promoção completa para um único package `asef`;
-2. decidir sobre estado `1.1` importável com contexto não resolvido;
-3. decidir se o primeiro WS-001 funcional deve preceder a próxima ADR;
+1. implementar QualityContext e fixture calculator no package único;
+2. evoluir estado `1.0 → 1.1` com contexto não resolvido;
+3. preservar import/replay sem alegar resume no meio de nó;
 4. selecionar a skill `unit` para o perfil Python;
 5. integrar LangGraph, gateway direto, Docker e evidências sob o runtime ASEF;
 6. executar os caminhos demo de sucesso, falha e espera humana;

@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import unittest
 
-from asef_spike.budgets import BudgetController, BudgetExceeded
-from asef_spike.domain import BudgetLimits, BudgetUsage
+from asef.legacy.domain import BudgetLimits, BudgetUsage
+from asef.runtime.budgets import BudgetController, BudgetExceeded
 
 
 class BudgetControllerTests(unittest.TestCase):

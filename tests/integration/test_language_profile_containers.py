@@ -4,8 +4,8 @@ import os
 import unittest
 from pathlib import Path
 
-from asef_spike.docker_runner import DockerPolicy, DockerRunner
-from asef_spike.language_profiles import LANGUAGE_PROFILES
+from asef.adapters.docker import DockerPolicy, DockerRunner
+from asef.languages import LANGUAGE_PROFILES
 
 
 @unittest.skipUnless(os.environ.get("ASEF_RUN_DOCKER_TESTS") == "1", "Docker tests disabled")

@@ -1,7 +1,7 @@
 # Reavaliação da Etapa 4 após rejeição da ADR-007
 
 - **Data:** 2026-07-12
-- **Status:** recomendação submetida ao responsável
+- **Status:** Opção C aprovada pelo responsável
 - **Gatilho:** rejeição explícita da ADR-007
 
 ## Finding principal
@@ -107,4 +107,8 @@ A consolidação adiciona trabalho imediato, mas remove migração duplicada pos
 
 ## Decisão requerida
 
-O responsável deve aprovar, rejeitar ou ajustar a Opção C e a sequência 4.R1–4.R7 antes de novas alterações estruturais.
+O responsável aprovou explicitamente a Opção C e a sequência revisada. O incremento 4.R1 foi autorizado e executado.
+
+## Resultado inicial
+
+4.R1 consolidou toda a implementação em uma única distribuição/package raiz `asef`. O antigo source package foi removido; a baseline funciona em `asef.legacy` apenas como namespace interno temporário. Testes, spikes, Docker e CLI foram migrados e aprovados.

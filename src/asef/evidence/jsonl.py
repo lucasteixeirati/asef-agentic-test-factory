@@ -34,4 +34,3 @@ class JsonlEventSink:
         with self.path.open("a", encoding="utf-8", newline="\n") as stream:
             stream.write(json.dumps(event.normalized(), ensure_ascii=False, sort_keys=True))
             stream.write("\n")
-

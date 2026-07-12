@@ -2,7 +2,7 @@
 
 ## Status
 
-Em replanejamento desde 2026-07-12. O incremento 4.1 produziu evidência técnica, mas a ADR-007 foi rejeitada e seus contratos não constituem arquitetura aceita.
+Em andamento desde 2026-07-12 sob a Opção C. ADR-007 rejeitada e incremento revisado 4.R1 concluído.
 
 ## Incremento 4.1 — Contratos e estado
 
@@ -48,4 +48,34 @@ ADR-007 rejeitada. A revisão identificou que manter `asef` e `asef_spike` como 
 
 ## Novo checkpoint requerido
 
-Revisar `docs/reviews/2026-07-12-reavaliacao-apos-rejeicao-adr-007.md`. Nenhuma nova mudança estrutural deve ocorrer antes da decisão sobre a promoção completa para um package único e estado `1.1` importável.
+A Opção C foi aprovada. O próximo incremento é 4.R2 — QualityContext, fixture calculator e estado `1.1` importável.
+
+## Incremento 4.R1 — Consolidação em package único
+
+### Concluído
+
+- todos os módulos migrados para `src/asef`;
+- namespaces `adapters`, `runtime`, `evidence` e `legacy` explícitos;
+- `src/asef_spike` removido da distribuição e sem source rastreado;
+- testes e spikes migrados para imports `asef`;
+- scripts `asef` e alias temporário `asef-spike` apontam para a mesma CLI;
+- README e referência do contexto atualizados;
+- wheel contém somente o package raiz `asef`;
+- demo legada executada em `SUCCEEDED`.
+
+### Verificação
+
+- 60 testes descobertos localmente: 50 aprovados e 10 integrações desabilitadas por design;
+- 10 testes de frameworks aprovados;
+- 10 integrações Docker aprovadas;
+- wheel `asef-agentic-test-factory 0.1.0a1` com 17 módulos ASEF;
+- nenhum módulo `asef_spike` no wheel;
+- zero imports residuais do package removido em source, testes e spikes.
+
+### Finding do harness
+
+O primeiro teste de ausência do package antigo encontrou sua própria string de busca e falhou. O detector passou a construir o nome dinamicamente e toda a regressão foi repetida.
+
+### Limite
+
+`asef.legacy` preserva o comportamento antigo dentro do package único. Ele não é API alvo e será reduzido à medida que application service e estado `1.1` assumirem o fluxo.

@@ -1,6 +1,6 @@
 # Arquitetura planejada do Walking Skeleton
 
-- **Estado:** contratos 4.1 implementados; adapters ainda planejados
+- **Estado:** package consolidado em 4.R1; contexto/estado 1.1 ainda planejados
 - **Etapa:** 4
 
 ## Componentes e autoridade
@@ -68,6 +68,15 @@ O relatório identifica a natureza de cada afirmação e sua evidência relacion
 - estado `1.x` dos spikes explicitamente incompatível;
 - budgets e evidências serializáveis em tipos primitivos;
 - ADR-007 submetida ao checkpoint humano.
+
+## Revisão após rejeição da ADR-007
+
+- ADR-007 rejeitada;
+- implementação consolidada em um único package `asef`;
+- adapters, runtime, evidence e baseline legada agora são namespaces internos;
+- package `asef_spike` removido da distribuição;
+- contratos v2 permanecem provisórios e serão revistos no estado `1.1` durante 4.R2;
+- nova ADR será criada apenas após o primeiro WS-001 funcional.
 
 ## Questões que a implementação deve responder
 

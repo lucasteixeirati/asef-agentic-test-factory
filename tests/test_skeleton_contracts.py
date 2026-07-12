@@ -224,6 +224,19 @@ class SkeletonStateAndOutcomeTests(unittest.TestCase):
             for forbidden in ("langgraph", "openai", "docker", "pydantic_ai"):
                 self.assertNotIn(forbidden, source.lower())
 
+    def test_distribution_contains_only_one_source_package(self) -> None:
+        removed_package = "asef" + "_spike"
+        pyproject = Path("pyproject.toml").read_text(encoding="utf-8")
+        self.assertIn('packages = ["src/asef"]', pyproject)
+        self.assertFalse(any((Path("src") / removed_package).glob("*.py")))
+        for root in (Path("src"), Path("tests"), Path("spikes")):
+            for source_path in root.rglob("*.py"):
+                self.assertNotIn(
+                    removed_package,
+                    source_path.read_text(encoding="utf-8"),
+                    str(source_path),
+                )
+
 
 if __name__ == "__main__":
     unittest.main()

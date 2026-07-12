@@ -41,7 +41,7 @@ O ASEF precisa compreender onde, para quem e sob quais limites uma automação s
 ## Artefatos
 
 - `examples/context/quality-context.example.json` — exemplo fictício e seguro;
-- `src/asef_spike/context.py` — validação inicial;
+- `src/asef/context.py` — validação inicial;
 - `docs/context/quality-context-reference.md` — referência dos campos;
 - `docs/context/mcp-and-llm-governance.md` — política de integrações;
 - `docs/skills/catalog.md` — catálogo inicial das capacidades.

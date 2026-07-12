@@ -5,7 +5,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from asef_spike.docker_runner import DockerPolicy, DockerRunner, _truncate
+from asef.adapters.docker import DockerPolicy, DockerRunner, _truncate
 
 
 class DockerRunnerTests(unittest.TestCase):

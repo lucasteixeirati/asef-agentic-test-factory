@@ -5,10 +5,10 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from asef_spike.budgets import BudgetController
-from asef_spike.domain import BudgetLimits, BudgetUsage, RunStatus, WorkflowRequest
-from asef_spike.gateway import InvalidStructuredOutput, ModelResult, RecordedModelGateway
-from asef_spike.runner import AnalysisValidationError, DemoWorkflowRunner, validate_analysis_output
+from asef.adapters.gateway import InvalidStructuredOutput, ModelResult, RecordedModelGateway
+from asef.legacy.domain import BudgetLimits, BudgetUsage, RunStatus, WorkflowRequest
+from asef.legacy.runner import AnalysisValidationError, DemoWorkflowRunner, validate_analysis_output
+from asef.runtime.budgets import BudgetController
 
 
 class DemoWorkflowRunnerTests(unittest.TestCase):

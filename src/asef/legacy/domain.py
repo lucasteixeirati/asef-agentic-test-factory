@@ -118,4 +118,3 @@ class RunState:
         result = asdict(self)
         result["status"] = self.status.value
         return result
-

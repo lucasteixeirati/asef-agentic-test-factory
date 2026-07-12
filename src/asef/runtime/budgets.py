@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from .domain import BudgetLimits, BudgetUsage
+from ..legacy.domain import BudgetLimits, BudgetUsage
 
 
 class BudgetExceeded(RuntimeError):

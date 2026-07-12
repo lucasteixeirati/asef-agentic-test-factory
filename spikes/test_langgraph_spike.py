@@ -5,9 +5,9 @@ import sqlite3
 import tempfile
 from pathlib import Path
 
-from asef_spike.budgets import BudgetController
-from asef_spike.domain import BudgetLimits, BudgetUsage, WorkflowRequest
-from asef_spike.gateway import RecordedModelGateway
+from asef.adapters.gateway import RecordedModelGateway
+from asef.legacy.domain import BudgetLimits, BudgetUsage, WorkflowRequest
+from asef.runtime.budgets import BudgetController
 from langgraph.checkpoint.sqlite import SqliteSaver
 from langgraph_spike import build_graph, resume_graph, run_graph
 

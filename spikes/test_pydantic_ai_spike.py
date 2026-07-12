@@ -7,10 +7,10 @@ from pathlib import Path
 from pydantic_ai import models
 from pydantic_ai.models.test import TestModel
 
-from asef_spike.budgets import BudgetController
-from asef_spike.domain import BudgetLimits, BudgetUsage, WorkflowRequest
-from asef_spike.gateway import GatewayError
-from asef_spike.runner import DemoWorkflowRunner, RISK_SCHEMA
+from asef.adapters.gateway import GatewayError
+from asef.legacy.domain import BudgetLimits, BudgetUsage, WorkflowRequest
+from asef.legacy.runner import DemoWorkflowRunner, RISK_SCHEMA
+from asef.runtime.budgets import BudgetController
 from pydantic_ai_spike import PydanticAIModelGateway
 
 

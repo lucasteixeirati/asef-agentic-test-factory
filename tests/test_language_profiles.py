@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import unittest
 
-from asef_spike.language_profiles import LANGUAGE_PROFILES, get_language_profile
+from asef.languages import LANGUAGE_PROFILES, get_language_profile
 
 
 class LanguageProfileTests(unittest.TestCase):

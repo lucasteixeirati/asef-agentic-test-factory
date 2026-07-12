@@ -1,7 +1,7 @@
 # Etapa 4 — Plano executável do Walking Skeleton
 
 - **Data de início do planejamento:** 2026-07-12
-- **Status:** planejamento concluído; implementação ainda não iniciada
+- **Status:** revisado após rejeição da ADR-007; sequência 4.R1–4.R7 vigente
 - **Gate de entrada:** Gate 3 aprovado
 - **Objetivo:** provar um fluxo vertical reproduzível e explicável, da entrada contextual até a execução isolada e o relatório.
 
@@ -238,6 +238,8 @@ O JSON final no stdout sempre contém ao menos `run_id`, `status`, `classificati
 Nenhum teste live é obrigatório em pull request.
 
 ## 12. Incrementos de implementação
+
+> A sequência original 4.1–4.7 foi substituída pela Opção C documentada em `docs/reviews/2026-07-12-reavaliacao-apos-rejeicao-adr-007.md`. 4.R1 consolidou o package; 4.R2 implementará contexto e estado `1.1`; a próxima ADR ocorrerá somente após WS-001 funcional.
 
 ### 4.1 — Contratos e estado
 

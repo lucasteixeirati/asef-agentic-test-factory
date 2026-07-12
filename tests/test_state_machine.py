@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import unittest
 
-from asef_spike.domain import RunState, RunStatus, WorkflowRequest
-from asef_spike.state_machine import InvalidTransition, WorkflowMachine
+from asef.legacy.domain import RunState, RunStatus, WorkflowRequest
+from asef.legacy.state_machine import InvalidTransition, WorkflowMachine
 
 
 def request() -> WorkflowRequest:
@@ -42,4 +42,3 @@ class WorkflowMachineTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

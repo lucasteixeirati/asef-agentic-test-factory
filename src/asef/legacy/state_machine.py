@@ -92,4 +92,3 @@ class WorkflowMachine:
             {"source": source.value, "target": target.value, "reason": reason, "timestamp": now}
         )
         return self.state
-

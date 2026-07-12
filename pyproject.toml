@@ -13,7 +13,8 @@ requires-python = ">=3.13"
 dependencies = []
 
 [project.scripts]
-asef-spike = "asef_spike.cli:main"
+asef = "asef.legacy.cli:main"
+asef-spike = "asef.legacy.cli:main"
 
 [project.urls]
 Homepage = "https://github.com/lucasteixeirati/asef-agentic-test-factory"
@@ -21,7 +22,7 @@ Repository = "https://github.com/lucasteixeirati/asef-agentic-test-factory"
 Issues = "https://github.com/lucasteixeirati/asef-agentic-test-factory/issues"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/asef", "src/asef_spike"]
+packages = ["src/asef"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

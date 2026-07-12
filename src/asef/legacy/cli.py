@@ -5,14 +5,14 @@ import json
 import os
 from pathlib import Path
 
-from .budgets import BudgetController
+from ..adapters.gateway import OpenAIResponsesGateway, RecordedModelGateway
+from ..runtime.budgets import BudgetController
 from .domain import BudgetLimits, BudgetUsage, WorkflowRequest
-from .gateway import OpenAIResponsesGateway, RecordedModelGateway
 from .runner import DemoWorkflowRunner
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="asef-spike")
+    parser = argparse.ArgumentParser(prog="asef")
     parser.add_argument("--mode", choices=("demo", "live"), default="demo")
     parser.add_argument("--title", default="Sum two integers")
     parser.add_argument(

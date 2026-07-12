@@ -5,7 +5,7 @@ import json
 import unittest
 from pathlib import Path
 
-from asef_spike.context import ContextValidationError, QualityContext, validate_quality_context
+from asef.context import ContextValidationError, QualityContext, validate_quality_context
 
 
 EXAMPLE = Path("examples/context/quality-context.example.json")

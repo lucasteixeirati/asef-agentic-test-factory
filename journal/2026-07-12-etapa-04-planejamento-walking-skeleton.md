@@ -73,3 +73,23 @@ A proposta inicial era não migrar automaticamente estado `1.x`, por ausência d
 O responsável rejeitou a ADR-007 e pediu uma análise mais profunda antes de continuar. O inventário mostrou que a maior parte do comportamento ainda estava em `asef_spike`, enquanto `asef` continha apenas contratos. A crítica revelou que o checkpoint havia decidido uma separação antes de implementar contexto, application service e fluxo integrado.
 
 A nova recomendação é consolidar um único package, permitir importação segura de estado `1.0` para `1.1` com contexto não resolvido e implementar o primeiro WS-001 funcional antes de uma nova ADR. Este é um exemplo de decisão humana impedindo que uma estrutura tecnicamente defensável se torne arquitetura prematura.
+
+## Aprovação da Opção C e implementação 4.R1
+
+O responsável aprovou a promoção completa. Todos os módulos funcionais foram movidos para o package `asef`, organizados em adapters, runtime, evidence e legacy. O source package anterior deixou de fazer parte da distribuição; o histórico Git preserva sua evolução.
+
+### Evidências
+
+- 50 testes locais efetivos aprovados;
+- 10 testes LangGraph/PydanticAI aprovados;
+- 10 integrações Docker aprovadas;
+- demo legada terminou em `SUCCEEDED` pelo novo import;
+- wheel contém 17 módulos `asef` e nenhum módulo do package removido.
+
+### Falha encontrada
+
+O primeiro teste criado para detectar imports do package removido encontrou a string dentro da própria asserção. O falso positivo foi corrigido construindo o nome dinamicamente, e todas as suítes foram repetidas.
+
+### Próximo passo
+
+4.R2: implementar QualityContext e fixture calculator no package consolidado, evoluir estado `1.0 → 1.1` com `CONTEXT_UNRESOLVED` e definir import/replay sem alegar retomada insegura.
