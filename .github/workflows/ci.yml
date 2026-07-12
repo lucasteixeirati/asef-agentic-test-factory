@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  core:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Run core tests
+        run: PYTHONPATH=src python -m unittest discover -s tests -v
+
+  framework-spikes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install isolated spike dependencies
+        run: python -m pip install -r spikes/requirements-langgraph.txt -r spikes/requirements-pydantic-ai.txt
+      - name: Run framework spikes
+        run: PYTHONPATH=src:spikes LANGGRAPH_STRICT_MSGPACK=true python -m unittest -v spikes/test_langgraph_spike.py spikes/test_pydantic_ai_spike.py
+
+  docker-security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Run Docker integration tests
+        run: PYTHONPATH=src ASEF_RUN_DOCKER_TESTS=1 python -m unittest discover -s tests/integration -v

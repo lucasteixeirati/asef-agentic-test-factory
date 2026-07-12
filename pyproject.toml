@@ -1,0 +1,20 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "asef-spike"
+version = "0.0.1"
+description = "Architectural spikes for the Agentic Test Factory"
+requires-python = ">=3.13"
+dependencies = []
+
+[project.scripts]
+asef-spike = "asef_spike.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/asef_spike"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+

@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0.0-draft",
+  "qa_profile": {
+    "id": "qa-example",
+    "role": "quality-engineer",
+    "experience_level": "senior",
+    "domains": ["e-commerce"],
+    "responsibilities": ["test-architecture", "automation", "quality-coaching"],
+    "preferred_evidence": ["json", "junit-xml", "markdown"],
+    "approval_boundaries": ["export-tests", "enable-network", "increase-budget"]
+  },
+  "team": {
+    "id": "commerce-platform",
+    "quality_goals": ["protect-checkout", "fast-feedback"],
+    "risk_taxonomy": ["revenue", "security", "availability", "data-integrity"],
+    "compliance": ["example-only"],
+    "data_classification": "internal"
+  },
+  "repositories": [
+    {
+      "id": "orders-service",
+      "provider": "github",
+      "repository_ref": "github:example/orders-service",
+      "default_branch": "main",
+      "language_profile": "python-pytest",
+      "read_scope": ["src/**", "tests/**", "pyproject.toml"],
+      "write_scope": [".asef/generated/**"]
+    }
+  ],
+  "systems": [
+    {
+      "id": "orders-api",
+      "kind": "backend-api",
+      "repository_ids": ["orders-service"],
+      "critical_flows": ["create-order", "cancel-order"],
+      "quality_capabilities": ["unit", "backend-api", "mutation", "performance"],
+      "environments": ["local", "test"],
+      "service_level_objectives": ["p95-under-500ms"],
+      "owners": ["commerce-platform"]
+    }
+  ],
+  "skill_catalog": [
+    {"id": "web-ui", "capability": "web-ui", "enabled": true, "allowed_mcp_servers": ["github-read"]},
+    {"id": "backend-api", "capability": "backend-api", "enabled": true, "allowed_mcp_servers": ["github-read"]},
+    {"id": "mobile", "capability": "mobile", "enabled": true, "allowed_mcp_servers": ["github-read"]},
+    {"id": "unit", "capability": "unit", "enabled": true, "allowed_mcp_servers": ["github-read"]},
+    {"id": "mutation", "capability": "mutation", "enabled": true, "allowed_mcp_servers": ["github-read"]},
+    {"id": "performance", "capability": "performance", "enabled": true, "allowed_mcp_servers": ["github-read"]}
+  ],
+  "mcp_servers": [
+    {
+      "id": "github-read",
+      "transport": "managed",
+      "allowed_operations": ["read-repository", "read-pull-request", "read-issue"],
+      "write_operations": [],
+      "secret_ref": "host-managed:github"
+    }
+  ],
+  "llm_policy": {
+    "allowed_tasks": ["analysis", "test-design", "test-generation", "review"],
+    "data_rules": ["no-secrets", "respect-read-scope", "sanitize-evidence"],
+    "default_mode": "recorded",
+    "live_requires_budget": true,
+    "fallback_requires_approval": true
+  }
+}

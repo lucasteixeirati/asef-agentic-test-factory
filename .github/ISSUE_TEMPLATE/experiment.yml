@@ -1,0 +1,21 @@
+name: Experimento
+description: Propor uma hipótese técnica reproduzível
+title: "[EXP]: "
+labels: ["experiment"]
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: Pergunta e hipótese
+    validations:
+      required: true
+  - type: textarea
+    id: method
+    attributes:
+      label: Método e evidências esperadas
+    validations:
+      required: true
+  - type: textarea
+    id: risks
+    attributes:
+      label: Riscos, custo e critérios de parada

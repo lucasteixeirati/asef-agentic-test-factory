@@ -1,0 +1,26 @@
+name: Skill ou contexto
+description: Propor uma capability, integração MCP ou extensão do QualityContext
+title: "[Context/Skill]: "
+labels: ["context", "skill"]
+body:
+  - type: textarea
+    id: user_context
+    attributes:
+      label: Contexto de QA e sistema
+      description: Use apenas exemplos fictícios ou sanitizados.
+    validations:
+      required: true
+  - type: textarea
+    id: capability
+    attributes:
+      label: Capability e resultado esperado
+    validations:
+      required: true
+  - type: textarea
+    id: permissions
+    attributes:
+      label: Ferramentas, MCPs, dados e aprovações necessárias
+  - type: textarea
+    id: conformance
+    attributes:
+      label: Como a capability será testada?

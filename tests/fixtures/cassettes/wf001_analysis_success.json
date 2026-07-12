@@ -1,0 +1,26 @@
+{
+  "schema_name": "wf001_analysis",
+  "model": "recorded-demo",
+  "response_id": "cassette-smk-001",
+  "usage": {
+    "input_tokens": 72,
+    "output_tokens": 88
+  },
+  "output": {
+    "behaviors": [
+      "Return the arithmetic sum of two integers"
+    ],
+    "risks": [
+      "Incorrect handling of negative values",
+      "Incorrect handling of integer boundaries"
+    ],
+    "scenarios": [
+      "Two positive integers",
+      "Positive and negative integer",
+      "Two negative integers",
+      "Zero as either operand"
+    ],
+    "clarification_required": false
+  }
+}
+

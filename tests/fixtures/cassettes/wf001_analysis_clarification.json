@@ -1,0 +1,15 @@
+{
+  "schema_name": "wf001_analysis",
+  "model": "recorded-clarification",
+  "response_id": "cassette-clarification-001",
+  "usage": {
+    "input_tokens": 32,
+    "output_tokens": 48
+  },
+  "output": {
+    "behaviors": ["Transfer funds between accounts"],
+    "risks": ["Authorization rules are unspecified"],
+    "scenarios": ["Attempt a transfer as an authenticated user"],
+    "clarification_required": true
+  }
+}

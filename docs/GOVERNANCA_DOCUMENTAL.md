@@ -1,0 +1,71 @@
+# Governança e autoridade documental
+
+## Objetivo
+
+Definir onde cada tipo de informação deve ser mantido e qual documento prevalece quando houver divergência.
+
+## Hierarquia de autoridade
+
+1. **ADRs aceitos:** decisões arquiteturais vigentes e suas consequências.
+2. **Planejamento Mestre:** propósito, princípios, política de versões, milestones, gates e decisões de produto.
+3. **Especificações especializadas:** segurança, avaliação, evidências, adaptadores e demais domínios técnicos.
+4. **Roadmap operacional:** acompanhamento de execução, dependências e status.
+5. **Experimentos e revisões:** evidências e recomendações que ainda precisam ser convertidas em decisões.
+6. **Journal:** registro factual e cronológico; não estabelece decisão por si só.
+7. **Documentos de concepção:** fontes históricas; não são normativos.
+
+## Regra de precedência
+
+- Um ADR aceito prevalece sobre hipótese ou formulação anterior do Planejamento Mestre.
+- O Planejamento Mestre prevalece em propósito, escopo, princípios e gates.
+- Uma especificação especializada prevalece nos detalhes de seu domínio, desde que não contrarie ADRs ou princípios do Planejamento Mestre.
+- Revisões e experimentos não alteram a arquitetura automaticamente; devem produzir uma decisão registrada.
+- Quando uma decisão superar conteúdo anterior, o documento antigo deve apontar para a decisão vigente ou ser marcado como superado.
+
+## Responsabilidade de atualização
+
+Toda mudança relevante deve verificar impactos em:
+
+1. ADRs relacionados;
+2. Planejamento Mestre;
+3. especificação especializada;
+4. roadmap e gates;
+5. documentação de uso;
+6. histórico e lições aprendidas.
+
+## Mapa documental
+
+| Documento | Autoridade principal |
+|---|---|
+| `PLANEJAMENTO_MESTRE.md` | Propósito, princípios, milestones e gates |
+| `docs/project/product-vision.md` | Visão resumida e proposta de valor |
+| `docs/project/measurement-baseline.md` | Método vigente de medição de tempo e custo |
+| `docs/project/marco-zero.md` | Índice e situação documental do Marco Zero |
+| `docs/project/stage-01-vision-domain-scope.md` | Índice e prontidão documental da Etapa 1 |
+| `docs/project/stage-02-contracts-workflow-evaluation.md` | Índice e prontidão documental da Etapa 2 |
+| `docs/project/stage-03-spikes-progress.md` | Progresso e pendências experimentais da Etapa 3 |
+| `docs/project/pre-stage-04-readiness.md` | Preparação pública e contextual antes da Etapa 4 |
+| `docs/project/requirements-v01.md` | Requisitos e atributos de qualidade pretendidos para v0.1 |
+| `docs/project/language-matrix.md` | Níveis de suporte e toolchains candidatos |
+| `docs/project/first-workflow.md` | Seleção conceitual do primeiro workflow |
+| `docs/project/gates/` | Decisões formais de aprovação ou bloqueio dos gates |
+| `docs/architecture/adr/` | Decisões arquiteturais vigentes |
+| `docs/architecture/language-adapters.md` | Contratos e extensibilidade multilíngue |
+| `docs/architecture/workflows/` | Topologia e estado dos workflows |
+| `docs/architecture/contracts/` | Schemas e contratos conceituais do core |
+| `docs/architecture/adr/` | Decisões arquiteturais aceitas |
+| `docs/architecture/evidence-model.md` | Eventos, manifests e rastreabilidade |
+| `docs/quality/security-strategy.md` | Threat model, sandbox e controles |
+| `docs/quality/evaluation-strategy.md` | Datasets, oracles, métricas e validade |
+| `docs/quality/sandbox-policy-baseline.md` | Baseline quantitativa de isolamento e budgets |
+| `docs/quality/datasets/` | Catálogos e futuros casos versionados |
+| `docs/project/open-source-strategy.md` | Publicação, experiência externa e comunidade |
+| `docs/reviews/` | Revisões independentes e respostas |
+| `docs/templates/` | Modelos operacionais para novos registros |
+| `book/README.md` | Estratégia editorial e estrutura provisória |
+| `journal/` | Registro factual da jornada |
+| `docs/context/` | Contratos e governança do contexto operacional |
+| `docs/skills/` | Catálogo e contratos planejados das skills ASEF |
+| `examples/context/` | Exemplos fictícios e sanitizados de contexto |
+| `README.md` | Entrada pública do projeto; não substitui o Planejamento Mestre |
+| `concepcao/` | História da origem do projeto |
