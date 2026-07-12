@@ -6,12 +6,31 @@ import unittest
 from pathlib import Path
 
 from asef.context import ContextValidationError, QualityContext, validate_quality_context
+from asef.contracts import SkeletonRunRequest
 
 
 EXAMPLE = Path("examples/context/quality-context.example.json")
 
 
 class QualityContextTests(unittest.TestCase):
+    def test_walking_skeleton_fixture_resolves_deterministic_snapshot(self) -> None:
+        context = QualityContext.load(Path("examples/context/walking-skeleton-context.json"))
+        snapshot = context.snapshot_for(
+            SkeletonRunRequest(
+                context_ref="examples/context/walking-skeleton-context.json",
+                system_id="calculator-service",
+                requested_skill="unit",
+                requirement_title="Add integers",
+                requirement_description="Return the sum",
+            )
+        )
+        value = snapshot.to_dict()
+        self.assertEqual(value["system_id"], "calculator-service")
+        self.assertEqual(value["skill_id"], "unit")
+        self.assertEqual(value["repository_id"], "calculator-example")
+        self.assertEqual(value["provider"], "recorded")
+        self.assertEqual(len(value["source_sha256"]), 64)
+
     def data(self) -> dict:
         return json.loads(EXAMPLE.read_text(encoding="utf-8"))
 

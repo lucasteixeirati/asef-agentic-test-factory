@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 from dataclasses import dataclass
 from pathlib import Path
@@ -26,10 +27,15 @@ SENSITIVE_KEY_PARTS = ("api_key", "password", "access_token", "private_key", "se
 @dataclass(slots=True, frozen=True)
 class QualityContext:
     data: dict[str, Any]
+    source_sha256: str = ""
 
     @classmethod
     def load(cls, path: Path) -> QualityContext:
-        return cls(validate_quality_context(json.loads(path.read_text(encoding="utf-8"))))
+        raw = path.read_bytes()
+        return cls(
+            validate_quality_context(json.loads(raw.decode("utf-8"))),
+            hashlib.sha256(raw).hexdigest(),
+        )
 
     def skills_for(self, system_id: str, requested: set[str] | None = None) -> list[dict[str, Any]]:
         systems = {item["id"]: item for item in self.data["systems"]}
@@ -43,6 +49,47 @@ class QualityContext:
             for skill in self.data["skill_catalog"]
             if skill["capability"] in capabilities and skill.get("enabled", True)
         ]
+
+    def snapshot_for(self, request: Any) -> Any:
+        from .contracts import ContextSnapshot, ContractValidationError
+
+        systems = {item["id"]: item for item in self.data["systems"]}
+        system = systems.get(request.system_id)
+        if system is None:
+            raise ContextValidationError(f"unknown system_id: {request.system_id}")
+        skills = {item["id"]: item for item in self.skills_for(request.system_id)}
+        skill = skills.get(request.requested_skill)
+        if skill is None:
+            raise ContextValidationError(
+                f"skill {request.requested_skill} is not enabled for system {request.system_id}"
+            )
+        repositories = {item["id"]: item for item in self.data["repositories"]}
+        repository_ids = system.get("repository_ids", [])
+        if len(repository_ids) != 1:
+            raise ContextValidationError("walking skeleton requires exactly one repository")
+        repository = repositories[repository_ids[0]]
+        policy = self.data["llm_policy"]
+        try:
+            snapshot = ContextSnapshot(
+                source_sha256=self.source_sha256,
+                qa_profile_id=self.data["qa_profile"]["id"],
+                team_id=self.data["team"]["id"],
+                system_id=system["id"],
+                repository_id=repository["id"],
+                skill_id=skill["id"],
+                language_profile=repository["language_profile"],
+                image=repository["execution_image"],
+                provider=policy["provider"],
+                model=policy["model"],
+                mode="demo" if request.execution_mode == "demo" else "live",
+                read_scopes=tuple(repository["read_scope"]),
+                write_scopes=tuple(repository["write_scope"]),
+                mcp_server_ids=tuple(skill.get("allowed_mcp_servers", [])),
+            )
+            snapshot.validate()
+            return snapshot
+        except (KeyError, ContractValidationError) as exc:
+            raise ContextValidationError(f"context cannot produce a valid snapshot: {exc}") from exc
 
 
 def validate_quality_context(value: dict[str, Any]) -> dict[str, Any]:

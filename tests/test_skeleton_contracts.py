@@ -6,17 +6,22 @@ from pathlib import Path
 
 from asef.contracts import (
     MAX_ARTIFACT_BYTES,
+    ContextResolution,
     ContextSnapshot,
     ContractValidationError,
     EvidenceRef,
     IncompatibleSchemaError,
     NormalizedExecutionResult,
+    RunOrigin,
     SkeletonRunRequest,
     SkeletonRunState,
     SkeletonBudgetLimits,
     SkeletonBudgetUsage,
     UnitTestArtifact,
     ensure_compatible_state_schema,
+    import_state_v1,
+    resolve_new_run_context,
+    start_replay,
 )
 from asef.outcomes import ExitCode, RunClassification, RunStatus, exit_code_for
 
@@ -170,7 +175,9 @@ class SkeletonStateAndOutcomeTests(unittest.TestCase):
     def test_state_is_json_serializable_with_primitive_enums(self) -> None:
         state = SkeletonRunState(request())
         value = state.to_dict()
-        self.assertEqual(value["schema_version"], "2.0.0")
+        self.assertEqual(value["schema_version"], "1.1.0")
+        self.assertEqual(value["origin"], "NEW")
+        self.assertEqual(value["context_resolution"], "CONTEXT_UNRESOLVED")
         self.assertEqual(value["status"], "RECEIVED")
         self.assertEqual(value["classification"], "UNCLASSIFIED")
         json.dumps(value)
@@ -184,12 +191,74 @@ class SkeletonStateAndOutcomeTests(unittest.TestCase):
         with self.assertRaisesRegex(ContractValidationError, "exceeds"):
             state.validate()
 
-    def test_spike_state_is_explicitly_incompatible(self) -> None:
-        with self.assertRaisesRegex(IncompatibleSchemaError, "cannot be resumed"):
-            ensure_compatible_state_schema("1.0.0")
+    def test_spike_state_is_importable_but_not_resumed(self) -> None:
+        legacy = {
+            "schema_version": "1.0.0",
+            "run_id": "legacy-run",
+            "attempts": {"analysis": 1},
+            "facts": {"analysis": {"summary": "preserved"}},
+            "usage": {"model_calls": 2, "input_tokens": 100, "output_tokens": 50},
+            "history": [{"event": "old-event"}],
+        }
+        state = import_state_v1(legacy, request())
+        self.assertEqual(state.run_id, "legacy-run")
+        self.assertEqual(state.origin, RunOrigin.IMPORTED)
+        self.assertEqual(state.context_resolution, ContextResolution.UNRESOLVED)
+        self.assertEqual(state.imported_facts, legacy["facts"])
+        self.assertEqual(state.usage.model_calls, 2)
+        self.assertEqual(state.imported_usage, legacy["usage"])
+        self.assertFalse(state.history[-1]["resume_supported"])
+
+    def test_new_run_resolves_context_before_side_effects(self) -> None:
+        state = resolve_new_run_context(
+            SkeletonRunState(request()),
+            context_snapshot_ref="context/snapshot.json",
+        )
+        self.assertEqual(state.context_resolution, ContextResolution.RESOLVED)
+        self.assertEqual(state.history[-1]["event"], "CONTEXT_RESOLVED")
+
+    def test_imported_run_cannot_be_resolved_in_place(self) -> None:
+        imported = import_state_v1(
+            {"schema_version": "1.0.0", "run_id": "legacy-run"}, request()
+        )
+        with self.assertRaisesRegex(ContractValidationError, "only a new run"):
+            resolve_new_run_context(imported, context_snapshot_ref="context/snapshot.json")
+
+    def test_versioned_import_fixture_preserves_non_normalized_usage(self) -> None:
+        document = json.loads(
+            Path("examples/state/spike-state-v1.example.json").read_text(encoding="utf-8")
+        )
+        state = import_state_v1(document, request())
+        self.assertEqual(state.imported_usage["estimated_cost_brl"], 0.01)
+        self.assertEqual(state.imported_budgets["max_test_corrections"], 2)
+
+    def test_replay_is_a_new_run_linked_to_import(self) -> None:
+        imported = import_state_v1(
+            {"schema_version": "1.0.0", "run_id": "legacy-run", "facts": {"x": 1}},
+            request(),
+        )
+        replay = start_replay(imported, context_snapshot_ref="context/snapshot.json")
+        self.assertNotEqual(replay.run_id, imported.run_id)
+        self.assertEqual(replay.origin, RunOrigin.REPLAY)
+        self.assertEqual(replay.source_run_id, imported.run_id)
+        self.assertEqual(replay.context_resolution, ContextResolution.RESOLVED)
+        self.assertEqual(replay.usage.model_calls, 0)
+        self.assertEqual(replay.imported_facts, {"x": 1})
+        self.assertFalse(replay.history[-1]["resume_supported"])
+
+    def test_import_rejects_non_1_0_document(self) -> None:
+        with self.assertRaisesRegex(IncompatibleSchemaError, "only state schema 1.0.0"):
+            import_state_v1({"schema_version": "2.0.0", "run_id": "old"}, request())
+
+    def test_import_rejects_sensitive_legacy_evidence(self) -> None:
+        with self.assertRaisesRegex(ContractValidationError, "sensitive field"):
+            import_state_v1(
+                {"schema_version": "1.0.0", "run_id": "old", "facts": {"api_key": "x"}},
+                request(),
+            )
 
     def test_current_major_accepts_future_minor(self) -> None:
-        ensure_compatible_state_schema("2.3.0")
+        ensure_compatible_state_schema("1.3.0")
 
     def test_exit_code_contract(self) -> None:
         cases = {

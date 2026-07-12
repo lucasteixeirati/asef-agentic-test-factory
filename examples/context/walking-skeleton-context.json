@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0.0-draft",
+  "qa_profile": {
+    "id": "qa-walking-skeleton",
+    "role": "quality-engineer",
+    "experience_level": "senior",
+    "approval_boundaries": ["export-tests", "increase-budget"]
+  },
+  "team": {
+    "id": "calculator-quality",
+    "quality_goals": ["fast-feedback"],
+    "risk_taxonomy": ["functional"],
+    "data_classification": "public"
+  },
+  "repositories": [
+    {
+      "id": "calculator-example",
+      "provider": "local",
+      "repository_ref": "workspace:examples/calculator",
+      "default_branch": "main",
+      "language_profile": "python-pytest",
+      "execution_image": "python@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "read_scope": ["calculator.py"],
+      "write_scope": [".asef/runs/**"]
+    }
+  ],
+  "systems": [
+    {
+      "id": "calculator-service",
+      "kind": "python-library",
+      "repository_ids": ["calculator-example"],
+      "critical_flows": ["add-integers"],
+      "quality_capabilities": ["unit"]
+    }
+  ],
+  "skill_catalog": [
+    {"id": "unit", "capability": "unit", "enabled": true, "allowed_mcp_servers": []}
+  ],
+  "mcp_servers": [],
+  "llm_policy": {
+    "provider": "recorded",
+    "model": "cassette-v1",
+    "allowed_tasks": ["analysis", "test-generation"],
+    "data_rules": ["no-secrets", "respect-read-scope"],
+    "default_mode": "recorded",
+    "live_requires_budget": true
+  }
+}

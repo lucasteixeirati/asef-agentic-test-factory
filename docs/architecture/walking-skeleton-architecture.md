@@ -1,6 +1,6 @@
 # Arquitetura planejada do Walking Skeleton
 
-- **Estado:** package consolidado em 4.R1; contexto/estado 1.1 ainda planejados
+- **Estado:** package consolidado em 4.R1; contexto/estado 1.1 implementados em 4.R2
 - **Etapa:** 4
 
 ## Componentes e autoridade
@@ -63,7 +63,7 @@ O relatório identifica a natureza de cada afirmação e sua evidência relacion
 ## Realizado no incremento 4.1
 
 - package `asef` criado sem imports de frameworks;
-- contratos `1.0.0` e estado `2.0.0`;
+- contratos `1.0.0` e estado `1.1.0` após a revisão 4.R2;
 - status, classificações e exit codes separados;
 - estado `1.x` dos spikes explicitamente incompatível;
 - budgets e evidências serializáveis em tipos primitivos;
@@ -75,7 +75,10 @@ O relatório identifica a natureza de cada afirmação e sua evidência relacion
 - implementação consolidada em um único package `asef`;
 - adapters, runtime, evidence e baseline legada agora são namespaces internos;
 - package `asef_spike` removido da distribuição;
-- contratos v2 permanecem provisórios e serão revistos no estado `1.1` durante 4.R2;
+- o estado `1.1` distingue nova run, import e replay;
+- import preserva evidência `1.0`, mas não concede capacidade de execução;
+- replay cria nova identidade e exige snapshot contextual válido;
+- o resolver transforma `QualityContext` validado em snapshot primitivo antes dos efeitos;
 - nova ADR será criada apenas após o primeiro WS-001 funcional.
 
 ## Questões que a implementação deve responder

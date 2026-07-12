@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0.0",
+  "run_id": "spike-run-example",
+  "workflow_id": "WF-001",
+  "workflow_version": "0.0.1-spike",
+  "status": "SUCCEEDED",
+  "attempts": {"analysis": 1, "test_generation": 1},
+  "facts": {"analysis": {"summary": "Calculator must add two integers"}},
+  "errors": [],
+  "history": [{"from": "RECEIVED", "to": "VALIDATING_INPUT"}],
+  "budgets": {"max_model_calls": 8, "max_test_corrections": 2},
+  "usage": {
+    "model_calls": 2,
+    "input_tokens": 100,
+    "output_tokens": 50,
+    "test_corrections": 0,
+    "estimated_cost_brl": 0.01
+  }
+}

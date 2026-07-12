@@ -1,6 +1,6 @@
 # Contratos concretos do Walking Skeleton — Incremento 4.1
 
-- **Estado:** implementados como evidência; estado v2 não aceito e será revisado em 4.R2
+- **Estado:** contratos `1.1.0` implementados e validados em 4.R2
 - **Implementação:** `src/asef/contracts.py` e `src/asef/outcomes.py`
 - **Distribuição:** `asef-agentic-test-factory 0.1.0a1`
 
@@ -9,12 +9,12 @@
 | Contrato | Versão | Regra |
 |---|---|---|
 | Requests, artifacts, snapshots e results | `1.0.0` | versão exata no skeleton |
-| Estado persistido | `2.0.0` | compatibilidade por major 2 |
+| Estado persistido | `1.1.0` | compatibilidade por major 1; import estrito de `1.0.0` |
 | Workflow | `0.1.0-skeleton` | identifica o fluxo da Etapa 4 |
 
-Estado `1.x` pertence aos spikes e não pode ser retomado. Ele não possui QualityContext, skill, scopes ou referências exigidas pelo skeleton. A execução deve iniciar uma nova run; nenhuma migração inventa esses campos.
+Estado `1.0.0` pertence aos spikes e não pode ser retomado. Ele pode ser importado sem contexto como evidência; uma execução exige replay com nova identidade e snapshot validado.
 
-> Esta regra foi parte da ADR-007 rejeitada e não é decisão vigente. A direção aprovada é evoluir para estado `1.1`, importar fatos `1.0` como contexto não resolvido e revalidar antes de efeitos colaterais.
+> A rejeição total de `1.x` fazia parte da ADR-007 rejeitada. O contrato vigente preserva fatos `1.0.0` como contexto não resolvido sem alegar resume.
 
 ## `SkeletonRunRequest`
 
@@ -88,6 +88,14 @@ Comandos rejeitam NUL e marcadores de valores sensíveis. Contagens não podem s
 
 Estado serializa apenas tipos primitivos. Usage não pode exceder os limites persistidos, e budget da request precisa corresponder ao budget da run.
 
+### Nova run, import e replay
+
+- `NEW`: nova identidade, contexto inicialmente não resolvido;
+- `IMPORTED`: identidade e evidências `1.0.0` preservadas, sem autorização de execução;
+- `REPLAY`: nova identidade vinculada ao import, snapshot obrigatório e execução desde o início;
+- `resume_supported: false` é registrado nos eventos de import/replay;
+- usage da replay começa zerado; usage e budgets anteriores continuam auditáveis.
+
 ## Status e classificação
 
 Status representa posição/terminal do workflow. Classificação representa significado do resultado. Uma run não deve usar `FAILED` como substituto genérico para input, policy, budget ou infraestrutura.
@@ -117,6 +125,6 @@ O package `asef` não importa LangGraph, OpenAI, Docker ou PydanticAI. Esses com
 - snapshot e imagem por digest;
 - execução e dados sensíveis;
 - budgets;
-- estado v2 e rejeição do spike v1;
+- estado 1.1 e importação controlada do spike 1.0;
 - exit codes;
 - ausência de imports de frameworks.

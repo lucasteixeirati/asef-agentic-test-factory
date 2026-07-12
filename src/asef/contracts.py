@@ -12,7 +12,7 @@ from uuid import uuid4
 from .outcomes import RunClassification, RunStatus
 
 
-STATE_SCHEMA_VERSION = "2.0.0"
+STATE_SCHEMA_VERSION = "1.1.0"
 CONTRACT_SCHEMA_VERSION = "1.0.0"
 WORKFLOW_ID = "WF-001"
 WORKFLOW_VERSION = "0.1.0-skeleton"
@@ -27,6 +27,17 @@ class ContractValidationError(ValueError):
 
 class IncompatibleSchemaError(ContractValidationError):
     pass
+
+
+class RunOrigin(str, Enum):
+    NEW = "NEW"
+    IMPORTED = "IMPORTED"
+    REPLAY = "REPLAY"
+
+
+class ContextResolution(str, Enum):
+    UNRESOLVED = "CONTEXT_UNRESOLVED"
+    RESOLVED = "CONTEXT_RESOLVED"
 
 
 def utc_now() -> str:
@@ -275,6 +286,10 @@ class SkeletonRunState:
     classification: RunClassification = RunClassification.UNCLASSIFIED
     created_at: str = field(default_factory=utc_now)
     updated_at: str = field(default_factory=utc_now)
+    origin: RunOrigin = RunOrigin.NEW
+    context_resolution: ContextResolution = ContextResolution.UNRESOLVED
+    source_run_id: str | None = None
+    source_schema_version: str | None = None
     context_snapshot_ref: str | None = None
     evidence_refs: list[EvidenceRef] = field(default_factory=list)
     attempts: dict[str, int] = field(default_factory=dict)
@@ -282,6 +297,9 @@ class SkeletonRunState:
     usage: SkeletonBudgetUsage = field(default_factory=SkeletonBudgetUsage)
     errors: list[dict[str, Any]] = field(default_factory=list)
     history: list[dict[str, Any]] = field(default_factory=list)
+    imported_facts: dict[str, Any] = field(default_factory=dict)
+    imported_usage: dict[str, Any] = field(default_factory=dict)
+    imported_budgets: dict[str, Any] = field(default_factory=dict)
 
     def validate(self) -> None:
         ensure_compatible_state_schema(self.schema_version)
@@ -290,6 +308,17 @@ class SkeletonRunState:
             raise ContractValidationError(f"workflow_id must be {WORKFLOW_ID}")
         if self.workflow_version != WORKFLOW_VERSION:
             raise ContractValidationError(f"workflow_version must be {WORKFLOW_VERSION}")
+        if self.context_resolution is ContextResolution.RESOLVED and not self.context_snapshot_ref:
+            raise ContractValidationError("resolved context requires context_snapshot_ref")
+        if self.context_resolution is ContextResolution.UNRESOLVED and self.context_snapshot_ref:
+            raise ContractValidationError("unresolved context cannot reference a snapshot")
+        if self.origin is RunOrigin.NEW and (self.source_run_id or self.source_schema_version):
+            raise ContractValidationError("new run cannot have source provenance")
+        if self.origin in {RunOrigin.IMPORTED, RunOrigin.REPLAY}:
+            if not self.source_run_id or not self.source_schema_version:
+                raise ContractValidationError("imported and replay runs require source provenance")
+        if self.origin is RunOrigin.IMPORTED and self.context_resolution is not ContextResolution.UNRESOLVED:
+            raise ContractValidationError("imported state must remain context unresolved")
         for ref in self.evidence_refs:
             ref.validate()
         self.budgets.validate()
@@ -315,14 +344,112 @@ class SkeletonRunState:
 def ensure_compatible_state_schema(version: str) -> None:
     major = _version_major(version)
     expected_major = _version_major(STATE_SCHEMA_VERSION)
-    if major == 1:
-        raise IncompatibleSchemaError(
-            "state schema 1.x belongs to architectural spikes and cannot be resumed; start a new run"
-        )
     if major != expected_major:
         raise IncompatibleSchemaError(
             f"state schema major {major} is incompatible with expected major {expected_major}"
         )
+
+
+def import_state_v1(document: dict[str, Any], request: SkeletonRunRequest) -> SkeletonRunState:
+    """Import spike state as evidence; this never resumes or executes the old run."""
+    _reject_sensitive_structure(document)
+    version = str(document.get("schema_version", ""))
+    if version != "1.0.0":
+        raise IncompatibleSchemaError("only state schema 1.0.0 can be imported into 1.1.0")
+    source_run_id = str(document.get("run_id", "")).strip()
+    if not source_run_id:
+        raise ContractValidationError("imported state requires run_id")
+    usage_data = document.get("usage", {})
+    usage = SkeletonBudgetUsage(
+        model_calls=int(usage_data.get("model_calls", 0)),
+        provider_retries=int(usage_data.get("provider_retries", 0)),
+        input_tokens=int(usage_data.get("input_tokens", 0)),
+        output_tokens=int(usage_data.get("output_tokens", 0)),
+    )
+    limits = SkeletonBudgetLimits(
+        max_model_calls=max(4, usage.model_calls),
+        max_provider_retries=max(1, usage.provider_retries),
+        max_input_tokens=max(30_000, usage.input_tokens),
+        max_output_tokens=max(10_000, usage.output_tokens),
+        api_budget_brl=request.api_budget_brl,
+    )
+    history = list(document.get("history", []))
+    history.append({
+        "event": "STATE_IMPORTED",
+        "source_schema_version": version,
+        "resume_supported": False,
+    })
+    state = SkeletonRunState(
+        request=request,
+        run_id=source_run_id,
+        origin=RunOrigin.IMPORTED,
+        source_run_id=source_run_id,
+        source_schema_version=version,
+        attempts=dict(document.get("attempts", {})),
+        budgets=limits,
+        usage=usage,
+        errors=list(document.get("errors", [])),
+        history=history,
+        imported_facts=dict(document.get("facts", {})),
+        imported_usage=dict(document.get("usage", {})),
+        imported_budgets=dict(document.get("budgets", {})),
+    )
+    state.validate()
+    return state
+
+
+def start_replay(
+    imported: SkeletonRunState,
+    *,
+    context_snapshot_ref: str,
+) -> SkeletonRunState:
+    """Create a fresh run linked to an imported run; no mid-node resume is claimed."""
+    if imported.origin is not RunOrigin.IMPORTED:
+        raise ContractValidationError("replay source must be an imported state")
+    if not context_snapshot_ref.strip():
+        raise ContractValidationError("replay requires a context snapshot reference")
+    attempts = dict(imported.attempts)
+    attempts["replay"] = attempts.get("replay", 0) + 1
+    state = SkeletonRunState(
+        request=imported.request,
+        origin=RunOrigin.REPLAY,
+        context_resolution=ContextResolution.RESOLVED,
+        source_run_id=imported.run_id,
+        source_schema_version=imported.schema_version,
+        context_snapshot_ref=context_snapshot_ref,
+        attempts=attempts,
+        budgets=imported.budgets,
+        imported_facts=dict(imported.imported_facts),
+        imported_usage=dict(imported.imported_usage),
+        imported_budgets=dict(imported.imported_budgets),
+        history=[*imported.history, {
+            "event": "REPLAY_STARTED",
+            "source_run_id": imported.run_id,
+            "resume_supported": False,
+        }],
+    )
+    state.validate()
+    return state
+
+
+def resolve_new_run_context(
+    state: SkeletonRunState,
+    *,
+    context_snapshot_ref: str,
+) -> SkeletonRunState:
+    """Bind a validated snapshot before a new run may perform side effects."""
+    if state.origin is not RunOrigin.NEW:
+        raise ContractValidationError("only a new run can resolve context in place")
+    if state.context_resolution is not ContextResolution.UNRESOLVED:
+        raise ContractValidationError("run context is already resolved")
+    if not context_snapshot_ref.strip():
+        raise ContractValidationError("context snapshot reference is required")
+    state.context_snapshot_ref = context_snapshot_ref
+    state.context_resolution = ContextResolution.RESOLVED
+    state.updated_at = utc_now()
+    state.history.append({"event": "CONTEXT_RESOLVED", "snapshot_ref": context_snapshot_ref})
+    state.validate()
+    return state
 
 
 def _require_version(actual: str, expected: str, label: str) -> None:
@@ -340,6 +467,28 @@ def _version_major(version: str) -> int:
 def _looks_sensitive(value: str) -> bool:
     lowered = value.lower()
     return any(marker in lowered for marker in ("api_key=", "password=", "token=", "secret="))
+
+
+def _reject_sensitive_structure(value: Any, path: str = "state") -> None:
+    if isinstance(value, dict):
+        for key, nested in value.items():
+            lowered = str(key).lower()
+            sensitive_keys = {
+                "api_key",
+                "access_token",
+                "auth_token",
+                "password",
+                "private_key",
+                "secret",
+            }
+            if lowered in sensitive_keys or lowered.endswith("_secret"):
+                raise ContractValidationError(f"imported state contains sensitive field at {path}.{key}")
+            _reject_sensitive_structure(nested, f"{path}.{key}")
+    elif isinstance(value, list):
+        for index, nested in enumerate(value):
+            _reject_sensitive_structure(nested, f"{path}[{index}]")
+    elif isinstance(value, str) and _looks_sensitive(value):
+        raise ContractValidationError(f"imported state contains sensitive value at {path}")
 
 
 def _to_primitive(value: Any) -> Any:

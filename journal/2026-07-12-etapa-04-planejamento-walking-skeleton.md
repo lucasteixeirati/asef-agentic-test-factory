@@ -93,3 +93,13 @@ O primeiro teste criado para detectar imports do package removido encontrou a st
 ### Próximo passo
 
 4.R2: implementar QualityContext e fixture calculator no package consolidado, evoluir estado `1.0 → 1.1` com `CONTEXT_UNRESOLVED` e definir import/replay sem alegar retomada insegura.
+## Continuação — incremento 4.R2
+
+- **Decisão humana:** seguir com a Opção C após a consolidação 4.R1.
+- **Implementação assistida por IA:** estado `1.1`, import/replay, resolver contextual e fixtures calculator/spike.
+- **Revisão crítica:** a primeira versão normalizava apenas parte do usage legado; usage e budgets brutos passaram a ser preservados para não apagar evidência histórica.
+- **Fronteira definida:** import é leitura auditável, replay é nova execução e resume no meio de nó não é suportado.
+- **Evidência:** 67 testes descobertos, 57 aprovados, 10 Docker desabilitados e 10 testes de frameworks aprovados.
+- **Falha útil:** a primeira proteção do import tratou `input_tokens` como secret; a regressão revelou o falso positivo e a regra foi refinada para chaves sensíveis específicas.
+- **Fricção:** a tentativa inicial via paths falhou no harness; discovery executou corretamente.
+- **Próximo passo:** 4.R3, application service determinístico antes de nova ADR.
