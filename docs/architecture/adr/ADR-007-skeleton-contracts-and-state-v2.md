@@ -1,8 +1,13 @@
 # ADR-007 — Package de contratos do skeleton e estado v2
 
-- **Status:** proposta para checkpoint do incremento 4.1
+- **Status:** rejeitada
 - **Data:** 2026-07-12
 - **Responsável pela decisão:** Lucas
+- **Decisão registrada em:** 2026-07-12
+
+## Resultado da decisão
+
+O responsável rejeitou a proposta e solicitou reexaminar a sequência da Etapa 4 antes de consolidar uma fronteira pública, manter dois packages e bloquear estados `1.x`. Os contratos implementados continuam como evidência técnica, mas não constituem arquitetura aceita.
 
 ## Contexto
 

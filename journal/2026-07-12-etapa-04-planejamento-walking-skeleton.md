@@ -46,7 +46,7 @@ Após a aprovação do Gate 3 e publicação do repositório, o responsável aut
 
 ## Próximo passo
 
-Submeter ADR-007 e os contratos do incremento 4.1 ao checkpoint humano. Após aceite, iniciar 4.2 — intake contextual e fixture controlada.
+Submeter a reavaliação após rejeição da ADR-007. Se aprovada, iniciar 4.R1 — consolidação em package único.
 
 ## Implementação 4.1
 
@@ -66,4 +66,10 @@ Submeter ADR-007 e os contratos do incremento 4.1 ao checkpoint humano. Após ac
 
 ### Decisão relevante
 
-Não migrar automaticamente estado `1.x` dos spikes. Ele não possui contexto e scopes suficientes; uma migração aparente produziria falsa continuidade. A proposta está formalizada na ADR-007.
+A proposta inicial era não migrar automaticamente estado `1.x`, por ausência de contexto e scopes. O responsável rejeitou essa solução; a reavaliação passou a propor importação `1.0 → 1.1` com contexto explicitamente não resolvido e revalidação antes de efeitos colaterais.
+
+## Rejeição da ADR-007 e aprendizado
+
+O responsável rejeitou a ADR-007 e pediu uma análise mais profunda antes de continuar. O inventário mostrou que a maior parte do comportamento ainda estava em `asef_spike`, enquanto `asef` continha apenas contratos. A crítica revelou que o checkpoint havia decidido uma separação antes de implementar contexto, application service e fluxo integrado.
+
+A nova recomendação é consolidar um único package, permitir importação segura de estado `1.0` para `1.1` com contexto não resolvido e implementar o primeiro WS-001 funcional antes de uma nova ADR. Este é um exemplo de decisão humana impedindo que uma estrutura tecnicamente defensável se torne arquitetura prematura.

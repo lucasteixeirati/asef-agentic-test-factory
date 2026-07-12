@@ -2,7 +2,7 @@
 
 ## Status
 
-Em andamento desde 2026-07-12. Incremento 4.1 implementado e aguardando checkpoint humano antes de integrar contexto ou frameworks.
+Em replanejamento desde 2026-07-12. O incremento 4.1 produziu evidência técnica, mas a ADR-007 foi rejeitada e seus contratos não constituem arquitetura aceita.
 
 ## Incremento 4.1 — Contratos e estado
 
@@ -42,6 +42,10 @@ Em andamento desde 2026-07-12. Incremento 4.1 implementado e aguardando checkpoi
 - a primeira build ainda produziu `asef-spike 0.0.1`; o metadata foi corrigido antes do checkpoint público.
 - a primeira CI do checkpoint passou, mas alertou sobre actions baseadas em Node 20; checkout/setup-python foram atualizadas para v6/Node 24.
 
-## Checkpoint requerido
+## Resultado do checkpoint 4.1
 
-O responsável deve aceitar, rejeitar ou ajustar ADR-007 e os contratos do incremento 4.1. Após aceite, inicia-se 4.2 — intake contextual e fixture controlada.
+ADR-007 rejeitada. A revisão identificou que manter `asef` e `asef_spike` como dois núcleos aumentaria duplicação e retrabalho.
+
+## Novo checkpoint requerido
+
+Revisar `docs/reviews/2026-07-12-reavaliacao-apos-rejeicao-adr-007.md`. Nenhuma nova mudança estrutural deve ocorrer antes da decisão sobre a promoção completa para um package único e estado `1.1` importável.

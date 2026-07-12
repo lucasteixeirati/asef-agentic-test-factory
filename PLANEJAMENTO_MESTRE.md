@@ -737,7 +737,7 @@ As datas serão estimadas após a baseline das primeiras sessões. Os gates são
 - [ ] Nenhuma etapa essencial depende apenas de logs informais?
 - [ ] É possível explicar qual contexto, skill, MCP/model policy e aprovação orientaram a run?
 
-**Status:** planejamento aprovado; incremento 4.1 implementado em 2026-07-12 e aguardando checkpoint da ADR-007. Progresso: `docs/project/stage-04-progress.md`.
+**Status:** em replanejamento. ADR-007 rejeitada pelo responsável em 2026-07-12; promoção para package único e estado `1.1` submetidos à decisão. Progresso: `docs/project/stage-04-progress.md`.
 
 ### Etapa 5 — Alpha Python de referência
 
@@ -1073,12 +1073,13 @@ Estas questões serão decididas nas etapas indicadas, não agora:
 
 ## 27. Próxima decisão
 
-Revisar o checkpoint do incremento 4.1 da Etapa 4:
+Revisar a reavaliação da Etapa 4 após rejeição da ADR-007:
 
-1. aceitar, rejeitar ou ajustar ADR-007 e os contratos v1/estado v2;
-2. após aceite, carregar e validar um `QualityContext` mínimo;
-3. selecionar a skill `unit` para o perfil Python;
-4. integrar LangGraph, gateway direto, Docker e evidências sob o runtime ASEF;
-5. executar os caminhos demo de sucesso, falha e espera humana;
-6. publicar quickstart e arquitetura real do skeleton;
-7. submeter o Gate 4 após uma execução reproduzível e explicável.
+1. decidir sobre a promoção completa para um único package `asef`;
+2. decidir sobre estado `1.1` importável com contexto não resolvido;
+3. decidir se o primeiro WS-001 funcional deve preceder a próxima ADR;
+4. selecionar a skill `unit` para o perfil Python;
+5. integrar LangGraph, gateway direto, Docker e evidências sob o runtime ASEF;
+6. executar os caminhos demo de sucesso, falha e espera humana;
+7. publicar quickstart e arquitetura real do skeleton;
+8. submeter o Gate 4 após uma execução reproduzível e explicável.
