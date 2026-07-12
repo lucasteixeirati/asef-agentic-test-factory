@@ -2,7 +2,7 @@
 
 ## Status
 
-Revisão técnica concluída em 2026-07-12. O pacote do Gate 3 está pronto e aguarda decisão explícita do responsável.
+Concluída e aprovada em 2026-07-12. ADR-004, ADR-005 e ADR-006 aceitas; Etapa 4 autorizada.
 
 ## Ambiente auditado
 
@@ -57,7 +57,6 @@ Revisão técnica concluída em 2026-07-12. O pacote do Gate 3 está pronto e ag
 - `pydantic_graph` emitiu `DeprecationWarning` relacionado ao event loop no Python 3.13;
 - alerta `DOCKER_INSECURE_NO_IPTABLES_RAW` permanece sob investigação.
 
-## Pendente antes da aprovação do Gate 3
+## Encerramento
 
-- decisão do responsável sobre ADR-004, ADR-005 e ADR-006;
-- aprovação ou rejeição explícita do Gate 3.
+Não há pendência bloqueadora da Etapa 3. Riscos residuais permanecem versionados no Gate 3 e nas ADRs aceitas.

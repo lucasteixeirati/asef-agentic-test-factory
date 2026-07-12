@@ -1,9 +1,9 @@
 # Gate 3 — Spikes arquiteturais
 
-- **Data da revisão técnica:** 2026-07-12
+- **Data da decisão:** 2026-07-12
 - **Responsável pela decisão:** Lucas
-- **Resultado atual:** pronto para decisão; ainda não aprovado pelo responsável
-- **Próxima etapa proposta:** Etapa 4 — Walking skeleton
+- **Resultado:** aprovado
+- **Próxima etapa autorizada:** Etapa 4 — Walking skeleton
 
 ## Critérios avaliados
 
@@ -34,13 +34,13 @@
 - workspace gravável e limites totais de artefatos permanecem posteriores;
 - primeira publicação GitHub ainda aguarda autenticação e criação remota.
 
-## Decisões requeridas do responsável
+## Decisões do responsável
 
-1. aceitar, rejeitar ou ajustar ADR-004;
-2. aceitar, rejeitar ou ajustar ADR-005;
-3. aceitar, rejeitar ou ajustar ADR-006;
-4. aprovar ou rejeitar o Gate 3 e autorizar a Etapa 4.
+1. ADR-004 aceita: LangGraph condicional no walking skeleton;
+2. ADR-005 aceita: gateway direto e PydanticAI disponível sob política;
+3. ADR-006 aceita: Docker Desktop como sandbox experimental;
+4. Gate 3 aprovado e Etapa 4 autorizada.
 
 ## Decisão
 
-Pendente de manifestação explícita do responsável. Este documento não autoriza automaticamente a Etapa 4.
+O responsável aprovou explicitamente as recomendações e os ADRs em 2026-07-12. A Etapa 3 está encerrada e a Etapa 4 está autorizada.

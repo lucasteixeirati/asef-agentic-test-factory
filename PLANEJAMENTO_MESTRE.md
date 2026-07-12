@@ -2,7 +2,7 @@
 
 > Documento vivo para orientar a construção da aplicação, da documentação pública e do futuro livro.
 
-**Status:** proposta consolidada inicial  
+**Status:** vigente — Gate 3 aprovado; Etapa 4 autorizada  
 **Data de início:** 2026-07-11  
 **Responsável:** Lucas  
 **Natureza:** projeto open source, educacional, experimental e de portfólio  
@@ -694,7 +694,7 @@ As datas serão estimadas após a baseline das primeiras sessões. Os gates são
 - [x] LangGraph e PydanticAI foram avaliados separadamente?
 - [x] Está claro quem controla o loop principal de execução?
 
-**Status:** revisão técnica concluída em 2026-07-12; Gate 3 aguarda decisão explícita do responsável. Pacote: `docs/project/gates/gate-03-spikes-arquiteturais.md`.
+**Status:** concluída e aprovada em 2026-07-12. ADR-004, ADR-005 e ADR-006 aceitas; Etapa 4 autorizada. Registro: `docs/project/gates/gate-03-spikes-arquiteturais.md`.
 
 ### Etapa 4 — Walking skeleton
 
@@ -1069,9 +1069,12 @@ Estas questões serão decididas nas etapas indicadas, não agora:
 
 ## 27. Próxima decisão
 
-Revisar o pacote do Gate 3 e decidir:
+Iniciar a Etapa 4 — Walking skeleton:
 
-1. adoção condicional de LangGraph no walking skeleton — ADR-004;
-2. gateway direto e PydanticAI disponível sob política — ADR-005;
-3. Docker Desktop como sandbox experimental — ADR-006;
-4. aprovação do Gate 3 e autorização da Etapa 4.
+1. detalhar o plano executável do primeiro fluxo completo;
+2. carregar e validar um `QualityContext` mínimo;
+3. selecionar a skill `unit` para o perfil Python;
+4. integrar LangGraph, gateway direto, Docker e evidências sob o runtime ASEF;
+5. executar os caminhos demo de sucesso, falha e espera humana;
+6. publicar quickstart e arquitetura real do skeleton;
+7. submeter o Gate 4 após uma execução reproduzível e explicável.

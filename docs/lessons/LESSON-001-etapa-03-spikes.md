@@ -2,7 +2,7 @@
 
 - **Data:** 2026-07-12
 - **Etapa:** Etapa 3
-- **Estado:** retrospectiva técnica pronta; decisão do gate pendente
+- **Estado:** concluída com Gate 3 aprovado
 
 ## O que esperávamos
 

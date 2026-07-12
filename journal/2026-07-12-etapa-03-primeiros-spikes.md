@@ -4,7 +4,7 @@
 
 - **Dia do projeto:** Dia 2
 - **Etapa:** Etapa 3 — Spikes arquiteturais
-- **Situação:** revisão técnica concluída; Gate 3 aguardando decisão do responsável
+- **Situação:** concluída e aprovada
 
 ## Entregáveis
 
@@ -104,8 +104,10 @@ As primeiras estimativas produzidas pela IA indicavam semanas de desenvolvimento
 22. Python, Node e Java iniciaram sob a mesma política por imagens fixadas em digest; isso prova o executor, não suporte end-to-end.
 23. O Docker adicionou cerca de 302 ms de overhead mediano no comando mínimo observado, 8,61 vezes o processo local devido ao workload quase vazio.
 24. Truncamento real de stdout/stderr e OOM com exit 137 foram confirmados.
+25. O repositório foi publicado em `lucasteixeirati/asef-agentic-test-factory` e a primeira execução da CI passou.
+26. O responsável aprovou ADR-004, ADR-005, ADR-006 e o Gate 3, autorizando o walking skeleton.
 
 ## Próximos passos
 
-- submeter ADR-004, ADR-005, ADR-006 e Gate 3 à decisão do responsável;
-- após aprovação, iniciar a Etapa 4 — Walking skeleton.
+- iniciar a Etapa 4 — Walking skeleton;
+- criar plano executável do incremento e primeiro journal da etapa.

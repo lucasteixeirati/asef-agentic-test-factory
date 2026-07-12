@@ -1,8 +1,9 @@
 # ADR-005 — Gateway direto e PydanticAI disponível sob política
 
-- **Status:** proposta para aprovação no Gate 3
+- **Status:** aceita
 - **Data:** 2026-07-12
 - **Responsável pela decisão:** Lucas
+- **Decisão registrada em:** 2026-07-12
 
 ## Contexto
 

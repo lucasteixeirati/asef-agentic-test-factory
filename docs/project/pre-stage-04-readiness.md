@@ -1,7 +1,7 @@
 # Preparação para a Etapa 4
 
 - **Data:** 2026-07-12
-- **Status:** em conclusão
+- **Status:** concluída
 - **Objetivo:** tornar o repositório público, contextual e reproduzível antes do walking skeleton.
 
 ## Decisões do responsável
@@ -21,7 +21,7 @@
 | Licença MIT | Concluído | `LICENSE` |
 | Guia de contribuição | Concluído | `CONTRIBUTING.md` |
 | Política de segurança | Concluído | `SECURITY.md` |
-| CI inicial | Concluído localmente; execução remota pendente | `.github/workflows/ci.yml` |
+| CI inicial | Concluído e aprovado no primeiro push | GitHub Actions run `29206523668` |
 | Templates públicos | Concluído | `.github/ISSUE_TEMPLATE/` e PR template |
 | QualityContext | Concluído no recorte inicial | código, 5 testes, exemplo e referência |
 | Catálogo de skills | Concluído como planejamento | `docs/skills/catalog.md` |
@@ -29,8 +29,8 @@
 | Python/Node/Java por digest | Concluído | EXP-006 e integração Docker |
 | OOM e truncamento real | Concluído | integração Docker |
 | Overhead Docker | Medido | EXP-006 |
-| Git local | Inicializado; commit pendente | branch `main` |
-| GitHub público | Pendente | autenticação e criação remota |
+| Git local | Concluído | commit inicial `cd814c7` na branch `main` |
+| GitHub público | Concluído | `lucasteixeirati/asef-agentic-test-factory` |
 
 ## Limites preservados
 
@@ -49,3 +49,7 @@
 - Git inicializado com snapshot coerente;
 - repositório público criado sem `.env`, `.venv` ou `.asef`;
 - Gate 3 revisado com as novas evidências.
+
+## Resultado
+
+Preparação concluída, repositório público e CI verde. ADR-004, ADR-005 e ADR-006 foram aceitas e o Gate 3 autorizou a Etapa 4.

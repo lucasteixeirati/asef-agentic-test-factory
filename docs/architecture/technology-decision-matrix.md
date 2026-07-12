@@ -1,7 +1,7 @@
 # Matriz de decisão tecnológica — Gate 3
 
 - **Data:** 2026-07-12
-- **Status:** recomendação pronta para decisão do responsável
+- **Status:** aprovada pelo responsável no Gate 3
 - **Escala:** 1 (fraco) a 5 (forte)
 - **Regra:** pontuação orienta a decisão, mas riscos bloqueadores e lacunas de evidência prevalecem.
 
