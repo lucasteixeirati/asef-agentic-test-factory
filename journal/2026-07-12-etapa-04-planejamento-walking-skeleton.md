@@ -62,6 +62,7 @@ Submeter ADR-007 e os contratos do incremento 4.1 ao checkpoint humano. Após ac
 2. A execução revelou dois `ResourceWarning` em um teste que lia arquivos sem fechar handles; a leitura passou a usar `Path.read_text`.
 3. Uma revisão após os primeiros testes adicionou validação de budget persistido e bloqueio de marcadores sensíveis em comandos.
 4. A primeira build continha o novo package, mas ainda gerava wheel `asef-spike 0.0.1`; o metadata foi corrigido para representar o produto público antes do commit.
+5. A CI passou, mas revelou depreciação do runtime Node 20 nas actions v4/v5; as actions oficiais foram atualizadas para v6/Node 24 em vez de silenciar o warning.
 
 ### Decisão relevante
 

@@ -40,6 +40,7 @@ Em andamento desde 2026-07-12. Incremento 4.1 implementado e aguardando checkpoi
 - budget precisa ser validado como parte do estado, não apenas durante execução;
 - command evidence também pode carregar secrets e recebeu validação defensiva.
 - a primeira build ainda produziu `asef-spike 0.0.1`; o metadata foi corrigido antes do checkpoint público.
+- a primeira CI do checkpoint passou, mas alertou sobre actions baseadas em Node 20; checkout/setup-python foram atualizadas para v6/Node 24.
 
 ## Checkpoint requerido
 
