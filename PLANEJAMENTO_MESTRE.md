@@ -2,7 +2,7 @@
 
 > Documento vivo para orientar a construção da aplicação, da documentação pública e do futuro livro.
 
-**Status:** vigente — 4.R8 concluída e CI pública verde; Gate 4 aguardando decisão humana
+**Status:** vigente — Gate 4 aprovado em 2026-07-13; planejamento detalhado da Etapa 5 autorizado
 **Data de início:** 2026-07-11  
 **Responsável:** Lucas  
 **Natureza:** projeto open source, educacional, experimental e de portfólio  
@@ -737,7 +737,7 @@ As datas serão estimadas após a baseline das primeiras sessões. Os gates são
 - [ ] Nenhuma etapa essencial depende apenas de logs informais?
 - [ ] É possível explicar qual contexto, skill, MCP/model policy e aprovação orientaram a run?
 
-**Status:** Opção C aprovada; 4.R1 a 4.R8 implementados. Após a auditoria 4.R7, a decisão foi adiada para ampliar coverage, mutation, observabilidade e material editorial. Regressão local e CI pública da 4.R8 aprovadas; somente a decisão humana permanece pendente. Progresso: `docs/project/stage-04-progress.md`.
+**Status:** concluída e aprovada em 2026-07-13. 4.R1 a 4.R8 implementados; coverage, mutation pilot, observabilidade, material editorial, regressão local e CI pública aprovados. Os riscos residuais foram aceitos por Lucas. Registro: `docs/project/gates/gate-04-evidence-package.md`.
 
 ### Etapa 5 — Alpha Python de referência
 
@@ -1073,10 +1073,11 @@ Estas questões serão decididas nas etapas indicadas, não agora:
 
 ## 27. Próxima decisão
 
-Decidir formalmente o Gate 4 com base em `docs/project/gates/gate-04-evidence-package.md`:
+Planejar detalhadamente a Etapa 5 — Alpha Python:
 
-1. revisar as evidências de G4-01 a G4-15;
-2. aceitar, condicionar ou rejeitar os riscos residuais registrados;
-3. registrar decisão e data no pacote do gate;
-4. somente após aprovação, atualizar o status da Etapa 4 para concluída;
-5. iniciar o planejamento detalhado da Etapa 5 sem inferir automaticamente seu escopo técnico.
+1. revisar objetivos, entradas, saídas e Gate 5 já previstos neste planejamento;
+2. decompor o alpha em incrementos pequenos com critérios de aceite;
+3. decidir o SUT de referência e a fronteira do modo live;
+4. definir datasets, coverage, mutation, observabilidade e segurança exigidos no alpha;
+5. separar capacidades obrigatórias de experimentos e possibilidades futuras;
+6. submeter o plano detalhado à aprovação de Lucas antes de alterar a implementação.

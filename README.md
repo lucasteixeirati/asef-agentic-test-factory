@@ -10,7 +10,7 @@ Este repositório também registra a jornada de desenvolvimento assistido por IA
 
 ## Estado atual
 
-**Experimental — pré-alpha.** O walking skeleton foi implementado e está em auditoria para o Gate 4. Não deve ser usado para executar código arbitrariamente hostil ou em produção.
+**Experimental — pré-alpha.** O walking skeleton e seu hardening foram aprovados no Gate 4. O projeto inicia o planejamento do Alpha Python e não deve ser usado para executar código arbitrariamente hostil ou em produção.
 
 Já demonstrado:
 
@@ -128,7 +128,7 @@ Nunca coloque uma chave real em arquivos do repositório. O modo live exige `OPE
 1. Marco Zero e planejamento — concluído.
 2. Contratos, workflow e avaliação — concluído.
 3. Spikes arquiteturais — revisão técnica concluída.
-4. Walking skeleton — implementado; Gate 4 aguardando decisão humana.
+4. Walking skeleton e hardening — concluídos; Gate 4 aprovado.
 5. Alpha Python.
 6. Perfis TypeScript e Java.
 7. Developer preview e hardening da v0.1.

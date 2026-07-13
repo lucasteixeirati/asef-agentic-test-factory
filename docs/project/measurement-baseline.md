@@ -68,6 +68,6 @@ Os números não serão convertidos artificialmente em percentual de produtivida
 | Pacote da Etapa 1 — visão, domínio e escopo | Documentação | 2026-07-11 | 2026-07-11 | 1 | Concluído |
 | Pacote da Etapa 2 — contratos, workflow e avaliação | Documentação | 2026-07-11 | 2026-07-11 | 1 | Concluído |
 | Etapa 3 — spikes arquiteturais | Implementação/experimento | 2026-07-12 | 2026-07-12 | 1 | Concluído |
-| Etapa 4 — walking skeleton e Gate 4 técnico | Implementação/documentação | 2026-07-12 | 2026-07-13 | 2 | Concluído tecnicamente; decisão pendente |
+| Etapa 4 — walking skeleton, hardening e Gate 4 | Implementação/documentação | 2026-07-12 | 2026-07-13 | 2 | Concluído e aprovado |
 
 Esta baseline é retrospectiva e cobre apenas os registros disponíveis. A medição prospectiva começa após sua criação.

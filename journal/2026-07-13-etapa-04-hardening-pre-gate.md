@@ -49,3 +49,7 @@ Uma execução de coverage falhou porque o comando global foi iniciado sem `PYTH
 Docker passou em 11/11. O wheel final de 52.008 bytes, SHA-256 `395d869b08df41b747e4f24fe5fb5d2ad7a813d8eef53f9ab225229eddf5fcb6`, foi construído após o ajuste final de redaction; a versão funcional imediatamente anterior foi instalada em venv novo fora do checkout. A demo sem API key terminou `SUCCEEDED`/`ACCEPTED`, e source, wheel, logs e artifacts passaram no secret scan.
 
 O commit `d0d7c32` foi publicado. A CI pública `29253153366` aprovou core, frameworks/workflow opcional e Docker/security. O Gate 4 pode ser reapresentado a Lucas, sem inferir aprovação automática.
+
+## Aprovação humana do Gate 4
+
+Lucas aprovou explicitamente o Gate 4 em 2026-07-13 e aceitou os riscos residuais documentados. A decisão encerra a Etapa 4 e autoriza o planejamento detalhado da Etapa 5. A implementação do Alpha Python não foi iniciada automaticamente.

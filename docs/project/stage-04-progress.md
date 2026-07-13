@@ -417,3 +417,12 @@ Antes de aprovar o gate, Lucas solicitou três revisões: força da suíte, exis
 ### Estado
 
 As três condições adicionais foram implementadas, a regressão local está verde e a CI pública `29253153366` aprovou os jobs core, frameworks/opcional e Docker/security. A decisão do Gate 4 permanece exclusivamente humana.
+
+## Decisão do Gate 4
+
+- **Decisão:** aprovado;
+- **Responsável:** Lucas;
+- **Data:** 2026-07-13;
+- **Riscos residuais:** aceitos conforme pacote de evidências;
+- **Efeito:** Etapa 4 concluída e planejamento detalhado da Etapa 5 autorizado;
+- **Não autorizado automaticamente:** iniciar implementação ou ampliar escopo da Etapa 5 sem aprovação do seu plano.

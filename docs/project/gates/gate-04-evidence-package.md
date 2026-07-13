@@ -56,13 +56,13 @@ Limite da evidência: pattern matching não substitui análise de entropia, scan
 
 ## Decisão humana
 
-- [ ] Aprovar o Gate 4 e iniciar o planejamento detalhado da Etapa 5.
+- [x] Aprovar o Gate 4 e iniciar o planejamento detalhado da Etapa 5.
 - [ ] Aprovar com condição adicional registrada abaixo.
 - [ ] Rejeitar e devolver para correções.
 
-**Decisão/condição:** pendente.
+**Decisão/condição:** aprovado por Lucas, com aceitação explícita dos riscos residuais documentados. A aprovação autoriza o planejamento detalhado da Etapa 5, não sua implementação automática.
 
-**Data:** pendente.
+**Data:** 2026-07-13.
 
 ## Hardening adicional solicitado antes da decisão
 
@@ -89,6 +89,6 @@ Em 2026-07-13, Lucas adiou a decisão e solicitou revisão de testes, logs e liv
 - source, wheel, logs e artifacts: secret scan sem findings;
 - wheel final: 52.008 bytes, SHA-256 `395d869b08df41b747e4f24fe5fb5d2ad7a813d8eef53f9ab225229eddf5fcb6`; wheel funcional anterior reinstalado e demo repetida antes do ajuste isolado de redaction.
 
-**Parecer atualizado:** aprovar o Gate 4 com os riscos residuais já registrados. A caixa de decisão acima continua desmarcada até manifestação explícita de Lucas.
+**Parecer atualizado:** Gate 4 aprovado por Lucas, com os riscos residuais registrados e aceitos.
 
 **CI pública da 4.R8:** run `29253153366`, com jobs core, frameworks/opcional e Docker/security aprovados.

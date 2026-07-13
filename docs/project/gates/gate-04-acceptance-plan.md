@@ -1,6 +1,6 @@
 # Gate 4 — Plano de aceite do Walking Skeleton
 
-- **Estado:** auditoria técnica concluída; decisão humana pendente
+- **Estado:** aprovado por Lucas em 2026-07-13
 - **Responsável pela decisão:** Lucas
 
 ## Critérios obrigatórios
@@ -47,3 +47,5 @@
 Todos os critérios obrigatórios precisam estar atendidos ou possuir risco explicitamente aceito que não invalide o objetivo do walking skeleton. O responsável aprova o gate; CI verde sozinha não constitui aprovação.
 
 O detalhamento técnico, os riscos residuais e a recomendação estão no [pacote de evidências do Gate 4](gate-04-evidence-package.md). O estado `Atendido` representa comprovação técnica, não aprovação automática do gate.
+
+Após a regressão adicional 4.R8, Lucas aprovou explicitamente o gate e aceitou os riscos residuais documentados. O próximo passo autorizado é o planejamento detalhado da Etapa 5.
