@@ -1,8 +1,9 @@
 # ADR-008 — LangGraph limitado a checkpoint e retomada humana
 
-- **Status:** proposta
+- **Status:** aceita
 - **Data:** 2026-07-12
 - **Responsável pela decisão:** Lucas
+- **Decisão registrada em:** 2026-07-12
 - **Refina:** ADR-004
 - **Não altera:** ADR-001, ADR-005 e ADR-006
 
@@ -99,4 +100,4 @@ Remover o extra e o adapter, manter state/eventos ASEF e retornar erro explícit
 
 ## Decisão humana
 
-Pendente. Esta ADR somente passa para `aceita` ou `rejeitada` após aprovação explícita do responsável.
+Aceita explicitamente por Lucas. A implementação está autorizada dentro dos limites e critérios desta ADR; a aprovação não autoriza LangGraph a substituir o runtime explícito ou assumir responsabilidades de domínio.

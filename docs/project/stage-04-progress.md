@@ -248,4 +248,6 @@ Revisar a arquitetura executada e decidir, em nova ADR, se LangGraph/SQLite agre
 - runtime explícito permanece canônico para WS-001;
 - extra opcional preserva core sem dependências obrigatórias;
 - dez critérios objetivos definidos para WS-002/WS-007;
-- decisão humana ainda pendente; nenhuma dependência ou implementação foi alterada neste checkpoint.
+- ADR-008 aceita explicitamente pelo responsável;
+- implementação de WS-002/WS-007 autorizada dentro dos limites da decisão;
+- nenhuma dependência foi adicionada ao core durante o checkpoint documental.

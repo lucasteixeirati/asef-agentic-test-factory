@@ -4,7 +4,7 @@
 - **Data:** 2026-07-12
 - **Responsável pela decisão:** Lucas
 - **Decisão registrada em:** 2026-07-12
-- **Reavaliação:** ADR-008 proposta após WS-001 funcional; ADR-004 permanece vigente até decisão humana
+- **Reavaliação:** refinada pela ADR-008 aceita após WS-001 funcional. A adoção fica limitada a checkpoint e retomada humana.
 
 ## Contexto
 

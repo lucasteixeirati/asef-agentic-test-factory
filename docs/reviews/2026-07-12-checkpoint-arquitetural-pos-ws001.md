@@ -1,7 +1,7 @@
 # Checkpoint arquitetural pós-WS-001
 
 - **Data:** 2026-07-12
-- **Status:** revisão concluída; ADR-008 proposta e aguardando decisão humana
+- **Status:** revisão concluída; ADR-008 aceita pelo responsável
 - **Gatilho:** primeiro WS-001 funcional no package único `asef`
 
 ## Resultado observado
@@ -111,4 +111,4 @@ Manter os application services explícitos como implementação canônica. Intro
 
 ## Parecer
 
-**Aprovar com escopo estreito a opção C.** LangGraph deve entrar como adapter de checkpoint e retomada humana, não como novo proprietário do workflow. Esta decisão maximiza aprendizado e valor de portfólio sem descartar a simplicidade que já provou funcionar.
+**Decisão:** opção C aprovada com escopo estreito. LangGraph deve entrar como adapter de checkpoint e retomada humana, não como novo proprietário do workflow. Esta decisão maximiza aprendizado e valor de portfólio sem descartar a simplicidade que já provou funcionar.

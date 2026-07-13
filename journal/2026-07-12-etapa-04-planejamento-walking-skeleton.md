@@ -142,3 +142,9 @@ O primeiro teste criado para detectar imports do package removido encontrou a st
 - **Controle humano:** ADR-008 permanece proposta e nenhuma adoção foi inferida.
 - **Valor para o livro:** a decisão agora compara hype, spike e implementação real em três momentos distintos, preservando a reversão da ADR-007 como parte da jornada.
 - **Próximo passo:** decisão de Lucas sobre ADR-008; depois WS-002 e WS-007 serão as primeiras provas.
+## Decisão humana — ADR-008
+
+- **Decisão:** Lucas aceitou explicitamente a ADR-008.
+- **Escopo autorizado:** LangGraph/SQLite somente como adapter opcional de checkpoint, retomada e cancelamento humano.
+- **Escopo não autorizado:** substituir o runtime explícito, controlar policy/budgets/outcomes ou contaminar contratos com tipos do framework.
+- **Próxima prova:** WS-002 deve retomar após reinício sem repetir a model call; WS-007 deve cancelar de forma auditável.
