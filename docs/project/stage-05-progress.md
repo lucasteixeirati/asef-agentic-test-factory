@@ -41,3 +41,13 @@ A primeira tentativa de rodar paths individuais com `python -m unittest -v tests
 ### Decisão humana
 
 Lucas aprovou explicitamente a ADR-009 em 2026-07-13. Com contratos, fixtures e regressões locais aprovados, o 5.1 está concluído. A publicação e a CI final fazem parte da evidência de entrega; o próximo incremento autorizado é 5.2 — adapter `pytest` e normalização.
+
+### Publicação e CI
+
+- commit publicado: `3352dc4` (`feat: establish stage 5 alpha contracts and reference suite`);
+- GitHub Actions: run `29276529459`;
+- `core`: aprovado, incluindo branch coverage e secret scan;
+- `docker-security`: aprovado, incluindo instalação pública e demo keyless fora do checkout;
+- `framework-spikes`: aprovado, incluindo coverage do workflow opcional.
+
+Com os três jobs aprovados, a condição de publicação do 5.1 está atendida.

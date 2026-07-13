@@ -34,3 +34,7 @@ O caso mostra duas formas de honestidade técnica: separar a evidência usada pa
 ## Decisão humana e próximo passo
 
 Lucas aprovou explicitamente a ADR-009 em 2026-07-13. A decisão encerra o 5.1 e autoriza o 5.2 — adapter `pytest` e normalização — após a publicação e confirmação da CI deste incremento.
+
+## Evidência publicada
+
+O commit `3352dc4` foi publicado no GitHub. A execução pública `29276529459` aprovou os jobs `core`, `docker-security` e `framework-spikes`, incluindo branch coverage, secret scan, instalação do package, demo sem chave fora do checkout e workflow opcional. A condição para iniciar 5.2 foi atendida.

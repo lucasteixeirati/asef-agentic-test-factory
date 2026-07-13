@@ -27,7 +27,7 @@
 | G5-17 | Core não importa Python tooling, Docker, OpenAI ou LangGraph | import boundaries + job core mínimo | Parcial — fronteira AST e core mínimo aprovados localmente |
 | G5-18 | README, quickstart, tutorial, arquitetura, segurança e limitações refletem o Alpha real | auditoria documental | Não iniciado |
 | G5-19 | Métricas, falhas, decisões humanas e contribuição da IA estão registradas | journal + baseline + retrospectiva | Parcial — journals e baseline atualizados até 5.1 |
-| G5-20 | CI pública e regressões do Gate 4 permanecem verdes | execução GitHub Actions | Parcial — regressões locais verdes; CI do 5.1 pendente |
+| G5-20 | CI pública e regressões do Gate 4 permanecem verdes | execução GitHub Actions | Parcial — 5.1 e regressões anteriores verdes na run 29276529459 |
 
 ## Casos de aceite obrigatórios
 
