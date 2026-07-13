@@ -6,7 +6,13 @@ from pathlib import Path
 from ..contracts import EvidenceRef, SkeletonRunRequest, SkeletonRunState, UnitTestArtifact
 from ..outcomes import RunClassification, RunStatus
 from ..skills.unit import UnitSkill, UnitSkillPolicyError
-from .ports import AgenticTestPort, RunStorePort, WorkspacePort, WorkspaceResult
+from .ports import (
+    AgenticTestPort,
+    ResolvedQualityContext,
+    RunStorePort,
+    WorkspacePort,
+    WorkspaceResult,
+)
 from .prepare_run import PrepareRunService
 
 
@@ -14,6 +20,7 @@ from .prepare_run import PrepareRunService
 class GenerateUnitResult:
     state: SkeletonRunState
     run_dir: Path
+    context: ResolvedQualityContext
     artifact: UnitTestArtifact | None = None
     workspace: WorkspaceResult | None = None
 
@@ -54,7 +61,7 @@ class GenerateUnitTestService:
             )
             state.classification = RunClassification.WAITING_HUMAN
             self.run_store.save_state(state)
-            return GenerateUnitResult(state, prepared.run_dir)
+            return GenerateUnitResult(state, prepared.run_dir, prepared.context)
 
         PrepareRunService._move(state, RunStatus.ANALYZING_RISK, "analysis_complete")
         PrepareRunService._move(state, RunStatus.DESIGNING_SCENARIOS, "risks_identified")
@@ -87,7 +94,7 @@ class GenerateUnitTestService:
             state.classification = RunClassification.POLICY_VIOLATION
             PrepareRunService._move(state, RunStatus.POLICY_BLOCKED, "unit_skill_policy_violation")
             self.run_store.save_static_validation(state, artifact, validation)
-            return GenerateUnitResult(state, prepared.run_dir, artifact)
+            return GenerateUnitResult(state, prepared.run_dir, prepared.context, artifact)
 
         PrepareRunService._move(state, RunStatus.STATIC_VALIDATION, "artifact_policy_passed")
         workspace = self.workspace.stage(prepared.run_dir, prepared.context, artifact)
@@ -110,7 +117,7 @@ class GenerateUnitTestService:
         }
         state.validate()
         self.run_store.save_static_validation(state, artifact, validation)
-        return GenerateUnitResult(state, prepared.run_dir, artifact, workspace)
+        return GenerateUnitResult(state, prepared.run_dir, prepared.context, artifact, workspace)
 
     @staticmethod
     def _record_usage(state: SkeletonRunState, input_tokens: int, output_tokens: int) -> None:

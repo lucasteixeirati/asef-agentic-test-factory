@@ -24,6 +24,7 @@ from asef.skills.unit import UnitSkill, UnitSkillPolicyError
 ANALYSIS = Path("tests/fixtures/cassettes/wf001_analysis_success.json")
 ARTIFACT = Path("tests/fixtures/cassettes/wf001_unit_artifact_success.json")
 SUT = Path("examples/calculator/calculator.py")
+Path(".asef").mkdir(exist_ok=True)
 
 
 def request() -> SkeletonRunRequest:
@@ -53,7 +54,7 @@ class GenerateUnitTestServiceTests(unittest.TestCase):
 
     def test_recorded_generation_passes_policy_and_preserves_original_sut(self) -> None:
         before = sha256(SUT)
-        with tempfile.TemporaryDirectory() as directory:
+        with tempfile.TemporaryDirectory(dir=Path(".asef")) as directory:
             result = self.service(Path(directory)).execute(request())
             self.assertEqual(result.state.status, RunStatus.STATIC_VALIDATION)
             self.assertEqual(result.state.usage.model_calls, 2)
@@ -88,7 +89,7 @@ class GenerateUnitTestServiceTests(unittest.TestCase):
                     "g",
                 )
 
-        with tempfile.TemporaryDirectory() as directory:
+        with tempfile.TemporaryDirectory(dir=Path(".asef")) as directory:
             result = self.service(Path(directory), EscapeAgent()).execute(request())
             self.assertEqual(result.state.status, RunStatus.POLICY_BLOCKED)
             self.assertEqual(result.state.classification, RunClassification.POLICY_VIOLATION)
@@ -101,7 +102,7 @@ class GenerateUnitTestServiceTests(unittest.TestCase):
             self.assertEqual(validation["status"], "POLICY_BLOCKED")
 
     def test_clarification_stops_before_generation_and_workspace(self) -> None:
-        with tempfile.TemporaryDirectory() as directory:
+        with tempfile.TemporaryDirectory(dir=Path(".asef")) as directory:
             service = self.service(
                 Path(directory),
                 RecordedAgentAdapter(
@@ -138,10 +139,16 @@ class UnitSkillTests(unittest.TestCase):
         with self.assertRaisesRegex(UnitSkillPolicyError, "invalid Python syntax"):
             UnitSkill().validate(self.artifact("def test_x(:\n    pass\n"))
 
+    def test_sensitive_value_marker_is_rejected(self) -> None:
+        with self.assertRaisesRegex(UnitSkillPolicyError, "sensitive value"):
+            UnitSkill().validate(
+                self.artifact("def test_x():\n    value = 'api_key=forbidden'\n")
+            )
+
 
 class GenerateCliTests(unittest.TestCase):
     def test_generate_command_returns_static_validation_boundary(self) -> None:
-        with tempfile.TemporaryDirectory() as directory:
+        with tempfile.TemporaryDirectory(dir=Path(".asef")) as directory:
             stdout, stderr = StringIO(), StringIO()
             with redirect_stdout(stdout), redirect_stderr(stderr):
                 code = main(["generate", "--output", directory])

@@ -17,6 +17,7 @@ from asef.outcomes import RunStatus
 
 
 CONTEXT = "examples/context/walking-skeleton-context.json"
+Path(".asef").mkdir(exist_ok=True)
 
 
 def request(**overrides: object) -> SkeletonRunRequest:
@@ -33,7 +34,7 @@ def request(**overrides: object) -> SkeletonRunRequest:
 
 class PrepareRunServiceTests(unittest.TestCase):
     def test_prepares_state_snapshot_and_manifest_at_agentic_boundary(self) -> None:
-        with tempfile.TemporaryDirectory() as directory:
+        with tempfile.TemporaryDirectory(dir=Path(".asef")) as directory:
             result = PrepareRunService(
                 FileQualityContextAdapter(), JsonRunStore(Path(directory))
             ).execute(request())
@@ -52,7 +53,7 @@ class PrepareRunServiceTests(unittest.TestCase):
             self.assertEqual(manifest["status"], "ANALYZING_REQUIREMENT")
 
     def test_unknown_system_fails_before_creating_run_directory(self) -> None:
-        with tempfile.TemporaryDirectory() as directory:
+        with tempfile.TemporaryDirectory(dir=Path(".asef")) as directory:
             root = Path(directory)
             service = PrepareRunService(FileQualityContextAdapter(), JsonRunStore(root))
             with self.assertRaisesRegex(ContextValidationError, "unknown system_id"):
@@ -76,8 +77,17 @@ class PrepareRunServiceTests(unittest.TestCase):
 
 
 class PublicCliTests(unittest.TestCase):
-    def test_prepare_command_returns_machine_readable_result(self) -> None:
+    def test_output_outside_asef_is_rejected_before_run_creation(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
+            stdout, stderr = StringIO(), StringIO()
+            with redirect_stdout(stdout), redirect_stderr(stderr):
+                code = main(["prepare", "--output", directory])
+            self.assertEqual(code, 2)
+            self.assertIn("inside the .asef directory", stderr.getvalue())
+            self.assertEqual(list(Path(directory).iterdir()), [])
+
+    def test_prepare_command_returns_machine_readable_result(self) -> None:
+        with tempfile.TemporaryDirectory(dir=Path(".asef")) as directory:
             stdout, stderr = StringIO(), StringIO()
             with redirect_stdout(stdout), redirect_stderr(stderr):
                 code = main(["prepare", "--output", directory])
@@ -88,7 +98,7 @@ class PublicCliTests(unittest.TestCase):
             self.assertEqual(stderr.getvalue(), "")
 
     def test_prepare_command_maps_context_error_to_exit_two(self) -> None:
-        with tempfile.TemporaryDirectory() as directory:
+        with tempfile.TemporaryDirectory(dir=Path(".asef")) as directory:
             stdout, stderr = StringIO(), StringIO()
             with redirect_stdout(stdout), redirect_stderr(stderr):
                 code = main(["prepare", "--system", "missing", "--output", directory])

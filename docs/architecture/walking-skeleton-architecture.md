@@ -104,6 +104,19 @@ GenerateUnitTestService
 ```
 
 O adapter gravado retorna apenas análise e artifact candidatos. O application service controla usage e transições. A skill decide se o artifact pode chegar ao workspace. Paths rejeitados nunca são usados para escrita: o conteúdo é preservado em `artifacts/rejected/attempt-001.txt`. O workspace contém cópias allowlisted e o teste gerado; hashes comprovam que o SUT original não foi alterado durante o staging.
+
+## Implementação 4.R5
+
+```text
+CompleteWorkflowService
+  -> GenerateUnitTestService
+  -> TestExecutionPort -> DockerUnitTestAdapter -> DockerRunner
+  -> RunStorePort -> execution + reports + estado terminal
+```
+
+O application service avalia apenas `ExecutionOutput`/`NormalizedExecutionResult`; não importa Docker. O adapter executa a imagem fixada pelo snapshot. A aceitação exige exit 0, contagem positiva, zero falhas e igualdade entre testes executados e aprovados. Falhas do daemon/CLI Docker (125–127) e timeout são infraestrutura, não defeitos funcionais.
+
+O WS-001 termina em `SUCCEEDED`/`ACCEPTED`. LangGraph continua fora do runtime principal: agora existe evidência suficiente para comparar seu valor contra este fluxo explícito, em vez de decidir por expectativa.
 - nova ADR será criada apenas após o primeiro WS-001 funcional.
 
 ## Questões que a implementação deve responder

@@ -193,3 +193,48 @@ O contexto do calculator já existia em 4.R2, mas apontava para um diretório de
 ### Próximo incremento
 
 4.R5 — executar o workspace no Docker Desktop, normalizar evidências e avançar o WS-001 até avaliação/relatório. LangGraph/SQLite só será conectado se ainda agregar valor ao fluxo já funcional.
+
+## Incremento 4.R5 — Execução, avaliação e relatório
+
+### Concluído
+
+- `TestExecutionPort` e output bruto independente de Docker;
+- `DockerUnitTestAdapter` usando exatamente a imagem por digest do snapshot;
+- política Docker com rede bloqueada, rootfs read-only, capabilities removidas, usuário 65534, limites de CPU/memória/PIDs e timeout;
+- comando `unittest` com bytecode desabilitado no workspace read-only;
+- normalização de duração, exit code, contagens, timeout e truncamento;
+- stdout/stderr persistidos com SHA-256 e referências no estado/manifest;
+- `execution.json`, `report.json` e `report.md`;
+- avaliação determinística exige exit 0, ao menos um teste e todos aprovados;
+- falha funcional, timeout e infraestrutura Docker recebem classificações distintas;
+- exit codes Docker 125–127 tratados como infraestrutura;
+- oracle usa a última contagem do `unittest`, evitando spoofing por output anterior;
+- CLI `asef run` termina o WS-001 em `SUCCEEDED`/`ACCEPTED`;
+- output público contido dentro de `.asef`.
+
+### Evidência
+
+- 90 testes descobertos: 79 aprovados e 11 Docker opt-in;
+- 11/11 integrações Docker aprovadas localmente;
+- 10/10 testes dos frameworks preservados;
+- WS-001 real: 4 testes executados e aprovados no container;
+- execução Docker observada em aproximadamente 2 segundos na rodada registrada;
+- state, manifest e reports convergem em `SUCCEEDED`;
+- wheel e CI serão novamente validados no checkpoint público.
+
+### Findings e correções
+
+- a fixture usava digest ilustrativo; passou a usar a imagem Python já comprovada;
+- a primeira tentativa específica do E2E falhou no harness antes do Docker por invocação incorreta do `unittest`;
+- `TemporaryDirectory` global/no Windows criou permissões incompatíveis com UID 65534; o E2E passou a usar pasta normal sob `.asef`, igual ao uso público;
+- essa falha revelou que a CLI aceitava output fora da raiz declarada; agora rejeita antes de criar a run;
+- o primeiro parser usava a primeira linha `Ran N tests`; agora usa a última para reduzir spoofing;
+- exit 125 do Docker foi separado de falha do teste.
+
+### Resultado
+
+O primeiro WS-001 está funcional e reproduzível. Isso satisfaz a condição definida após a rejeição da ADR-007 para realizar um novo checkpoint arquitetural baseado em implementação real.
+
+### Próximo passo
+
+Revisar a arquitetura executada e decidir, em nova ADR, se LangGraph/SQLite agregam valor suficiente para entrar no runtime. Depois seguir para 4.R6 com WS-002 a WS-007; o Gate 4 permanece aberto até essas pendências serem sanadas.

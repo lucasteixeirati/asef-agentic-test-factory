@@ -72,11 +72,14 @@ $env:PYTHONPATH='src'
 python -m unittest discover -s tests -v
 python -m asef.cli prepare --output .asef\runs
 python -m asef.cli generate --output .asef\runs
+python -m asef.cli run --output .asef\runs
 ```
 
 O comando `prepare` valida request, QualityContext, scopes e o SUT controlado. Ele persiste estado, snapshot, manifest e eventos, encerrando em `ANALYZING_REQUIREMENT`, pronto para o próximo adapter. O alias `asef-spike` mantém a demo legada temporariamente.
 
 O comando `generate` usa cassettes versionados para análise e geração, aplica a skill `unit`, coloca artifacts rejeitados em quarentena e monta um workspace efêmero. Ele termina em `STATIC_VALIDATION`; execução em Docker pertence ao próximo incremento.
+
+O comando `run` executa o WS-001 completo no Docker Desktop sem API key. O resultado esperado é `SUCCEEDED`/`ACCEPTED`, com `execution.json`, stdout/stderr, `report.json` e `report.md`. Por policy, `--output` deve permanecer dentro de `.asef`.
 
 Testes Docker são opt-in:
 

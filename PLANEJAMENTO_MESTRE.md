@@ -737,7 +737,7 @@ As datas serão estimadas após a baseline das primeiras sessões. Os gates são
 - [ ] Nenhuma etapa essencial depende apenas de logs informais?
 - [ ] É possível explicar qual contexto, skill, MCP/model policy e aprovação orientaram a run?
 
-**Status:** Opção C aprovada; 4.R1 a 4.R4 concluídos em 2026-07-12. O fluxo público já prepara contexto, usa cassettes, gera artifact, aplica a skill `unit` e monta workspace. Próximo: Docker, avaliação e relatório em 4.R5. Progresso: `docs/project/stage-04-progress.md`.
+**Status:** Opção C aprovada; 4.R1 a 4.R5 concluídos. O WS-001 termina em Docker com `SUCCEEDED`, evidências e relatórios. Próximo: checkpoint arquitetural e nova ADR antes de 4.R6. O Gate 4 continua aberto para WS-002 a WS-007. Progresso: `docs/project/stage-04-progress.md`.
 
 ### Etapa 5 — Alpha Python de referência
 
@@ -1073,13 +1073,12 @@ Estas questões serão decididas nas etapas indicadas, não agora:
 
 ## 27. Próxima decisão
 
-Executar 4.R5 da sequência revisada da Etapa 4:
+Executar o checkpoint arquitetural pós-WS-001:
 
-1. executar o workspace real no Docker Desktop pela porta estabilizada;
-2. normalizar stdout, stderr, duração e resultado de testes;
-3. avaliar as evidências deterministicamente;
-4. gerar `report.json` e `report.md`;
-5. concluir o primeiro caminho reproduzível do WS-001;
-6. avaliar LangGraph/SQLite sobre o fluxo funcional;
-7. publicar quickstart e arquitetura real do skeleton;
-8. submeter nova ADR após WS-001 funcional e o Gate 4 após execução reproduzível.
+1. comparar o fluxo explícito funcional com LangGraph/SQLite;
+2. medir valor real de checkpoint, interrupção e retomada contra a complexidade adicionada;
+3. propor nova ADR com decisão reversível e evidências do WS-001;
+4. preservar runtime ASEF como autoridade de policy, budgets e outcomes;
+5. seguir para 4.R6 e implementar WS-002 a WS-007;
+6. concluir quickstart e evidências faltantes do Gate 4;
+7. submeter o Gate 4 somente após sanar ou aceitar formalmente cada pendência.

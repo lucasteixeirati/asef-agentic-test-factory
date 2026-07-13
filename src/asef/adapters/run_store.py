@@ -1,10 +1,17 @@
 from __future__ import annotations
 
 import json
+import hashlib
 from pathlib import Path
 from typing import Any
 
-from ..contracts import ContextSnapshot, SkeletonRunState
+from ..application.ports import ExecutionOutput
+from ..contracts import (
+    ContextSnapshot,
+    EvidenceRef,
+    NormalizedExecutionResult,
+    SkeletonRunState,
+)
 
 
 class JsonRunStore:
@@ -52,6 +59,85 @@ class JsonRunStore:
         self._write_json(results / "static-validation.json", validation)
         self._write_state_files(run_dir, state)
 
+    def save_execution(
+        self,
+        state: SkeletonRunState,
+        output: ExecutionOutput,
+    ) -> NormalizedExecutionResult:
+        run_dir = self.output_root / state.run_id
+        results = run_dir / "results"
+        results.mkdir(parents=True, exist_ok=True)
+        stdout_path = results / "stdout.txt"
+        stderr_path = results / "stderr.txt"
+        stdout_path.write_text(output.stdout, encoding="utf-8")
+        stderr_path.write_text(output.stderr, encoding="utf-8")
+        stdout_ref = EvidenceRef("stdout", "results/stdout.txt", self._sha256(stdout_path))
+        stderr_ref = EvidenceRef("stderr", "results/stderr.txt", self._sha256(stderr_path))
+        normalized = NormalizedExecutionResult(
+            image=output.image,
+            command=output.command,
+            exit_code=output.exit_code,
+            duration_ms=output.duration_ms,
+            stdout_ref=stdout_ref,
+            stderr_ref=stderr_ref,
+            tests=output.tests,
+            passed=output.passed,
+            failed=output.failed,
+            timed_out=output.timed_out,
+            stdout_truncated=output.stdout_truncated,
+            stderr_truncated=output.stderr_truncated,
+        )
+        self._write_json(results / "execution.json", normalized.to_dict())
+        return normalized
+
+    def save_report(
+        self,
+        state: SkeletonRunState,
+        execution: NormalizedExecutionResult | None,
+        evaluation: dict[str, object],
+    ) -> str:
+        run_dir = self.output_root / state.run_id
+        report = {
+            "schema_version": "1.0.0",
+            "run_id": state.run_id,
+            "workflow_id": state.workflow_id,
+            "status": state.status.value,
+            "classification": state.classification.value,
+            "requirement": {
+                "title": state.request.requirement_title,
+                "description": state.request.requirement_description,
+            },
+            "evaluation": evaluation,
+            "execution": execution.to_dict() if execution else None,
+            "usage": {
+                "model_calls": state.usage.model_calls,
+                "input_tokens": state.usage.input_tokens,
+                "output_tokens": state.usage.output_tokens,
+            },
+            "evidence_refs": [ref.to_dict() if hasattr(ref, "to_dict") else {
+                "kind": ref.kind,
+                "relative_path": ref.relative_path,
+                "sha256": ref.sha256,
+                "schema_version": ref.schema_version,
+            } for ref in state.evidence_refs],
+        }
+        self._write_json(run_dir / "report.json", report)
+        title = self._markdown_text(state.request.requirement_title)
+        markdown = (
+            "# ASEF Run Report\n\n"
+            f"- Run: `{state.run_id}`\n"
+            f"- Requirement: {title}\n"
+            f"- Status: `{state.status.value}`\n"
+            f"- Classification: `{state.classification.value}`\n"
+            f"- Tests: `{evaluation.get('tests', 'unknown')}`\n"
+            f"- Passed: `{evaluation.get('passed', 'unknown')}`\n"
+            f"- Failed: `{evaluation.get('failed', 'unknown')}`\n"
+            f"- Conclusion: {self._markdown_text(str(evaluation.get('conclusion', '')))}\n"
+        )
+        (run_dir / "report.md").write_text(markdown, encoding="utf-8")
+        self._write_state_files(run_dir, state)
+        return "report.md"
+
     def _write_state_files(self, run_dir: Path, state: SkeletonRunState) -> None:
         self._write_json(run_dir / "state.json", state.to_dict())
         (run_dir / "events.jsonl").write_text(
@@ -72,6 +158,15 @@ class JsonRunStore:
             "output_tokens": state.usage.output_tokens,
             "elapsed_ms": state.usage.elapsed_ms,
         }
+        manifest["evidence_refs"] = [
+            {
+                "kind": ref.kind,
+                "relative_path": ref.relative_path,
+                "sha256": ref.sha256,
+                "schema_version": ref.schema_version,
+            }
+            for ref in state.evidence_refs
+        ]
         self._write_json(manifest_path, manifest)
 
     @staticmethod
@@ -80,3 +175,13 @@ class JsonRunStore:
             json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
             encoding="utf-8",
         )
+
+    @staticmethod
+    def _sha256(path: Path) -> str:
+        return hashlib.sha256(path.read_bytes()).hexdigest()
+
+    @staticmethod
+    def _markdown_text(value: str) -> str:
+        sanitized = value.replace("|", "\\|").replace("`", "\\`")
+        sanitized = sanitized.replace("<", "&lt;").replace(">", "&gt;")
+        return " ".join(sanitized.splitlines()).strip()

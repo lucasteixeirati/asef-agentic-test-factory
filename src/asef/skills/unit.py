@@ -13,12 +13,16 @@ class UnitSkillPolicyError(ValueError):
 class UnitSkill:
     allowed_import_roots = frozenset({"calculator", "unittest"})
     forbidden_calls = frozenset({"open", "exec", "eval", "compile", "__import__", "input"})
+    sensitive_markers = ("sk-", "api_key=", "password=", "access_token=", "secret=")
 
     def validate(self, artifact: UnitTestArtifact) -> dict[str, Any]:
         try:
             artifact.validate()
         except ContractValidationError as exc:
             raise UnitSkillPolicyError(f"artifact contract violation: {exc}") from exc
+        lowered_content = artifact.content.lower()
+        if any(marker in lowered_content for marker in self.sensitive_markers):
+            raise UnitSkillPolicyError("generated test contains a sensitive value marker")
         try:
             tree = ast.parse(artifact.content, filename=artifact.relative_path)
         except SyntaxError as exc:

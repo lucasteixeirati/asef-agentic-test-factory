@@ -122,3 +122,14 @@ O primeiro teste criado para detectar imports do package removido encontrou a st
 - **Métrica:** 81 testes descobertos, 71 aprovados, 10 Docker desabilitados; 8 testes novos do incremento.
 - **Prova adicional:** os 4 testes gerados pelo cassette passaram contra a cópia efêmera do calculator; isso valida o artifact, mas ainda não substitui a execução Docker do 4.R5.
 - **Próximo passo:** 4.R5, Docker, execução, avaliação e relatório para fechar WS-001.
+## Continuação — incremento 4.R5
+
+- **Objetivo:** fechar o WS-001 com execução isolada, avaliação determinística e relatórios.
+- **Resultado:** 4 testes gerados passaram no Docker; run terminou `SUCCEEDED`/`ACCEPTED`.
+- **Evidências:** stdout/stderr com hashes, execution normalizada, state, manifest, report JSON e Markdown.
+- **Métrica:** execução Docker observada em cerca de 2 segundos; duas respostas gravadas consumiram 192 input tokens e 248 output tokens declarados nos cassettes.
+- **Falha útil:** diretório temporário global do Windows não era legível pelo UID 65534 do container. Pasta normal em `.asef` passou e levou à contenção obrigatória de output na CLI.
+- **Correção de oracle:** usar a última contagem `Ran N tests` e classificar Docker 125–127 como infraestrutura.
+- **Regressão:** 90 testes descobertos, 79 aprovados e 11 opt-in; 11/11 Docker e 10/10 frameworks aprovados.
+- **Decisão pendente:** avaliar LangGraph/SQLite agora que existe fluxo funcional; nenhuma adoção automática foi feita.
+- **Próximo passo:** checkpoint arquitetural e nova ADR, depois WS-002 a WS-007.

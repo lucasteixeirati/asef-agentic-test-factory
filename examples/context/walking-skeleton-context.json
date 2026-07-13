@@ -19,7 +19,7 @@
       "repository_ref": "workspace:examples/calculator",
       "default_branch": "main",
       "language_profile": "python-pytest",
-      "execution_image": "python@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "execution_image": "python@sha256:399babc8b49529dabfd9c922f2b5eea81d611e4512e3ed250d75bd2e7683f4b0",
       "read_scope": ["calculator.py"],
       "write_scope": [".asef/runs/**"]
     }

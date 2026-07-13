@@ -4,7 +4,13 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Protocol
 
-from ..contracts import ContextSnapshot, SkeletonRunRequest, SkeletonRunState, UnitTestArtifact
+from ..contracts import (
+    ContextSnapshot,
+    NormalizedExecutionResult,
+    SkeletonRunRequest,
+    SkeletonRunState,
+    UnitTestArtifact,
+)
 
 
 @dataclass(slots=True, frozen=True)
@@ -42,6 +48,22 @@ class WorkspaceResult:
     generated_file: str
 
 
+@dataclass(slots=True, frozen=True)
+class ExecutionOutput:
+    image: str
+    command: tuple[str, ...]
+    exit_code: int
+    duration_ms: int
+    stdout: str
+    stderr: str
+    tests: int | None
+    passed: int | None
+    failed: int | None
+    timed_out: bool = False
+    stdout_truncated: bool = False
+    stderr_truncated: bool = False
+
+
 class QualityContextPort(Protocol):
     def resolve(self, request: SkeletonRunRequest) -> ResolvedQualityContext: ...
 
@@ -65,6 +87,10 @@ class WorkspacePort(Protocol):
     ) -> WorkspaceResult: ...
 
 
+class TestExecutionPort(Protocol):
+    def execute(self, workspace: Path, snapshot: ContextSnapshot) -> ExecutionOutput: ...
+
+
 class RunStorePort(Protocol):
     def save_prepared(
         self,
@@ -80,3 +106,16 @@ class RunStorePort(Protocol):
         artifact: UnitTestArtifact,
         validation: dict[str, object],
     ) -> None: ...
+
+    def save_execution(
+        self,
+        state: SkeletonRunState,
+        output: ExecutionOutput,
+    ) -> NormalizedExecutionResult: ...
+
+    def save_report(
+        self,
+        state: SkeletonRunState,
+        execution: NormalizedExecutionResult | None,
+        evaluation: dict[str, object],
+    ) -> str: ...
