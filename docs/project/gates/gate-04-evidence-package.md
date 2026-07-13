@@ -90,3 +90,5 @@ Em 2026-07-13, Lucas adiou a decisão e solicitou revisão de testes, logs e liv
 - wheel final: 52.008 bytes, SHA-256 `395d869b08df41b747e4f24fe5fb5d2ad7a813d8eef53f9ab225229eddf5fcb6`; wheel funcional anterior reinstalado e demo repetida antes do ajuste isolado de redaction.
 
 **Parecer atualizado:** aprovar o Gate 4 com os riscos residuais já registrados. A caixa de decisão acima continua desmarcada até manifestação explícita de Lucas.
+
+**CI pública da 4.R8:** run `29253153366`, com jobs core, frameworks/opcional e Docker/security aprovados.

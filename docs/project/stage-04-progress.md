@@ -416,4 +416,4 @@ Antes de aprovar o gate, Lucas solicitou três revisões: força da suíte, exis
 
 ### Estado
 
-As três condições adicionais foram implementadas e a regressão local está verde. A decisão do Gate 4 permanece humana; falta somente confirmar a CI pública deste incremento.
+As três condições adicionais foram implementadas, a regressão local está verde e a CI pública `29253153366` aprovou os jobs core, frameworks/opcional e Docker/security. A decisão do Gate 4 permanece exclusivamente humana.

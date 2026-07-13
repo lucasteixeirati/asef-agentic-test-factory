@@ -3,7 +3,7 @@
 - **Data:** 2026-07-13
 - **Etapa:** 4.R8
 - **Participantes:** Lucas e GPT-5.6 Sol
-- **Estado:** implementação e regressão local concluídas; CI pública pendente
+- **Estado:** implementação, regressão local e CI pública concluídas
 
 ## Decisão humana
 
@@ -48,4 +48,4 @@ Uma execução de coverage falhou porque o comando global foi iniciado sem `PYTH
 
 Docker passou em 11/11. O wheel final de 52.008 bytes, SHA-256 `395d869b08df41b747e4f24fe5fb5d2ad7a813d8eef53f9ab225229eddf5fcb6`, foi construído após o ajuste final de redaction; a versão funcional imediatamente anterior foi instalada em venv novo fora do checkout. A demo sem API key terminou `SUCCEEDED`/`ACCEPTED`, e source, wheel, logs e artifacts passaram no secret scan.
 
-Resta publicar, confirmar a CI pública e então reapresentar o Gate 4 a Lucas.
+O commit `d0d7c32` foi publicado. A CI pública `29253153366` aprovou core, frameworks/workflow opcional e Docker/security. O Gate 4 pode ser reapresentado a Lucas, sem inferir aprovação automática.

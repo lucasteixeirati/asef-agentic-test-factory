@@ -2,7 +2,7 @@
 
 > Documento vivo para orientar a construção da aplicação, da documentação pública e do futuro livro.
 
-**Status:** vigente — 4.R8 concluída localmente; Gate 4 aguardando CI pública e decisão humana
+**Status:** vigente — 4.R8 concluída e CI pública verde; Gate 4 aguardando decisão humana
 **Data de início:** 2026-07-11  
 **Responsável:** Lucas  
 **Natureza:** projeto open source, educacional, experimental e de portfólio  
@@ -737,7 +737,7 @@ As datas serão estimadas após a baseline das primeiras sessões. Os gates são
 - [ ] Nenhuma etapa essencial depende apenas de logs informais?
 - [ ] É possível explicar qual contexto, skill, MCP/model policy e aprovação orientaram a run?
 
-**Status:** Opção C aprovada; 4.R1 a 4.R8 implementados. Após a auditoria 4.R7, a decisão foi adiada para ampliar coverage, mutation, observabilidade e material editorial. Regressão local da 4.R8 aprovada; confirmação da CI pública e decisão humana pendentes. Progresso: `docs/project/stage-04-progress.md`.
+**Status:** Opção C aprovada; 4.R1 a 4.R8 implementados. Após a auditoria 4.R7, a decisão foi adiada para ampliar coverage, mutation, observabilidade e material editorial. Regressão local e CI pública da 4.R8 aprovadas; somente a decisão humana permanece pendente. Progresso: `docs/project/stage-04-progress.md`.
 
 ### Etapa 5 — Alpha Python de referência
 
