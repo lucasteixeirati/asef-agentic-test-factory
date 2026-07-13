@@ -111,3 +111,14 @@ O primeiro teste criado para detectar imports do package removido encontrou a st
 - **Finding:** o contexto criado em 4.R2 referenciava `examples/calculator`, mas o SUT ainda não existia. O arquivo controlado foi incluído em 4.R3.
 - **Evidência:** 73 testes descobertos, 63 aprovados e 10 Docker desabilitados; 6 testes novos cobrem serviço e CLI.
 - **Próximo passo:** 4.R4, gateway gravado, artifact, skill unit, policy e workspace efêmero.
+## Continuação — incremento 4.R4
+
+- **Objetivo:** atravessar a fronteira agêntica gravada sem delegar policy ou controle de fluxo ao modelo.
+- **Resultado:** análise e artifact tipados, skill unit, static validation, quarentena e workspace efêmero.
+- **Decisão de arquitetura:** manter o adapter gravado simples e colocar rastreabilidade, transições, usage e escrita sob o application service/runtime.
+- **Falha evitada:** artifact rejeitado usaria inicialmente o próprio path não confiável ao ser preservado; passou a ser salvo com nome fixo em quarentena.
+- **Evidência adversarial:** path traversal produz `POLICY_BLOCKED` sem workspace; imports, chamadas e sintaxe inválida também são rejeitados.
+- **Evidência de imutabilidade:** hashes do calculator original e da cópia são verificados durante o staging.
+- **Métrica:** 81 testes descobertos, 71 aprovados, 10 Docker desabilitados; 8 testes novos do incremento.
+- **Prova adicional:** os 4 testes gerados pelo cassette passaram contra a cópia efêmera do calculator; isso valida o artifact, mas ainda não substitui a execução Docker do 4.R5.
+- **Próximo passo:** 4.R5, Docker, execução, avaliação e relatório para fechar WS-001.

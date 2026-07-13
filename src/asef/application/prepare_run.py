@@ -11,13 +11,14 @@ from ..contracts import (
     utc_now,
 )
 from ..outcomes import RunStatus
-from .ports import QualityContextPort, RunStorePort
+from .ports import QualityContextPort, ResolvedQualityContext, RunStorePort
 
 
 @dataclass(slots=True, frozen=True)
 class PrepareRunResult:
     state: SkeletonRunState
     run_dir: Path
+    context: ResolvedQualityContext
 
 
 class PrepareRunService:
@@ -47,7 +48,7 @@ class PrepareRunService:
         self._move(state, RunStatus.ANALYZING_REQUIREMENT, "sut_inspection_complete")
         state.validate()
         run_dir = self.run_store.save_prepared(state, resolved.snapshot)
-        return PrepareRunResult(state=state, run_dir=run_dir)
+        return PrepareRunResult(state=state, run_dir=run_dir, context=resolved)
 
     @staticmethod
     def _move(state: SkeletonRunState, target: RunStatus, reason: str) -> None:

@@ -737,7 +737,7 @@ As datas serão estimadas após a baseline das primeiras sessões. Os gates são
 - [ ] Nenhuma etapa essencial depende apenas de logs informais?
 - [ ] É possível explicar qual contexto, skill, MCP/model policy e aprovação orientaram a run?
 
-**Status:** Opção C aprovada; 4.R1, 4.R2 e 4.R3 concluídos em 2026-07-12. Package único, estado `1.1`, application service e CLI pública preparados. Próximo: artifact e skill `unit` em 4.R4. Progresso: `docs/project/stage-04-progress.md`.
+**Status:** Opção C aprovada; 4.R1 a 4.R4 concluídos em 2026-07-12. O fluxo público já prepara contexto, usa cassettes, gera artifact, aplica a skill `unit` e monta workspace. Próximo: Docker, avaliação e relatório em 4.R5. Progresso: `docs/project/stage-04-progress.md`.
 
 ### Etapa 5 — Alpha Python de referência
 
@@ -1073,13 +1073,13 @@ Estas questões serão decididas nas etapas indicadas, não agora:
 
 ## 27. Próxima decisão
 
-Executar 4.R4 da sequência revisada da Etapa 4:
+Executar 4.R5 da sequência revisada da Etapa 4:
 
-1. selecionar e implementar a skill `unit` para o perfil Python;
-2. conectar análise e geração pelo gateway gravado através de ports;
-3. validar policy, path, tamanho, conteúdo e sintaxe do artifact;
-4. montar workspace efêmero sem alterar o SUT original;
-5. aproximar o primeiro caminho determinístico do WS-001 da execução real;
-6. avançar depois para LangGraph e Docker pelas portas estabilizadas;
+1. executar o workspace real no Docker Desktop pela porta estabilizada;
+2. normalizar stdout, stderr, duração e resultado de testes;
+3. avaliar as evidências deterministicamente;
+4. gerar `report.json` e `report.md`;
+5. concluir o primeiro caminho reproduzível do WS-001;
+6. avaliar LangGraph/SQLite sobre o fluxo funcional;
 7. publicar quickstart e arquitetura real do skeleton;
 8. submeter nova ADR após WS-001 funcional e o Gate 4 após execução reproduzível.

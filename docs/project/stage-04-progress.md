@@ -149,3 +149,47 @@ O contexto do calculator já existia em 4.R2, mas apontava para um diretório de
 ### Próximo incremento
 
 4.R4 — gateway gravado, artifact tipado, skill `unit`, policy e workspace efêmero. O checkpoint de nova ADR continua condicionado ao WS-001 funcional.
+
+## Incremento 4.R4 — Artifact, skill unit e workspace
+
+### Concluído
+
+- ports tipados para análise, geração e workspace;
+- adapter agêntico gravado com cassettes separados de análise e artifact;
+- duas chamadas contabilizadas em usage sem dar ao adapter controle do fluxo;
+- análise suficiente avança; ambiguidade termina em `WAITING_FOR_CLARIFICATION` antes da geração;
+- geração de `UnitTestArtifact` com hash calculado localmente;
+- rastreabilidade exata entre design e `scenario_ids` do artifact;
+- skill `unit` baseada em AST para sintaxe, imports, chamadas proibidas e presença de testes;
+- path, extensão, profundidade e limite de 20 KiB continuam protegidos pelo contrato;
+- artifact rejeitado salvo em quarentena com nome controlado;
+- workspace copia somente arquivos allowlisted e verifica hashes da origem e da cópia;
+- SUT original verificado como não modificado;
+- CLI `asef generate` encerra em `STATIC_VALIDATION`, pronta para execução.
+
+### Fronteiras preservadas
+
+- cassettes fornecem dados, não transições, paths efetivos ou autorização de escrita;
+- policy pertence à skill/runtime, não ao adapter de modelo;
+- nenhum artifact é exportado ao repositório do SUT;
+- nenhum Docker ou LangGraph foi acoplado antes das portas estabilizarem;
+- modo `live` não é aceito silenciosamente pelo comando gravado.
+
+### Verificação
+
+- 81 testes descobertos: 71 aprovados e 10 integrações Docker desabilitadas por design;
+- 8 testes novos do 4.R4;
+- 10 testes dos frameworks preservados;
+- caminho manual produz artifact, static validation e workspace;
+- os 4 testes gravados foram executados localmente contra a cópia do calculator e passaram;
+- WS-004 parcialmente comprovado: path traversal resulta em `POLICY_BLOCKED` e nenhum workspace é criado.
+
+### Findings
+
+- a primeira implementação deixava o adapter classificar path inválido; a autoridade foi movida para a skill/runtime;
+- um artifact bloqueado seria inicialmente persistido usando seu path não confiável; a revisão criou quarentena controlada;
+- a checagem de secret do 4.R2 e a policy AST mostram o mesmo padrão: controles amplos demais geram falsos positivos, enquanto controles vagos deixam bypasses. Os testes adversariais calibram a fronteira.
+
+### Próximo incremento
+
+4.R5 — executar o workspace no Docker Desktop, normalizar evidências e avançar o WS-001 até avaliação/relatório. LangGraph/SQLite só será conectado se ainda agregar valor ao fluxo já funcional.

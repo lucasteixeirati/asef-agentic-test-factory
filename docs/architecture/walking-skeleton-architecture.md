@@ -92,6 +92,18 @@ CLI pública
 ```
 
 O serviço conhece somente contratos e protocols. Paths e JSON pertencem aos adapters. A validação completa de request, contexto, scopes e existência do SUT ocorre antes da criação do diretório da run. O estado preparado contém manifest mínimo do SUT, mas não afirma que análise, geração ou execução já aconteceram.
+
+## Implementação 4.R4
+
+```text
+GenerateUnitTestService
+  -> AgenticTestPort -> RecordedAgentAdapter
+  -> UnitSkill (contrato + AST + rastreabilidade)
+  -> WorkspacePort -> EphemeralWorkspaceAdapter
+  -> RunStorePort -> evidências e quarentena
+```
+
+O adapter gravado retorna apenas análise e artifact candidatos. O application service controla usage e transições. A skill decide se o artifact pode chegar ao workspace. Paths rejeitados nunca são usados para escrita: o conteúdo é preservado em `artifacts/rejected/attempt-001.txt`. O workspace contém cópias allowlisted e o teste gerado; hashes comprovam que o SUT original não foi alterado durante o staging.
 - nova ADR será criada apenas após o primeiro WS-001 funcional.
 
 ## Questões que a implementação deve responder
