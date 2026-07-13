@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import hashlib
+import re
 from pathlib import Path
 from typing import Any
 from uuid import uuid4
@@ -82,6 +83,18 @@ class JsonRunStore:
         stderr_path.write_text(output.stderr, encoding="utf-8")
         stdout_ref = EvidenceRef("stdout", "results/stdout.txt", self._sha256(stdout_path))
         stderr_ref = EvidenceRef("stderr", "results/stderr.txt", self._sha256(stderr_path))
+        raw_result_ref = None
+        if output.raw_result_content is not None:
+            filename = output.raw_result_filename or "tool-result.txt"
+            if not re.fullmatch(r"[a-z0-9][a-z0-9._-]{0,100}", filename):
+                raise ValueError("raw result filename must be a safe basename")
+            raw_path = results / filename
+            raw_path.write_text(output.raw_result_content, encoding="utf-8")
+            raw_result_ref = EvidenceRef(
+                output.raw_result_media_type or "tool-result",
+                f"results/{filename}",
+                self._sha256(raw_path),
+            )
         normalized = NormalizedExecutionResult(
             image=output.image,
             command=output.command,
@@ -92,6 +105,12 @@ class JsonRunStore:
             tests=output.tests,
             passed=output.passed,
             failed=output.failed,
+            errors=output.errors,
+            skipped=output.skipped,
+            tool_id=output.tool_id,
+            tool_version=output.tool_version,
+            outcome=output.outcome,
+            raw_result_ref=raw_result_ref,
             timed_out=output.timed_out,
             stdout_truncated=output.stdout_truncated,
             stderr_truncated=output.stderr_truncated,

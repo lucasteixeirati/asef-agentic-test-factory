@@ -63,14 +63,18 @@ LANGUAGE_PROFILES = {
         target_support_level="reference",
         project_markers=("pyproject.toml", "requirements.txt", "src/**/*.py"),
         capabilities=(
-            CapabilityDeclaration("unit", "partial", "docker-unit-test", "NormalizedExecutionResult", True),
+            CapabilityDeclaration("unit", "partial", "pytest-docker-junit", "NormalizedExecutionResult", True),
             CapabilityDeclaration("project-detection", "partial", "quality-context", None, True),
             CapabilityDeclaration("coverage", "planned", None, "CoverageResult", True),
             CapabilityDeclaration("mutation", "planned", None, "MutationResult", True),
             CapabilityDeclaration("backend-api", "planned", None, None),
             CapabilityDeclaration("performance", "planned", None, None),
         ),
-        limitations=("pytest adapter pending Stage 5.2", "coverage and mutation adapters pending"),
+        limitations=(
+            "pytest adapter implemented but not yet the public CLI default",
+            "pytest tool image must be built locally until registry distribution is decided",
+            "coverage and mutation adapters pending",
+        ),
     ),
     "node-typescript": LanguageProfile(
         id="node-typescript",

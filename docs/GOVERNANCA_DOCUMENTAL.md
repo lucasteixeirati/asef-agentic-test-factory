@@ -57,6 +57,7 @@ Toda mudança relevante deve verificar impactos em:
 | `docs/project/gates/` | Decisões formais de aprovação ou bloqueio dos gates |
 | `docs/architecture/adr/` | Decisões arquiteturais vigentes |
 | `docs/architecture/language-adapters.md` | Contratos e extensibilidade multilíngue |
+| `docs/architecture/pytest-adapter.md` | Implementação, segurança e limitações do adapter pytest do 5.2 |
 | `docs/architecture/workflows/` | Topologia e estado dos workflows |
 | `docs/architecture/contracts/` | Schemas e contratos conceituais do core |
 | `docs/architecture/contracts/alpha-python-contracts.md` | Contratos concretos de datasets e métricas iniciados no 5.1 |
@@ -68,6 +69,7 @@ Toda mudança relevante deve verificar impactos em:
 | `docs/quality/sandbox-policy-baseline.md` | Baseline quantitativa de isolamento e budgets |
 | `docs/quality/datasets/` | Catálogos e futuros casos versionados |
 | `datasets/` | Casos executáveis versionados e separação entre geração e avaliação |
+| `tooling/python-pytest/` | Build reproduzível da imagem de ferramenta pytest |
 | `docs/quality/stage-04r8-test-hardening.md` | Baselines de coverage e mutation do hardening pré-Gate 4 |
 | `docs/project/open-source-strategy.md` | Publicação, experiência externa e comunidade |
 | `docs/reviews/` | Revisões independentes e respostas |

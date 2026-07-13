@@ -3,7 +3,12 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-from ..contracts import NormalizedExecutionResult, SkeletonRunRequest, SkeletonRunState
+from ..contracts import (
+    NormalizedExecutionResult,
+    SkeletonRunRequest,
+    SkeletonRunState,
+    TestExecutionOutcome,
+)
 from ..outcomes import RunClassification, RunStatus
 from .generate_unit import GenerateUnitResult, GenerateUnitTestService
 from .ports import RunStorePort, TestExecutionPort
@@ -56,6 +61,8 @@ class CompleteWorkflowService:
 
         execution = self.run_store.save_execution(state, raw)
         state.evidence_refs.extend([execution.stdout_ref, execution.stderr_ref])
+        if execution.raw_result_ref:
+            state.evidence_refs.append(execution.raw_result_ref)
         state.facts["execution"] = {
             "image": execution.image,
             "command": list(execution.command),
@@ -64,10 +71,26 @@ class CompleteWorkflowService:
             "tests": execution.tests,
             "passed": execution.passed,
             "failed": execution.failed,
+            "errors": execution.errors,
+            "skipped": execution.skipped,
+            "tool_id": execution.tool_id,
+            "tool_version": execution.tool_version,
+            "outcome": execution.outcome.value,
             "timed_out": execution.timed_out,
         }
         PrepareRunService._move(state, RunStatus.EVALUATING_EVIDENCE, "execution_evidence_saved")
-        infrastructure_failure = execution.timed_out or execution.exit_code in {125, 126, 127}
+        infrastructure_failure = (
+            execution.timed_out
+            or execution.exit_code in {125, 126, 127}
+            or execution.outcome in {
+                TestExecutionOutcome.TOOL_ERROR,
+                TestExecutionOutcome.INFRASTRUCTURE_ERROR,
+            }
+        )
+        test_error = execution.outcome in {
+            TestExecutionOutcome.TEST_ERROR,
+            TestExecutionOutcome.NO_TESTS,
+        }
         accepted = (
             execution.exit_code == 0
             and not infrastructure_failure
@@ -75,6 +98,12 @@ class CompleteWorkflowService:
             and execution.tests > 0
             and execution.failed == 0
             and execution.passed == execution.tests
+            and execution.errors in {None, 0}
+            and execution.skipped in {None, 0}
+            and execution.outcome in {
+                TestExecutionOutcome.UNCLASSIFIED,
+                TestExecutionOutcome.PASSED,
+            }
         )
         evaluation = {
             "accepted": accepted,
@@ -86,6 +115,9 @@ class CompleteWorkflowService:
             "tests": execution.tests,
             "passed": execution.passed,
             "failed": execution.failed,
+            "errors": execution.errors,
+            "skipped": execution.skipped,
+            "outcome": execution.outcome.value,
             "timed_out": execution.timed_out,
         }
         state.facts["evaluation"] = evaluation
@@ -96,6 +128,9 @@ class CompleteWorkflowService:
         elif infrastructure_failure:
             state.classification = RunClassification.INFRASTRUCTURE_ERROR
             PrepareRunService._move(state, RunStatus.FAILED, "execution_infrastructure_failure")
+        elif test_error:
+            state.classification = RunClassification.TEST_ERROR
+            PrepareRunService._move(state, RunStatus.FAILED, "generated_test_error")
         else:
             state.classification = RunClassification.TEST_FAILURE
             PrepareRunService._move(state, RunStatus.FAILED, "deterministic_oracle_rejected")

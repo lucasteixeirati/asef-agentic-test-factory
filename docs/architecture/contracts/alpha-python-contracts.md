@@ -62,3 +62,7 @@ As categorias precisam reconciliar com o total e o resultado não pode exceder o
 Os contratos usam somente biblioteca padrão e `EvidenceRef`. Um teste baseado em AST verifica que os módulos de contratos, outcomes, linguagens e avaliação não importam `pytest`, coverage, mutmut, Docker, OpenAI, LangGraph ou PydanticAI.
 
 Strings de identificação de ferramenta são dados; não constituem import ou autoridade arquitetural.
+
+## Evolução 5.2 — execução pytest
+
+`TestExecutionOutcome` e `NormalizedExecutionResult 1.1.0` acrescentam taxonomia factual, ferramenta/versão, errors, skipped e raw result. O adapter específico usa JUnit XML; o core recebe somente esses fatos neutros. Assertion failure permanece sem atribuição de causa até o oracle do 5.3.

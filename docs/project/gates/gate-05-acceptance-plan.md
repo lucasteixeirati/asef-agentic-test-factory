@@ -11,18 +11,18 @@
 | G5-01 | Wheel instala e executa fora do checkout | sessão limpa + CI de package audit | Não iniciado |
 | G5-02 | Demo completa funciona sem chave e sem rede de provider | Smoke Dataset + secret ausente | Não iniciado |
 | G5-03 | WF-001 live usa a mesma porta, policies e budgets do demo | contract tests + live smoke manual | Não iniciado |
-| G5-04 | Perfil Python executa `pytest` somente em Docker | manifest + integração | Não iniciado |
+| G5-04 | Perfil Python executa `pytest` somente em Docker | manifest + integração | Parcial — adapter e 3 integrações reais no 5.2; CLI futura |
 | G5-05 | Análise, riscos, cenários, testes e resultados são rastreáveis | report + schema/contract tests | Parcial — casos e refs tipados no 5.1 |
 | G5-06 | Oracle curado não entra no prompt e é independente do teste gerado | payload test + hashes + fixtures | Parcial — schema, fixtures e hashes no 5.1; integração futura |
 | G5-07 | `TEST_ERROR` permite no máximo duas correções somente no teste | casos de correção e exaustão | Não iniciado |
 | G5-08 | `SUT_DEFECT_SUSPECTED` exige evidência independente e revisão humana | SUT defeituoso + oracle + checkpoint | Não iniciado |
-| G5-09 | Policy, budget, infraestrutura e resultado funcional são distintos | matriz de outcomes/exit codes | Não iniciado |
+| G5-09 | Policy, budget, infraestrutura e resultado funcional são distintos | matriz de outcomes/exit codes | Parcial — outcomes pytest tipados no 5.2; oracle/budget futuros |
 | G5-10 | `SMK-001` a `SMK-010` são executáveis e reproduzíveis em demo | relatório agregado 10/10 | Não iniciado |
 | G5-11 | `SEC-001` a `SEC-012` passam no ambiente de referência | job Docker/security 12/12 | Não iniciado |
 | G5-12 | Coverage Python é normalizada com escopo e limitações | fixture de conformance + report | Parcial — contrato neutro no 5.1; adapter futuro |
 | G5-13 | Mutation Python é normalizada e limitada por budget | fixture conhecida + timeout test | Parcial — contrato e budget no 5.1; adapter futuro |
 | G5-14 | Reports JSON e Markdown separam fatos, inferências e recomendações | schema + revisão de conteúdo | Não iniciado |
-| G5-15 | Logs/evidências são correlacionados, limitados e sem secrets | test logs + secret scan | Não iniciado |
+| G5-15 | Logs/evidências são correlacionados, limitados e sem secrets | test logs + secret scan | Parcial — stdout/stderr/JUnit limitados e separados no 5.2 |
 | G5-16 | `asef doctor` diagnostica requisitos sem expor credenciais | CLI end-to-end | Não iniciado |
 | G5-17 | Core não importa Python tooling, Docker, OpenAI ou LangGraph | import boundaries + job core mínimo | Parcial — fronteira AST e core mínimo aprovados localmente |
 | G5-18 | README, quickstart, tutorial, arquitetura, segurança e limitações refletem o Alpha real | auditoria documental | Não iniciado |

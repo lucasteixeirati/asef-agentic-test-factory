@@ -19,7 +19,8 @@ Docker Desktop será o ambiente de containers adotado inicialmente. O ambiente d
 - container efêmero;
 - usuário não privilegiado;
 - rede desabilitada por padrão;
-- filesystem read-only, exceto workspace temporário permitido;
+- filesystem e workspace do SUT read-only;
+- outputs de tooling somente em mount separado, mínimo e validado, sem sobreposição com o workspace;
 - nenhuma montagem do socket do Docker;
 - capabilities removidas e perfil de segurança mantido;
 - limites de CPU, memória, processos e duração;
@@ -58,3 +59,13 @@ Antes da v0.1, cada ambiente anunciado deverá possuir evidência de instalaçã
 
 O Adversarial/Security Dataset deverá provar falha segura para leitura indevida, rede, fork/processos, consumo excessivo, arquivos grandes, timeout, dependências proibidas e tentativa de acesso a credenciais.
 
+## Aplicação no adapter pytest — 5.2
+
+- imagem base fixada por digest;
+- versões e hashes dos wheels do toolchain pinados;
+- tag local resolvido para image ID imutável antes da execução;
+- rede desabilitada em runtime;
+- workspace read-only e resultado JUnit em arquivo isolado;
+- mounts de output sobrepostos, ancestrais, descendentes ou fora da raiz são rejeitados;
+- XML limitado a 2 MiB e DTD/entities rejeitados;
+- ausência ou corrupção do resultado vira erro de tooling, não falha do SUT.

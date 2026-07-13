@@ -2,7 +2,7 @@
 
 > Documento vivo para orientar a construção da aplicação, da documentação pública e do futuro livro.
 
-**Status:** vigente — Gate 4 e plano da Etapa 5 aprovados; 5.1 concluído e ADR-009 aceita em 2026-07-13
+**Status:** vigente — 5.1 concluído; 5.2 aprovado e aguardando confirmação da CI pública
 **Data de início:** 2026-07-11  
 **Responsável:** Lucas  
 **Natureza:** projeto open source, educacional, experimental e de portfólio  
@@ -746,7 +746,7 @@ As datas serão estimadas após a baseline das primeiras sessões. Os gates são
 **Plano executável:** `docs/project/stage-05-alpha-python-plan.md`
 
 **Plano de aceite:** `docs/project/gates/gate-05-acceptance-plan.md`
-**Status:** planejamento detalhado e baseline do Gate 5 aprovados por Lucas em 2026-07-13. O 5.1 foi concluído com regressões verdes e ADR-009 aceita; 5.2 autorizado após confirmação da publicação/CI.
+**Status:** 5.1 concluído e publicado com ADR-009 aceita. O 5.2 foi implementado localmente com pytest/JUnit, 88% de branch coverage e 14/14 integrações Docker; aguarda revisão e CI pública.
 
 **Aplicação**
 
@@ -1078,12 +1078,11 @@ Estas questões serão decididas nas etapas indicadas, não agora:
 
 ## 27. Próxima decisão
 
-Executar o incremento 5.2 — adapter `pytest` e normalização:
+Publicar e confirmar o incremento 5.2 — adapter `pytest` e normalização:
 
-1. confirmar a CI pública do 5.1;
-2. definir a saída estruturada preferencial do `pytest` sem acoplar o core;
-3. implementar o adapter dentro do perfil Python e do sandbox Docker;
-4. distinguir coleta, sintaxe/import, assertion e falha de tooling/infra;
-5. preservar o raw result por referência e normalizar apenas fatos comprováveis;
-6. manter capabilities parciais/planejadas explicitamente declaradas até suas evidências;
+1. publicar o código e as evidências aprovadas;
+2. validar os três jobs da CI pública;
+3. registrar a execução pública como evidência do incremento;
+4. então iniciar o planejamento detalhado do 5.3 — oracle e correção limitada;
+5. manter capabilities parciais/planejadas explicitamente declaradas até suas evidências;
 6. não considerar o Gate 5 aprovado nem iniciar a Etapa 6 automaticamente.

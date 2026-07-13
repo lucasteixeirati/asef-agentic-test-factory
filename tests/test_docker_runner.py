@@ -54,6 +54,31 @@ class DockerRunnerTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "escapes allowed root"):
                 runner.build_command(root, ["python", "-V"])
 
+    def test_writable_output_must_be_separate_and_inside_allowed_root(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            workspace = root / "workspace"
+            output = root / "output"
+            workspace.mkdir()
+            output.mkdir()
+            runner = DockerRunner(DockerPolicy("image@digest", allowed_workspace_root=root))
+            command = runner.build_command(workspace, ["python", "-V"], output_dir=output)
+            self.assertTrue(any("dst=/workspace,readonly" in item for item in command))
+            self.assertTrue(any("dst=/asef-output" in item for item in command))
+            with self.assertRaisesRegex(ValueError, "cannot overlap"):
+                runner.build_command(workspace, ["python", "-V"], output_dir=workspace)
+            nested = workspace / "results"
+            nested.mkdir()
+            with self.assertRaisesRegex(ValueError, "cannot overlap"):
+                runner.build_command(workspace, ["python", "-V"], output_dir=nested)
+            outside = root.parent / "outside-output"
+            outside.mkdir(exist_ok=True)
+            try:
+                with self.assertRaisesRegex(ValueError, "escapes allowed root"):
+                    runner.build_command(workspace, ["python", "-V"], output_dir=outside)
+            finally:
+                outside.rmdir()
+
     def test_timeout_forces_container_cleanup(self) -> None:
         captured: list[list[str]] = []
 

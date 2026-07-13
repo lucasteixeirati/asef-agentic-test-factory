@@ -9,6 +9,7 @@ from ..contracts import (
     NormalizedExecutionResult,
     SkeletonRunRequest,
     SkeletonRunState,
+    TestExecutionOutcome,
     UnitTestArtifact,
 )
 
@@ -63,6 +64,14 @@ class ExecutionOutput:
     tests: int | None
     passed: int | None
     failed: int | None
+    errors: int | None = None
+    skipped: int | None = None
+    tool_id: str | None = None
+    tool_version: str | None = None
+    outcome: TestExecutionOutcome = TestExecutionOutcome.UNCLASSIFIED
+    raw_result_content: str | None = None
+    raw_result_filename: str | None = None
+    raw_result_media_type: str | None = None
     timed_out: bool = False
     stdout_truncated: bool = False
     stderr_truncated: bool = False

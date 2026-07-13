@@ -9,6 +9,7 @@
 | Contrato | Versão | Regra |
 |---|---|---|
 | Requests, artifacts, snapshots e results | `1.0.0` | versão exata no skeleton |
+| Resultado de execução estruturado | `1.1.0` | extensão aditiva do 5.2 para tool/outcome/JUnit |
 | Estado persistido | `1.1.0` | compatibilidade por major 1; import estrito de `1.0.0` |
 | Workflow | `0.1.0-skeleton` | identifica o fluxo da Etapa 4 |
 
@@ -72,6 +73,8 @@ Paths vazios, absolutos ou com traversal são inválidos.
 - refs de stdout/stderr;
 - contagens opcionais de testes;
 - timeout e truncamento.
+
+No 5.2, o resultado evoluiu de forma aditiva para incluir ferramenta/versão, outcome neutro, errors, skipped e referência opcional ao resultado bruto. Imagem de execução aceita registry digest ou image ID local imutável. Os campos antigos permanecem válidos para o runner do skeleton.
 
 Comandos rejeitam NUL e marcadores de valores sensíveis. Contagens não podem ser negativas ou inconsistentes.
 

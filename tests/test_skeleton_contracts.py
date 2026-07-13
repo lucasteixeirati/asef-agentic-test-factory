@@ -17,6 +17,7 @@ from asef.contracts import (
     SkeletonRunState,
     SkeletonBudgetLimits,
     SkeletonBudgetUsage,
+    TestExecutionOutcome,
     UnitTestArtifact,
     ensure_compatible_state_schema,
     import_state_v1,
@@ -168,6 +169,40 @@ class ExecutionResultContractTests(unittest.TestCase):
                 duration_ms=1,
                 stdout_ref=evidence("stdout"),
                 stderr_ref=evidence("stderr"),
+            ).validate()
+
+    def test_structured_pytest_result_reconciles_counts_and_raw_evidence(self) -> None:
+        result = NormalizedExecutionResult(
+            image="sha256:" + DIGEST,
+            command=("python", "-m", "pytest"),
+            exit_code=1,
+            duration_ms=10,
+            stdout_ref=evidence("stdout"),
+            stderr_ref=evidence("stderr"),
+            tests=3,
+            passed=1,
+            failed=1,
+            errors=0,
+            skipped=1,
+            tool_id="pytest",
+            tool_version="8.3.3",
+            outcome=TestExecutionOutcome.ASSERTION_FAILURE,
+            raw_result_ref=evidence("junit"),
+        )
+        self.assertEqual(result.to_dict()["schema_version"], "1.1.0")
+        with self.assertRaisesRegex(ContractValidationError, "must equal"):
+            NormalizedExecutionResult(
+                image="sha256:" + DIGEST,
+                command=("python", "-m", "pytest"),
+                exit_code=1,
+                duration_ms=10,
+                stdout_ref=evidence("stdout"),
+                stderr_ref=evidence("stderr"),
+                tests=3,
+                passed=2,
+                failed=0,
+                errors=0,
+                skipped=0,
             ).validate()
 
 

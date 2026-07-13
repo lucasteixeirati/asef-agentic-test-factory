@@ -2,7 +2,7 @@
 
 - **Plano:** `docs/project/stage-05-alpha-python-plan.md`
 - **Gate:** `docs/project/gates/gate-05-acceptance-plan.md`
-- **Estado atual:** incremento 5.1 concluído e aprovado; 5.2 autorizado
+- **Estado atual:** incremento 5.1 concluído; 5.2 aprovado e aguardando confirmação da CI pública
 
 ## 5.1 — Contratos, ADRs e suíte de referência
 
@@ -51,3 +51,47 @@ Lucas aprovou explicitamente a ADR-009 em 2026-07-13. Com contratos, fixtures e 
 - `framework-spikes`: aprovado, incluindo coverage do workflow opcional.
 
 Com os três jobs aprovados, a condição de publicação do 5.1 está atendida.
+
+## 5.2 — Adapter pytest e normalização
+
+### Entregas implementadas
+
+- `PytestDockerAdapter` fora do core;
+- JUnit XML nativo, sem plugin adicional;
+- `TestExecutionOutcome` neutro;
+- `NormalizedExecutionResult 1.1.0` com ferramenta, versão, errors, skipped e raw result;
+- distinção factual entre pass, assertion failure, test error, no tests, tool error e infraestrutura;
+- resultado bruto persistível como evidência;
+- imagem derivada com base por digest, versões e hashes de wheels pinados;
+- image tag resolvido para image ID imutável antes da execução;
+- output mount separado sem abrir escrita no workspace;
+- build da imagem incluído no job Docker da CI.
+
+### Evidência local
+
+- testes unitários do adapter/parser: 7/7;
+- integração pytest em Docker: 3/3;
+- Docker/security completo: 14/14;
+- core: 147 descobertos, 125 aprovados e 22 opt-in;
+- branch coverage geral: 88%;
+- branch coverage do adapter pytest: 93%;
+- SUT preservou o hash durante tentativa de escrita.
+
+### Fricções e correções
+
+- o primeiro teste inválido de reconciliação acionava uma regra anterior antes da nova; os dados foram corrigidos para isolar a propriedade testada;
+- exposição pública e isolamento do oracle já haviam sido separados no 5.1; no 5.2 a mesma disciplina separou workspace e output gravável;
+- versões pinadas sem hashes foram consideradas insuficientes e o build passou a exigir SHA-256 dos wheels;
+- uma imagem local por tag seria evidência mutável; o adapter agora resolve e executa pelo image ID.
+
+### Limitações preservadas
+
+- a imagem pytest ainda não é publicada em registry;
+- a CLI pública continua usando o runner do skeleton;
+- assertion failure continua `TEST_FAILURE` até a avaliação combinada do 5.3;
+- suítes geradas com testes ignorados não são aceitas silenciosamente;
+- o perfil Python permanece experimental/parcial.
+
+### Decisão humana e próximo passo
+
+Lucas aprovou explicitamente o incremento 5.2 em 2026-07-13. O código e as evidências locais serão publicados; com os três jobs da CI pública aprovados, o 5.2 será encerrado e o planejamento detalhado do 5.3 — oracle e loop de correção — ficará autorizado.

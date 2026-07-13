@@ -16,7 +16,7 @@ from asef.application.generate_unit import GenerateUnitTestService
 from asef.application.ports import ExecutionOutput
 from asef.application.prepare_run import PrepareRunService
 from asef.context import QualityContext
-from asef.contracts import SkeletonRunRequest
+from asef.contracts import SkeletonRunRequest, TestExecutionOutcome
 from asef.outcomes import RunClassification, RunStatus
 from asef.skills.unit import UnitSkill
 
@@ -112,6 +112,47 @@ class CompleteWorkflowServiceTests(unittest.TestCase):
                 Path(directory), output(exit_code=125, tests=0, passed=0, failed=0)
             ).execute(request())
             self.assertEqual(result.state.classification, RunClassification.INFRASTRUCTURE_ERROR)
+
+    def test_pytest_collection_error_is_classified_as_test_error(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            execution = output(exit_code=2, tests=1, passed=0, failed=0)
+            execution = ExecutionOutput(
+                **{
+                    field: getattr(execution, field)
+                    for field in ("image", "command", "exit_code", "duration_ms", "stdout", "stderr", "tests", "passed", "failed")
+                },
+                errors=1,
+                skipped=0,
+                tool_id="pytest",
+                tool_version="8.3.3",
+                outcome=TestExecutionOutcome.TEST_ERROR,
+                raw_result_content='<testsuite tests="1" errors="1"/>',
+                raw_result_filename="pytest-junit.xml",
+                raw_result_media_type="application/junit+xml",
+            )
+            result = self.service(Path(directory), execution).execute(request())
+            self.assertEqual(result.state.classification, RunClassification.TEST_ERROR)
+            self.assertEqual(result.execution.outcome, TestExecutionOutcome.TEST_ERROR)
+            self.assertEqual(len(result.state.evidence_refs), 4)
+            self.assertTrue((result.run_dir / "results/pytest-junit.xml").is_file())
+
+    def test_skipped_generated_test_is_not_silently_accepted(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            execution = output(tests=2, passed=1)
+            execution = ExecutionOutput(
+                **{
+                    field: getattr(execution, field)
+                    for field in ("image", "command", "exit_code", "duration_ms", "stdout", "stderr", "tests", "passed", "failed")
+                },
+                errors=0,
+                skipped=1,
+                tool_id="pytest",
+                tool_version="8.3.3",
+                outcome=TestExecutionOutcome.PASSED,
+            )
+            result = self.service(Path(directory), execution).execute(request())
+            self.assertEqual(result.state.classification, RunClassification.TEST_FAILURE)
+            self.assertFalse(result.state.facts["evaluation"]["accepted"])
 
 
 class DockerUnitTestAdapterTests(unittest.TestCase):

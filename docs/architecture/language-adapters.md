@@ -57,6 +57,10 @@ Conformidade não significa gerar código idêntico ou ignorar práticas idiomá
 3. Java como validação de tooling corporativo e build mais complexo.
 4. Go ou .NET como candidato posterior.
 
+## Implementação Python no 5.2
+
+`pytest-docker-junit` é o primeiro adapter real de test runner do perfil Python. Ele usa imagem derivada pinada, JUnit XML nativo, workspace read-only e output mount separado. O perfil continua experimental/parcial até o adapter ser integrado ao workflow completo, à distribuição da imagem e ao oracle independente.
+
 ## Níveis de suporte
 
 - **Referência:** todas as capacidades obrigatórias e documentação completa.
@@ -65,4 +69,3 @@ Conformidade não significa gerar código idêntico ou ignorar práticas idiomá
 - **Planejado:** ainda sem compromisso de implementação.
 
 Os níveis e capacidades obrigatórias da v0.1 serão definidos na Etapa 1.
-

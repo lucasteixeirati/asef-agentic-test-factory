@@ -14,6 +14,7 @@ from .outcomes import RunClassification, RunStatus
 
 STATE_SCHEMA_VERSION = "1.1.0"
 CONTRACT_SCHEMA_VERSION = "1.0.0"
+EXECUTION_SCHEMA_VERSION = "1.1.0"
 WORKFLOW_ID = "WF-001"
 WORKFLOW_VERSION = "0.1.0-skeleton"
 MAX_REQUIREMENT_CHARS = 20_000
@@ -38,6 +39,16 @@ class RunOrigin(str, Enum):
 class ContextResolution(str, Enum):
     UNRESOLVED = "CONTEXT_UNRESOLVED"
     RESOLVED = "CONTEXT_RESOLVED"
+
+
+class TestExecutionOutcome(str, Enum):
+    UNCLASSIFIED = "UNCLASSIFIED"
+    PASSED = "PASSED"
+    ASSERTION_FAILURE = "ASSERTION_FAILURE"
+    TEST_ERROR = "TEST_ERROR"
+    NO_TESTS = "NO_TESTS"
+    TOOL_ERROR = "TOOL_ERROR"
+    INFRASTRUCTURE_ERROR = "INFRASTRUCTURE_ERROR"
 
 
 def utc_now() -> str:
@@ -205,29 +216,45 @@ class NormalizedExecutionResult:
     tests: int | None = None
     passed: int | None = None
     failed: int | None = None
+    errors: int | None = None
+    skipped: int | None = None
+    tool_id: str | None = None
+    tool_version: str | None = None
+    outcome: TestExecutionOutcome = TestExecutionOutcome.UNCLASSIFIED
+    raw_result_ref: EvidenceRef | None = None
     timed_out: bool = False
     stdout_truncated: bool = False
     stderr_truncated: bool = False
-    schema_version: str = CONTRACT_SCHEMA_VERSION
+    schema_version: str = EXECUTION_SCHEMA_VERSION
 
     def validate(self) -> None:
-        _require_version(self.schema_version, CONTRACT_SCHEMA_VERSION, "execution result")
-        if "@sha256:" not in self.image:
-            raise ContractValidationError("execution image must be fixed by digest")
+        _require_version(self.schema_version, EXECUTION_SCHEMA_VERSION, "execution result")
+        if "@sha256:" not in self.image and not re.fullmatch(r"sha256:[0-9a-f]{64}", self.image):
+            raise ContractValidationError("execution image must be fixed by registry digest or image ID")
         if not self.command or any(not item or "\x00" in item for item in self.command):
             raise ContractValidationError("execution command must contain safe arguments")
         if any(_looks_sensitive(item) for item in self.command):
             raise ContractValidationError("execution command contains a sensitive value")
         if self.duration_ms < 0:
             raise ContractValidationError("duration_ms cannot be negative")
-        for value in (self.tests, self.passed, self.failed):
+        for value in (self.tests, self.passed, self.failed, self.errors, self.skipped):
             if value is not None and value < 0:
                 raise ContractValidationError("test counts cannot be negative")
         if self.tests is not None and self.passed is not None and self.failed is not None:
             if self.passed + self.failed > self.tests:
                 raise ContractValidationError("passed + failed cannot exceed tests")
+        counts = (self.passed, self.failed, self.errors, self.skipped)
+        if self.tests is not None and all(value is not None for value in counts):
+            if sum(value for value in counts if value is not None) != self.tests:
+                raise ContractValidationError("pytest outcome counts must equal tests")
+        if (self.tool_id is None) != (self.tool_version is None):
+            raise ContractValidationError("execution tool_id and tool_version must be set together")
+        if self.tool_id is not None and (not self.tool_id.strip() or not self.tool_version.strip()):
+            raise ContractValidationError("execution tool and version cannot be blank")
         self.stdout_ref.validate()
         self.stderr_ref.validate()
+        if self.raw_result_ref:
+            self.raw_result_ref.validate()
 
     def to_dict(self) -> dict[str, Any]:
         self.validate()

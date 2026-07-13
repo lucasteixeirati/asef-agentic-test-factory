@@ -45,6 +45,7 @@ class DockerRunner:
         command: list[str],
         *,
         container_name: str | None = None,
+        output_dir: Path | None = None,
     ) -> list[str]:
         resolved = workspace.resolve(strict=True)
         if not resolved.is_dir():
@@ -61,6 +62,22 @@ class DockerRunner:
             raise ValueError("command must contain safe argument values")
 
         mount = f"type=bind,src={resolved},dst=/workspace,readonly"
+        mounts = ["--mount", mount]
+        if output_dir is not None:
+            resolved_output = output_dir.resolve(strict=True)
+            if not resolved_output.is_dir():
+                raise ValueError("output directory must be a directory")
+            if self.policy.allowed_workspace_root is not None:
+                try:
+                    resolved_output.relative_to(allowed_root)
+                except ValueError as exc:
+                    raise ValueError("output directory escapes allowed root") from exc
+            if _paths_overlap(resolved, resolved_output):
+                raise ValueError("writable output directory cannot overlap the readonly workspace")
+            mounts.extend([
+                "--mount",
+                f"type=bind,src={resolved_output},dst=/asef-output",
+            ])
         return [
             "docker",
             "run",
@@ -86,19 +103,29 @@ class DockerRunner:
             "65534:65534",
             "--tmpfs",
             "/tmp:rw,noexec,nosuid,size=64m",
-            "--mount",
-            mount,
+            *mounts,
             "--workdir",
             "/workspace",
             self.policy.image,
             *command,
         ]
 
-    def run(self, workspace: Path, command: list[str]) -> ContainerResult:
+    def run(
+        self,
+        workspace: Path,
+        command: list[str],
+        *,
+        output_dir: Path | None = None,
+    ) -> ContainerResult:
         container_name = f"asef-{uuid4().hex}"
         try:
             completed = self.executor(
-                self.build_command(workspace, command, container_name=container_name),
+                self.build_command(
+                    workspace,
+                    command,
+                    container_name=container_name,
+                    output_dir=output_dir,
+                ),
                 capture_output=True,
                 text=True,
                 encoding="utf-8",
@@ -159,3 +186,16 @@ def _timeout_text(value: str | bytes | None) -> str:
     if isinstance(value, bytes):
         return value.decode("utf-8", errors="replace")
     return value
+
+
+def _paths_overlap(left: Path, right: Path) -> bool:
+    try:
+        left.relative_to(right)
+        return True
+    except ValueError:
+        pass
+    try:
+        right.relative_to(left)
+        return True
+    except ValueError:
+        return False
