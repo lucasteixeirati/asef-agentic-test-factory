@@ -87,7 +87,7 @@ Em 2026-07-13, Lucas adiou a decisão e solicitou revisão de testes, logs e liv
 - wheel instalado sem dependências fora do checkout;
 - demo sem API key: `SUCCEEDED`/`ACCEPTED`;
 - source, wheel, logs e artifacts: secret scan sem findings;
-- wheel final: 52.008 bytes, SHA-256 `395d869b08df41b747e4f24fe5fb5d2ad7a813d8eef53f9ab225229eddf5fcb6`; wheel funcional anterior reinstalado e demo repetida antes do ajuste isolado de redaction.
+- wheel do marco aprovado: 52.014 bytes, SHA-256 `41ab457797d0f2232ed434e6442a8e55c86773fdd7d22c5d82671dbded84fd60`; wheel funcional equivalente reinstalado e demo repetida durante a auditoria.
 
 **Parecer atualizado:** Gate 4 aprovado por Lucas, com os riscos residuais registrados e aceitos.
 

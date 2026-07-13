@@ -410,9 +410,9 @@ Antes de aprovar o gate, Lucas solicitou três revisões: força da suíte, exis
 - wheel final instalado sem dependências em venv novo e fora do checkout;
 - demo sem `OPENAI_API_KEY`: `SUCCEEDED`/`ACCEPTED`;
 - secret scan aprovado em source, wheel, logs e artifacts;
-- wheel final: 52.008 bytes;
-- SHA-256: `395d869b08df41b747e4f24fe5fb5d2ad7a813d8eef53f9ab225229eddf5fcb6`;
-- ajuste final restrito à ampliação de redaction; wheel anterior reinstalado e executado fora do checkout.
+- wheel do marco aprovado: 52.014 bytes;
+- SHA-256: `41ab457797d0f2232ed434e6442a8e55c86773fdd7d22c5d82671dbded84fd60`;
+- wheel funcional equivalente reinstalado e executado fora do checkout durante a auditoria.
 
 ### Estado
 

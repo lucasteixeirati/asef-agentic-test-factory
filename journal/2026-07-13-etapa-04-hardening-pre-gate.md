@@ -46,7 +46,7 @@ Uma execução de coverage falhou porque o comando global foi iniciado sem `PYTH
 
 ## Próximo passo
 
-Docker passou em 11/11. O wheel final de 52.008 bytes, SHA-256 `395d869b08df41b747e4f24fe5fb5d2ad7a813d8eef53f9ab225229eddf5fcb6`, foi construído após o ajuste final de redaction; a versão funcional imediatamente anterior foi instalada em venv novo fora do checkout. A demo sem API key terminou `SUCCEEDED`/`ACCEPTED`, e source, wheel, logs e artifacts passaram no secret scan.
+Docker passou em 11/11. Após a aprovação, o wheel do marco final mediu 52.014 bytes, SHA-256 `41ab457797d0f2232ed434e6442a8e55c86773fdd7d22c5d82671dbded84fd60`; a versão funcional equivalente foi instalada em venv novo fora do checkout. A demo sem API key terminou `SUCCEEDED`/`ACCEPTED`, e source, wheel, logs e artifacts passaram no secret scan.
 
 O commit `d0d7c32` foi publicado. A CI pública `29253153366` aprovou core, frameworks/workflow opcional e Docker/security. O Gate 4 pode ser reapresentado a Lucas, sem inferir aprovação automática.
 
