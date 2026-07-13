@@ -10,7 +10,7 @@ Este repositório também registra a jornada de desenvolvimento assistido por IA
 
 ## Estado atual
 
-**Experimental — pré-alpha.** O projeto concluiu tecnicamente os spikes arquiteturais e prepara o walking skeleton. Não deve ser usado para executar código arbitrariamente hostil ou em produção.
+**Experimental — pré-alpha.** O walking skeleton foi implementado e está em auditoria para o Gate 4. Não deve ser usado para executar código arbitrariamente hostil ou em produção.
 
 Já demonstrado:
 
@@ -63,38 +63,45 @@ Cada organização poderá descrever, sem armazenar secrets:
 
 Veja [`docs/context/README.md`](docs/context/README.md) e o [exemplo fictício](examples/context/quality-context.example.json).
 
-## Executar a baseline local
+## Quickstart — demo sem chave de API
 
-Requisitos atuais: Python 3.13 e, para integrações, Docker Desktop.
+Requisitos: Git, Python 3.13 e Docker Desktop iniciado. Em um PowerShell:
 
 ```powershell
-$env:PYTHONPATH='src'
-python -m unittest discover -s tests -v
-python -m asef.cli prepare --output .asef\runs
-python -m asef.cli generate --output .asef\runs
-python -m asef.cli run --output .asef\runs
+git clone https://github.com/lucasteixeirati/asef-agentic-test-factory.git
+cd asef-agentic-test-factory
+py -3.13 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install .
+.\.venv\Scripts\asef.exe run
 ```
 
-O comando `prepare` valida request, QualityContext, scopes e o SUT controlado. Ele persiste estado, snapshot, manifest e eventos, encerrando em `ANALYZING_REQUIREMENT`, pronto para o próximo adapter. O alias `asef-spike` mantém a demo legada temporariamente.
+O resultado esperado é um JSON com `"status": "SUCCEEDED"` e `"classification": "ACCEPTED"`. O relatório fica no caminho indicado por `report_path`. A demo cria contexto, SUT fictício e cassettes públicos sob `.asef/demo/v1`; ela não lê `OPENAI_API_KEY`, não chama um modelo e não exige checkout para funcionar depois da instalação.
 
-O comando `generate` usa cassettes versionados para análise e geração, aplica a skill `unit`, coloca artifacts rejeitados em quarentena e monta um workspace efêmero. Ele termina em `STATIC_VALIDATION`; execução em Docker pertence ao próximo incremento.
+O comando executa o WS-001 completo no Docker Desktop, sem rede no container e sem escrever no SUT original. Estado, snapshot de contexto, manifest, eventos, artifact, resultado e relatórios permanecem sob `.asef/runs`. Por policy, `--output` também deve permanecer dentro de `.asef`.
 
-O comando `run` executa o WS-001 completo no Docker Desktop sem API key. O resultado esperado é `SUCCEEDED`/`ACCEPTED`, com `execution.json`, stdout/stderr, `report.json` e `report.md`. Por policy, `--output` deve permanecer dentro de `.asef`.
+Para observar fronteiras intermediárias sem executar o container:
+
+```powershell
+.\.venv\Scripts\asef.exe prepare
+.\.venv\Scripts\asef.exe generate
+```
+
+Limitações atuais: apenas a skill `unit` e o perfil Python do calculator percorrem o fluxo completo; o modo live ainda não é público; o isolamento depende do daemon local do Docker; e a demo gravada prova o workflow, não a qualidade de um modelo em produção.
 
 Checkpoint e decisão humana usam um extra opcional:
 
 ```powershell
-python -m pip install -e ".[workflow-langgraph]"
-python -m asef.cli wait --output .asef\runs
-python -m asef.cli resume --output .asef\runs --run-id <RUN_ID> --answer "Only signed integers"
-python -m asef.cli cancel --output .asef\runs --run-id <RUN_ID> --reason "No longer required"
+.\.venv\Scripts\python.exe -m pip install ".[workflow-langgraph]"
+.\.venv\Scripts\asef.exe wait
+.\.venv\Scripts\asef.exe resume --run-id <RUN_ID> --answer "Only signed integers"
+.\.venv\Scripts\asef.exe cancel --run-id <RUN_ID> --reason "No longer required"
 ```
 
 `wait` retorna 3, `resume` reutiliza a mesma run e `cancel` retorna 130. O modo linear continua funcionando sem instalar o extra.
 
 Exit codes públicos: 0 sucesso, 2 input/contexto, 3 espera humana, 4 falha funcional, 5 policy, 6 budget, 7 provider/infraestrutura e 130 cancelamento. A matriz é exercitada automaticamente nos testes.
 
-Testes Docker são opt-in:
+Para desenvolver e executar toda a suíte localmente, use o checkout:
 
 ```powershell
 $env:PYTHONPATH='src'
@@ -119,7 +126,7 @@ Nunca coloque uma chave real em arquivos do repositório. O modo live exige `OPE
 1. Marco Zero e planejamento — concluído.
 2. Contratos, workflow e avaliação — concluído.
 3. Spikes arquiteturais — revisão técnica concluída.
-4. Walking skeleton — próximo.
+4. Walking skeleton — implementado; Gate 4 aguardando decisão humana.
 5. Alpha Python.
 6. Perfis TypeScript e Java.
 7. Developer preview e hardening da v0.1.

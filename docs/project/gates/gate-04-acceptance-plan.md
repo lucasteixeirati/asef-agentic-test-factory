@@ -1,13 +1,13 @@
 # Gate 4 — Plano de aceite do Walking Skeleton
 
-- **Estado:** em andamento; WS-001 funcional e critérios parciais atualizados em 4.R5
+- **Estado:** auditoria técnica concluída; decisão humana pendente
 - **Responsável pela decisão:** Lucas
 
 ## Critérios obrigatórios
 
 | ID | Critério | Evidência esperada | Estado |
 |---|---|---|---|
-| G4-01 | Clone limpo executa modo demo documentado | CI + sessão de instalação | Pendente |
+| G4-01 | Clone limpo executa modo demo documentado | CI + sessão de instalação | Atendido |
 | G4-02 | QualityContext é validado antes de LLM/Docker | testes WS-003 + eventos | Atendido |
 | G4-03 | Skill `unit` é selecionada por sistema/capability | snapshot + contract test | Atendido |
 | G4-04 | Teste real é gerado apenas no workspace efêmero | artifact + hash + path test | Atendido |
@@ -19,9 +19,9 @@
 | G4-10 | Cancelamento encerra de forma explicável | WS-007 | Atendido |
 | G4-11 | Eventos, state, manifest, contexto e reports são consistentes | schema/contract tests | Atendido |
 | G4-12 | Exit codes e stdout/stderr seguem o contrato público | CLI end-to-end | Atendido |
-| G4-13 | Nenhum secret ou dado privado aparece nos artifacts | secret scan + fixtures públicas | Pendente |
+| G4-13 | Nenhum secret ou dado privado aparece nos artifacts | secret scan + fixtures públicas | Atendido |
 | G4-14 | Core não depende diretamente de OpenAI, LangGraph ou Docker | dependency/import test ou revisão | Atendido |
-| G4-15 | Quickstart descreve limitações e funciona sem API key | README + execução CI | Pendente |
+| G4-15 | Quickstart descreve limitações e funciona sem API key | README + execução CI | Atendido |
 
 ## Critérios informativos
 
@@ -45,3 +45,5 @@
 ## Regra de decisão
 
 Todos os critérios obrigatórios precisam estar atendidos ou possuir risco explicitamente aceito que não invalide o objetivo do walking skeleton. O responsável aprova o gate; CI verde sozinha não constitui aprovação.
+
+O detalhamento técnico, os riscos residuais e a recomendação estão no [pacote de evidências do Gate 4](gate-04-evidence-package.md). O estado `Atendido` representa comprovação técnica, não aprovação automática do gate.

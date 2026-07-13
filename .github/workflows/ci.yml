@@ -17,6 +17,8 @@ jobs:
           python-version: "3.13"
       - name: Run core tests
         run: PYTHONPATH=src python -m unittest discover -s tests -v
+      - name: Scan tracked files for secret signatures
+        run: python tools/secret_scan.py
 
   framework-spikes:
     runs-on: ubuntu-latest
@@ -39,3 +41,11 @@ jobs:
           python-version: "3.13"
       - name: Run Docker integration tests
         run: PYTHONPATH=src ASEF_RUN_DOCKER_TESTS=1 python -m unittest discover -s tests/integration -v
+      - name: Install the public package
+        run: python -m pip install .
+      - name: Run keyless demo outside the checkout
+        run: |
+          mkdir -p "$RUNNER_TEMP/asef-clean"
+          cd "$RUNNER_TEMP/asef-clean"
+          env -u OPENAI_API_KEY asef run
+          python "$GITHUB_WORKSPACE/tools/secret_scan.py" .asef

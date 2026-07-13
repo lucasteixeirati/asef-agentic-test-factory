@@ -21,6 +21,7 @@ from .application.human_decision import HumanDecisionService
 from .application.prepare_run import PrepareRunService
 from .context import ContextValidationError
 from .contracts import ContractValidationError, SkeletonRunRequest
+from .demo import materialize_demo_assets
 from .outcomes import exit_code_for
 from .skills.unit import UnitSkill
 
@@ -40,9 +41,7 @@ def build_parser() -> argparse.ArgumentParser:
     _common_arguments(wait)
     _recorded_arguments(
         wait,
-        analysis_default=Path(
-            "tests/fixtures/cassettes/wf001_analysis_calculator_clarification.json"
-        ),
+        clarification_default=True,
     )
     resume = subparsers.add_parser("resume", help="resume a waiting run")
     _decision_arguments(resume)
@@ -56,18 +55,19 @@ def build_parser() -> argparse.ArgumentParser:
 def _recorded_arguments(
     parser: argparse.ArgumentParser,
     *,
-    analysis_default: Path = Path("tests/fixtures/cassettes/wf001_analysis_success.json"),
+    clarification_default: bool = False,
 ) -> None:
     parser.add_argument(
         "--analysis-cassette",
         type=Path,
-        default=analysis_default,
+        default=None,
     )
     parser.add_argument(
         "--artifact-cassette",
         type=Path,
-        default=Path("tests/fixtures/cassettes/wf001_unit_artifact_success.json"),
+        default=None,
     )
+    parser.set_defaults(demo_clarification=clarification_default)
 
 
 def _decision_arguments(parser: argparse.ArgumentParser) -> None:
@@ -76,13 +76,13 @@ def _decision_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--artifact-cassette",
         type=Path,
-        default=Path("tests/fixtures/cassettes/wf001_unit_artifact_success.json"),
+        default=None,
     )
 
 
 def _common_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
-        "--context", type=Path, default=Path("examples/context/walking-skeleton-context.json")
+        "--context", type=Path, default=None
     )
     parser.add_argument("--system", default="calculator-service")
     parser.add_argument("--skill", default="unit")
@@ -103,6 +103,17 @@ def main(argv: list[str] | None = None) -> int:
         resolved_output = args.output.resolve()
         if not resolved_output.is_relative_to(allowed_output_root):
             raise ContractValidationError("output must remain inside the .asef directory")
+        demo_assets = materialize_demo_assets()
+        if hasattr(args, "context") and args.context is None:
+            args.context = demo_assets.context.relative_to(Path.cwd())
+        if hasattr(args, "analysis_cassette") and args.analysis_cassette is None:
+            args.analysis_cassette = (
+                demo_assets.analysis_clarification
+                if getattr(args, "demo_clarification", False)
+                else demo_assets.analysis_success
+            )
+        if hasattr(args, "artifact_cassette") and args.artifact_cassette is None:
+            args.artifact_cassette = demo_assets.artifact_success
         store = JsonRunStore(args.output)
         context_port = FileQualityContextAdapter()
         prepare_service = PrepareRunService(context_port, store)
@@ -111,7 +122,7 @@ def main(argv: list[str] | None = None) -> int:
             generation_service = GenerateUnitTestService(
                 prepare_service,
                 RecordedAgentAdapter(
-                    Path("tests/fixtures/cassettes/wf001_analysis_success.json"),
+                    demo_assets.analysis_success,
                     args.artifact_cassette,
                 ),
                 UnitSkill(),

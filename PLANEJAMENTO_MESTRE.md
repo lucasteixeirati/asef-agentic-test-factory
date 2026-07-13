@@ -2,7 +2,7 @@
 
 > Documento vivo para orientar a construção da aplicação, da documentação pública e do futuro livro.
 
-**Status:** vigente — Gate 3 aprovado; Etapa 4 autorizada  
+**Status:** vigente — Etapa 4 implementada e auditada; Gate 4 aguardando decisão humana
 **Data de início:** 2026-07-11  
 **Responsável:** Lucas  
 **Natureza:** projeto open source, educacional, experimental e de portfólio  
@@ -737,7 +737,7 @@ As datas serão estimadas após a baseline das primeiras sessões. Os gates são
 - [ ] Nenhuma etapa essencial depende apenas de logs informais?
 - [ ] É possível explicar qual contexto, skill, MCP/model policy e aprovação orientaram a run?
 
-**Status:** Opção C aprovada; 4.R1 a 4.R6 concluídos. WS-001 a WS-007 e toda a matriz de exit codes possuem evidência automatizada. Próximo: 4.R7, auditoria e pacote de decisão do Gate 4. Progresso: `docs/project/stage-04-progress.md`.
+**Status:** Opção C aprovada; 4.R1 a 4.R7 concluídos. WS-001 a WS-007, matriz de exit codes, instalação limpa, quickstart sem API key e secret scan possuem evidência. Todos os critérios técnicos estão atendidos; Gate 4 aguarda decisão explícita. Progresso: `docs/project/stage-04-progress.md`.
 
 ### Etapa 5 — Alpha Python de referência
 
@@ -1073,13 +1073,10 @@ Estas questões serão decididas nas etapas indicadas, não agora:
 
 ## 27. Próxima decisão
 
-Executar 4.R7 e preparar o Gate 4:
+Decidir formalmente o Gate 4 com base em `docs/project/gates/gate-04-evidence-package.md`:
 
-1. validar instalação em ambiente/clone limpo e modo demo sem API key;
-2. executar secret scan sobre source, fixtures, wheel e artifacts de exemplo;
-3. revisar e testar o quickstart público;
-4. consolidar evidências de todos os critérios G4-01 a G4-15;
-5. registrar riscos residuais e limitações do skeleton;
-6. preparar o pacote documental para decisão humana do Gate 4;
-6. concluir quickstart e evidências faltantes do Gate 4;
-7. submeter o Gate 4 somente após sanar ou aceitar formalmente cada pendência.
+1. revisar as evidências de G4-01 a G4-15;
+2. aceitar, condicionar ou rejeitar os riscos residuais registrados;
+3. registrar decisão e data no pacote do gate;
+4. somente após aprovação, atualizar o status da Etapa 4 para concluída;
+5. iniciar o planejamento detalhado da Etapa 5 sem inferir automaticamente seu escopo técnico.

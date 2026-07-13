@@ -322,3 +322,45 @@ WS-001 a WS-007 possuem evidência automatizada. G4-09 e G4-12 passam para atend
 ### Próximo passo
 
 4.R7 — executar auditoria final, validar clone/instalação limpa, fechar G4-01/G4-13/G4-15 e preparar o pacote de decisão do Gate 4.
+
+## Incremento 4.R7 — auditoria final do Gate 4
+
+### Concluído
+
+- removida a dependência acidental da CLI em `examples/` e `tests/fixtures/`;
+- demo portável materializada em `.asef/demo/v1` a partir do package instalado;
+- teste automatizado executa defaults da CLI fora da árvore do repositório;
+- wheel instalado sem dependências em ambiente virtual novo;
+- `prepare`, `generate` e `run` executados em diretório vazio e sem `OPENAI_API_KEY`;
+- WS-001 isolado terminou `SUCCEEDED`/`ACCEPTED` no Docker;
+- scanner local sem dependências criado para assinaturas de secrets;
+- source, fixtures, wheel e artifacts da sessão limpa aprovados no scan;
+- CI ampliada para scan do source e quickstart instalado fora do checkout;
+- README atualizado com instalação pública, resultado esperado e limitações;
+- pacote de evidências e riscos residuais preparado.
+
+### Evidência da sessão limpa
+
+- package: `asef-agentic-test-factory==0.1.0a1`;
+- wheel final: 49.478 bytes;
+- SHA-256: `dd5b11b0df513a8475fd9c1f7312a33ffe4707a8eae579fb12b71eec6465caf0`;
+- core sem dependências obrigatórias adicionais;
+- exit codes observados: `prepare=0`, `generate=0`, `run=0`;
+- API key removida do ambiente antes da execução;
+- três scans retornaram zero findings: arquivos públicos, wheel e artifacts.
+
+### Regressão final
+
+- core: 108 testes descobertos, 89 aprovados e 19 opt-in/skip;
+- frameworks e checkpoint opcional: 18/18 aprovados;
+- Docker/security/multilanguage: 11/11 aprovados;
+- scanner: casos limpo, assinatura em texto e assinatura dentro de wheel cobertos;
+- wheel instalado e WS-001 repetido após a atualização final do README.
+
+### Finding e correção
+
+A primeira auditoria mostrou que os defaults públicos apontavam para arquivos de teste do checkout. Isso tornava a alegação de instalação limpa incorreta. Os recursos foram transformados em demo materializada pelo package, e a regressão passou a ser coberta fora do repositório.
+
+### Estado
+
+G4-01, G4-13 e G4-15 passam para atendidos. Todos os critérios técnicos obrigatórios possuem evidência; o Gate 4 continua aberto até a decisão explícita do responsável.

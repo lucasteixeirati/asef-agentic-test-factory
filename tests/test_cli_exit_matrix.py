@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import tempfile
 import unittest
 from contextlib import redirect_stderr, redirect_stdout
@@ -61,6 +62,21 @@ def invoke(arguments: list[str]) -> tuple[int, dict, str]:
 
 
 class PublicExitCodeMatrixTests(unittest.TestCase):
+    def test_installed_cli_defaults_work_outside_repository_tree(self) -> None:
+        original = Path.cwd()
+        with tempfile.TemporaryDirectory() as directory, patch(
+            "asef.cli.DockerUnitTestAdapter", return_value=SuccessfulExecution()
+        ):
+            try:
+                os.chdir(directory)
+                code, payload, stderr = invoke(["run"])
+                self.assertEqual((code, payload["status"]), (0, "SUCCEEDED"))
+                self.assertEqual(stderr, "")
+                self.assertTrue(Path(payload["report_path"]).is_file())
+                self.assertTrue(Path(".asef/demo/v1/context.json").is_file())
+            finally:
+                os.chdir(original)
+
     def test_exit_zero_for_accepted_run(self) -> None:
         with tempfile.TemporaryDirectory(dir=Path(".asef")) as directory, patch(
             "asef.cli.DockerUnitTestAdapter", return_value=SuccessfulExecution()
