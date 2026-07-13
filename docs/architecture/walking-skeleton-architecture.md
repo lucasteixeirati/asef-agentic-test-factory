@@ -117,6 +117,23 @@ CompleteWorkflowService
 O application service avalia apenas `ExecutionOutput`/`NormalizedExecutionResult`; não importa Docker. O adapter executa a imagem fixada pelo snapshot. A aceitação exige exit 0, contagem positiva, zero falhas e igualdade entre testes executados e aprovados. Falhas do daemon/CLI Docker (125–127) e timeout são infraestrutura, não defeitos funcionais.
 
 O WS-001 termina em `SUCCEEDED`/`ACCEPTED`. LangGraph continua fora do runtime principal: agora existe evidência suficiente para comparar seu valor contra este fluxo explícito, em vez de decidir por expectativa.
+
+## Implementação 4.R6a — waits humanos
+
+```text
+HumanCheckpointPort
+  -> LangGraphHumanCheckpointAdapter
+  -> checkpoint.sqlite por run
+
+HumanDecisionService
+  -> load state + snapshot ASEF
+  -> resume/cancel validado
+  -> continuar application services explícitos
+```
+
+O adapter importa LangGraph somente dentro da operação e pertence ao extra `workflow-langgraph`. O core continua instalável e testável sem a dependência. A decisão confirmada no checkpoint é idempotente; se o processo falhar depois do `Command(resume)`, uma nova invocação recupera a mesma decisão.
+
+Antes de continuar, o serviço recarrega e valida `state.json`, compara o snapshot persistido com o QualityContext atual, sanitiza a resposta humana e grava uma decisão append-only. Resume mantém a mesma `run_id`; cancelamento não cria artifact, workspace ou container.
 - nova ADR será criada apenas após o primeiro WS-001 funcional.
 
 ## Questões que a implementação deve responder

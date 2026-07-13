@@ -737,7 +737,7 @@ As datas serão estimadas após a baseline das primeiras sessões. Os gates são
 - [ ] Nenhuma etapa essencial depende apenas de logs informais?
 - [ ] É possível explicar qual contexto, skill, MCP/model policy e aprovação orientaram a run?
 
-**Status:** Opção C aprovada; 4.R1 a 4.R5 e checkpoint pós-WS-001 concluídos. ADR-008 aceita para uso limitado de LangGraph/SQLite. Próximo: 4.R6 com WS-002 e WS-007 primeiro. O Gate 4 continua aberto. Progresso: `docs/project/stage-04-progress.md`.
+**Status:** Opção C aprovada; 4.R1 a 4.R5 e 4.R6a concluídos. ADR-008 implementada de forma opcional; WS-002 e WS-007 aprovados. Próximo: WS-003 a WS-006 e critérios restantes do Gate 4. Progresso: `docs/project/stage-04-progress.md`.
 
 ### Etapa 5 — Alpha Python de referência
 
@@ -1073,13 +1073,13 @@ Estas questões serão decididas nas etapas indicadas, não agora:
 
 ## 27. Próxima decisão
 
-Executar 4.R6 sob a ADR-008 aceita:
+Continuar 4.R6 após WS-002/WS-007:
 
-1. criar a porta de checkpoint/retomada humana sem imports de LangGraph no core;
-2. adicionar LangGraph/SQLite como extra opcional e adapter isolado;
-3. implementar WS-002 com retomada após reinício sem repetir model call;
-4. implementar WS-007 com cancelamento explícito;
-5. preservar runtime ASEF como autoridade de policy, budgets e outcomes;
-6. seguir depois para WS-003 a WS-006 e critérios restantes do Gate 4;
+1. consolidar WS-003 para contexto inválido antes de modelo/Docker;
+2. consolidar WS-004 para policy blocked pela CLI;
+3. implementar WS-005 no estado 1.1 com budget exhausted;
+4. consolidar WS-006 para Docker indisponível/timeout e exit 7;
+5. automatizar a matriz pública de exit codes do G4-12;
+6. preservar runtime ASEF como autoridade de policy, budgets e outcomes;
 6. concluir quickstart e evidências faltantes do Gate 4;
 7. submeter o Gate 4 somente após sanar ou aceitar formalmente cada pendência.

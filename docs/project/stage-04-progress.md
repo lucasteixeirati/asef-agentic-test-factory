@@ -251,3 +251,42 @@ Revisar a arquitetura executada e decidir, em nova ADR, se LangGraph/SQLite agre
 - ADR-008 aceita explicitamente pelo responsável;
 - implementação de WS-002/WS-007 autorizada dentro dos limites da decisão;
 - nenhuma dependência foi adicionada ao core durante o checkpoint documental.
+
+## Incremento 4.R6a — WS-002 e WS-007
+
+### Concluído
+
+- extra opcional `workflow-langgraph` com versões pinadas;
+- `HumanCheckpointPort` no core sem imports do framework;
+- adapter LangGraph/SQLite isolado e carregado sob demanda;
+- checkpoint primitivo por `run_id` dentro da pasta da run;
+- carregamento validado de state `1.1` e ContextSnapshot;
+- comparação do QualityContext atual com o snapshot persistido;
+- decisões humanas sanitizadas, identificadas e append-only;
+- retomada idempotente após processo falhar depois da decisão;
+- CLI `wait`, `resume` e `cancel`;
+- WS-002 retoma a mesma run sem repetir a análise;
+- nenhum artifact/workspace/container antes da resposta;
+- WS-007 termina `CANCELLED`/`CANCELLED_BY_USER` sem efeitos posteriores;
+- checkpoint ausente ou corrompido falha de forma explícita.
+
+### Evidência
+
+- core sem extra: 97 testes, 79 aprovados e 18 opt-in/skip;
+- extra instalado: 7/7 testes novos aprovados;
+- frameworks existentes: 10/10 preservados antes da publicação;
+- CLI em processos separados: `wait` exit 3, `resume` exit 0 e `cancel` exit 130;
+- resume real concluiu Docker em `SUCCEEDED`/`ACCEPTED`;
+- usage final possui 2 model calls: uma análise anterior à espera e uma geração posterior; a análise não foi repetida.
+
+### Falhas e findings
+
+- primeira montagem da CLI duplicou `--artifact-cassette` e foi corrigida antes do workflow;
+- primeiro resume expôs variável local remanescente após refactor;
+- a falha ocorreu após confirmar o checkpoint e motivou recuperação idempotente da decisão;
+- o cassette histórico de transferência era incompatível com o calculator e a rastreabilidade bloqueou corretamente o artifact;
+- foi criado cassette de esclarecimento específico do calculator, sem enfraquecer a policy.
+
+### Próximo passo
+
+Continuar 4.R6 com WS-003 a WS-006 e fechar G4-09/G4-12 antes do Gate 4.

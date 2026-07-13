@@ -101,3 +101,15 @@ Remover o extra e o adapter, manter state/eventos ASEF e retornar erro explícit
 ## Decisão humana
 
 Aceita explicitamente por Lucas. A implementação está autorizada dentro dos limites e critérios desta ADR; a aprovação não autoriza LangGraph a substituir o runtime explícito ou assumir responsabilidades de domínio.
+
+## Evidência inicial de implementação
+
+- extra opcional `workflow-langgraph` criado;
+- core executado sem o extra e sem imports do framework;
+- checkpoint SQLite local por run;
+- retomada após recriar adapter/processo;
+- decisão repetida tratada de forma idempotente;
+- checkpoint ausente ou corrompido falha com erro explícito;
+- WS-002 mantém a mesma run e não repete a análise;
+- WS-007 cancela sem artifact, workspace ou Docker;
+- serialização estrita aprovada nos testes opcionais.

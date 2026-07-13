@@ -148,3 +148,14 @@ O primeiro teste criado para detectar imports do package removido encontrou a st
 - **Escopo autorizado:** LangGraph/SQLite somente como adapter opcional de checkpoint, retomada e cancelamento humano.
 - **Escopo não autorizado:** substituir o runtime explícito, controlar policy/budgets/outcomes ou contaminar contratos com tipos do framework.
 - **Próxima prova:** WS-002 deve retomar após reinício sem repetir a model call; WS-007 deve cancelar de forma auditável.
+## Continuação — incremento 4.R6a
+
+- **Objetivo:** provar a ADR-008 com WS-002 e WS-007, sem colocar LangGraph no core.
+- **Resultado:** espera persistida, retomada após novo processo e cancelamento auditável.
+- **Métrica:** resume terminou com 2 model calls totais — análise antes da espera e geração depois; a análise permaneceu em uma chamada.
+- **Exit codes públicos:** wait 3, resume 0 e cancel 130.
+- **Falha útil:** o primeiro resume quebrou após confirmar o checkpoint; isso revelou a necessidade de recuperar decisões confirmadas de forma idempotente.
+- **Controle de qualidade:** cassette bancário incompatível com calculator foi bloqueado pela rastreabilidade em vez de produzir teste incoerente.
+- **Dependência:** LangGraph/SQLite entrou somente como extra opcional; core passou sem instalá-lo.
+- **Evidência:** 97 testes no core e 7 testes opcionais novos; CLI resume também passou pelo Docker real.
+- **Próximo passo:** WS-003 a WS-006 e matriz completa de exit codes.

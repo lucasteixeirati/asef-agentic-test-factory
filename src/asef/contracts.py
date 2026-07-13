@@ -453,6 +453,62 @@ def resolve_new_run_context(
     return state
 
 
+def context_snapshot_from_dict(value: dict[str, Any]) -> ContextSnapshot:
+    snapshot = ContextSnapshot(
+        source_sha256=value["source_sha256"],
+        qa_profile_id=value["qa_profile_id"],
+        team_id=value["team_id"],
+        system_id=value["system_id"],
+        repository_id=value["repository_id"],
+        skill_id=value["skill_id"],
+        language_profile=value["language_profile"],
+        image=value["image"],
+        provider=value["provider"],
+        model=value["model"],
+        mode=value["mode"],
+        read_scopes=tuple(value["read_scopes"]),
+        write_scopes=tuple(value["write_scopes"]),
+        mcp_server_ids=tuple(value.get("mcp_server_ids", [])),
+        schema_version=value.get("schema_version", CONTRACT_SCHEMA_VERSION),
+    )
+    snapshot.validate()
+    return snapshot
+
+
+def state_from_dict(value: dict[str, Any]) -> SkeletonRunState:
+    try:
+        state = SkeletonRunState(
+            request=SkeletonRunRequest(**value["request"]),
+            run_id=value["run_id"],
+            schema_version=value["schema_version"],
+            workflow_id=value["workflow_id"],
+            workflow_version=value["workflow_version"],
+            status=RunStatus(value["status"]),
+            classification=RunClassification(value["classification"]),
+            created_at=value["created_at"],
+            updated_at=value["updated_at"],
+            origin=RunOrigin(value["origin"]),
+            context_resolution=ContextResolution(value["context_resolution"]),
+            source_run_id=value.get("source_run_id"),
+            source_schema_version=value.get("source_schema_version"),
+            context_snapshot_ref=value.get("context_snapshot_ref"),
+            evidence_refs=[EvidenceRef(**item) for item in value.get("evidence_refs", [])],
+            attempts=dict(value.get("attempts", {})),
+            budgets=SkeletonBudgetLimits(**value.get("budgets", {})),
+            usage=SkeletonBudgetUsage(**value.get("usage", {})),
+            errors=list(value.get("errors", [])),
+            history=list(value.get("history", [])),
+            facts=dict(value.get("facts", {})),
+            imported_facts=dict(value.get("imported_facts", {})),
+            imported_usage=dict(value.get("imported_usage", {})),
+            imported_budgets=dict(value.get("imported_budgets", {})),
+        )
+    except (KeyError, TypeError, ValueError) as exc:
+        raise ContractValidationError(f"persisted state is invalid: {exc}") from exc
+    state.validate()
+    return state
+
+
 def _require_version(actual: str, expected: str, label: str) -> None:
     if actual != expected:
         raise IncompatibleSchemaError(f"{label} schema {actual!r} must be {expected!r}")

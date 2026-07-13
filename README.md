@@ -81,6 +81,17 @@ O comando `generate` usa cassettes versionados para análise e geração, aplica
 
 O comando `run` executa o WS-001 completo no Docker Desktop sem API key. O resultado esperado é `SUCCEEDED`/`ACCEPTED`, com `execution.json`, stdout/stderr, `report.json` e `report.md`. Por policy, `--output` deve permanecer dentro de `.asef`.
 
+Checkpoint e decisão humana usam um extra opcional:
+
+```powershell
+python -m pip install -e ".[workflow-langgraph]"
+python -m asef.cli wait --output .asef\runs
+python -m asef.cli resume --output .asef\runs --run-id <RUN_ID> --answer "Only signed integers"
+python -m asef.cli cancel --output .asef\runs --run-id <RUN_ID> --reason "No longer required"
+```
+
+`wait` retorna 3, `resume` reutiliza a mesma run e `cancel` retorna 130. O modo linear continua funcionando sem instalar o extra.
+
 Testes Docker são opt-in:
 
 ```powershell

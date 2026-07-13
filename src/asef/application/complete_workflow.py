@@ -5,7 +5,7 @@ from pathlib import Path
 
 from ..contracts import NormalizedExecutionResult, SkeletonRunRequest, SkeletonRunState
 from ..outcomes import RunClassification, RunStatus
-from .generate_unit import GenerateUnitTestService
+from .generate_unit import GenerateUnitResult, GenerateUnitTestService
 from .ports import RunStorePort, TestExecutionPort
 from .prepare_run import PrepareRunService
 
@@ -30,7 +30,9 @@ class CompleteWorkflowService:
         self.run_store = run_store
 
     def execute(self, request: SkeletonRunRequest) -> CompleteWorkflowResult:
-        generated = self.generation_service.execute(request)
+        return self.complete_generated(self.generation_service.execute(request))
+
+    def complete_generated(self, generated: GenerateUnitResult) -> CompleteWorkflowResult:
         state = generated.state
         if generated.workspace is None:
             return CompleteWorkflowResult(state, generated.run_dir, None)

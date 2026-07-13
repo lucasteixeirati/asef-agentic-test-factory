@@ -8,12 +8,14 @@ from ..outcomes import RunClassification, RunStatus
 from ..skills.unit import UnitSkill, UnitSkillPolicyError
 from .ports import (
     AgenticTestPort,
+    AnalysisResult,
+    HumanCheckpointPort,
     ResolvedQualityContext,
     RunStorePort,
     WorkspacePort,
     WorkspaceResult,
 )
-from .prepare_run import PrepareRunService
+from .prepare_run import PrepareRunResult, PrepareRunService
 
 
 @dataclass(slots=True, frozen=True)
@@ -35,12 +37,14 @@ class GenerateUnitTestService:
         skill: UnitSkill,
         workspace: WorkspacePort,
         run_store: RunStorePort,
+        checkpoint: HumanCheckpointPort | None = None,
     ) -> None:
         self.prepare_service = prepare_service
         self.agent = agent
         self.skill = skill
         self.workspace = workspace
         self.run_store = run_store
+        self.checkpoint = checkpoint
 
     def execute(self, request: SkeletonRunRequest) -> GenerateUnitResult:
         prepared = self.prepare_service.execute(request)
@@ -60,8 +64,37 @@ class GenerateUnitTestService:
                 state, RunStatus.WAITING_FOR_CLARIFICATION, "recorded_analysis_requires_clarification"
             )
             state.classification = RunClassification.WAITING_HUMAN
+            if self.checkpoint is not None:
+                payload: dict[str, object] = {
+                    "schema_version": "1.0.0",
+                    "analysis": {
+                        "behaviors": list(analysis.behaviors),
+                        "risks": list(analysis.risks),
+                        "scenarios": list(analysis.scenarios),
+                        "model": analysis.model,
+                        "response_id": analysis.response_id,
+                    },
+                }
+                self.checkpoint.pause(
+                    state.run_id,
+                    prepared.run_dir / "checkpoint.sqlite",
+                    payload,
+                )
+                state.facts["human_checkpoint"] = {
+                    "kind": "requirement_clarification",
+                    "ref": "checkpoint.sqlite",
+                }
             self.run_store.save_state(state)
             return GenerateUnitResult(state, prepared.run_dir, prepared.context)
+
+        return self.continue_after_analysis(prepared, analysis)
+
+    def continue_after_analysis(
+        self,
+        prepared: PrepareRunResult,
+        analysis: AnalysisResult,
+    ) -> GenerateUnitResult:
+        state = prepared.state
 
         PrepareRunService._move(state, RunStatus.ANALYZING_RISK, "analysis_complete")
         PrepareRunService._move(state, RunStatus.DESIGNING_SCENARIOS, "risks_identified")
@@ -70,7 +103,7 @@ class GenerateUnitTestService:
             "scenario_count": len(analysis.scenarios),
         }
         PrepareRunService._move(state, RunStatus.GENERATING_TESTS, "design_ready")
-        generated = self.agent.generate(request, analysis)
+        generated = self.agent.generate(state.request, analysis)
         self._record_usage(state, generated.input_tokens, generated.output_tokens)
         artifact = generated.artifact
         state.attempts["test_generation"] = 1

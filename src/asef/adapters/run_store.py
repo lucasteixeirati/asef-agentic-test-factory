@@ -11,6 +11,8 @@ from ..contracts import (
     EvidenceRef,
     NormalizedExecutionResult,
     SkeletonRunState,
+    context_snapshot_from_dict,
+    state_from_dict,
 )
 
 
@@ -38,6 +40,12 @@ class JsonRunStore:
 
     def save_state(self, state: SkeletonRunState) -> None:
         self._write_state_files(self.output_root / state.run_id, state)
+
+    def load_state(self, run_id: str) -> SkeletonRunState:
+        return state_from_dict(self._read_run_json(run_id, "state.json"))
+
+    def load_snapshot(self, run_id: str) -> ContextSnapshot:
+        return context_snapshot_from_dict(self._read_run_json(run_id, "context-snapshot.json"))
 
     def save_static_validation(
         self,
@@ -168,6 +176,21 @@ class JsonRunStore:
             for ref in state.evidence_refs
         ]
         self._write_json(manifest_path, manifest)
+
+    def _read_run_json(self, run_id: str, filename: str) -> dict[str, Any]:
+        if not run_id or any(marker in run_id for marker in ("/", "\\", "..")):
+            raise ValueError("invalid run_id")
+        run_dir = (self.output_root / run_id).resolve()
+        root = self.output_root.resolve()
+        if not run_dir.is_relative_to(root):
+            raise ValueError("run_id escapes output root")
+        try:
+            value = json.loads((run_dir / filename).read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise ValueError(f"cannot load {filename}: {exc}") from exc
+        if not isinstance(value, dict):
+            raise ValueError(f"{filename} must contain an object")
+        return value
 
     @staticmethod
     def _write_json(path: Path, value: dict[str, Any]) -> None:

@@ -12,6 +12,12 @@ authors = [{ name = "Lucas Teixeira" }]
 requires-python = ">=3.13"
 dependencies = []
 
+[project.optional-dependencies]
+workflow-langgraph = [
+  "langgraph==1.2.9",
+  "langgraph-checkpoint-sqlite==3.1.0",
+]
+
 [project.scripts]
 asef = "asef.cli:main"
 asef-spike = "asef.legacy.cli:main"

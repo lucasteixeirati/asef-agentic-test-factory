@@ -28,7 +28,7 @@ jobs:
       - name: Install isolated spike dependencies
         run: python -m pip install -r spikes/requirements-langgraph.txt -r spikes/requirements-pydantic-ai.txt
       - name: Run framework spikes
-        run: PYTHONPATH=src:spikes LANGGRAPH_STRICT_MSGPACK=true python -m unittest -v spikes/test_langgraph_spike.py spikes/test_pydantic_ai_spike.py
+        run: PYTHONPATH=src:spikes LANGGRAPH_STRICT_MSGPACK=true python -m unittest -v spikes/test_langgraph_spike.py spikes/test_pydantic_ai_spike.py tests/test_human_checkpoint.py tests/test_human_workflow.py
 
   docker-security:
     runs-on: ubuntu-latest
