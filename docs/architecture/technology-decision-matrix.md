@@ -19,6 +19,8 @@
 
 **Recomendação:** adotar LangGraph condicionalmente no walking skeleton para grafo, checkpoint e interrupção. A semântica dos estados, budgets, políticas e evidências continua pertencendo ao ASEF. A baseline Python permanece como oracle de simplicidade e conformance.
 
+> **Checkpoint pós-WS-001:** o fluxo linear foi comprovado sem LangGraph. A ADR-008 propõe limitar o framework a checkpoint e retomada humana, preservando o runtime explícito como caminho canônico.
+
 ## Adapter de provider
 
 | Critério | Peso | HTTP direto | PydanticAI completo |

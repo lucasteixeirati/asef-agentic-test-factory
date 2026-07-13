@@ -737,7 +737,7 @@ As datas serão estimadas após a baseline das primeiras sessões. Os gates são
 - [ ] Nenhuma etapa essencial depende apenas de logs informais?
 - [ ] É possível explicar qual contexto, skill, MCP/model policy e aprovação orientaram a run?
 
-**Status:** Opção C aprovada; 4.R1 a 4.R5 concluídos. O WS-001 termina em Docker com `SUCCEEDED`, evidências e relatórios. Próximo: checkpoint arquitetural e nova ADR antes de 4.R6. O Gate 4 continua aberto para WS-002 a WS-007. Progresso: `docs/project/stage-04-progress.md`.
+**Status:** Opção C aprovada; 4.R1 a 4.R5 e checkpoint pós-WS-001 concluídos. ADR-008 proposta para uso limitado de LangGraph/SQLite e aguardando decisão humana. O Gate 4 continua aberto para WS-002 a WS-007. Progresso: `docs/project/stage-04-progress.md`.
 
 ### Etapa 5 — Alpha Python de referência
 
@@ -1073,12 +1073,11 @@ Estas questões serão decididas nas etapas indicadas, não agora:
 
 ## 27. Próxima decisão
 
-Executar o checkpoint arquitetural pós-WS-001:
+Decidir a ADR-008 antes de iniciar 4.R6:
 
-1. comparar o fluxo explícito funcional com LangGraph/SQLite;
-2. medir valor real de checkpoint, interrupção e retomada contra a complexidade adicionada;
-3. propor nova ADR com decisão reversível e evidências do WS-001;
-4. preservar runtime ASEF como autoridade de policy, budgets e outcomes;
-5. seguir para 4.R6 e implementar WS-002 a WS-007;
+1. revisar a adoção limitada de LangGraph/SQLite para waits humanos;
+2. aceitar, rejeitar ou solicitar ajustes na ADR-008;
+3. preservar runtime ASEF como autoridade de policy, budgets e outcomes;
+4. após a decisão, seguir para 4.R6 e implementar WS-002 a WS-007;
 6. concluir quickstart e evidências faltantes do Gate 4;
 7. submeter o Gate 4 somente após sanar ou aceitar formalmente cada pendência.

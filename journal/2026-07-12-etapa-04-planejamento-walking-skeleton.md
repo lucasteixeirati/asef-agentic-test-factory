@@ -133,3 +133,12 @@ O primeiro teste criado para detectar imports do package removido encontrou a st
 - **Regressão:** 90 testes descobertos, 79 aprovados e 11 opt-in; 11/11 Docker e 10/10 frameworks aprovados.
 - **Decisão pendente:** avaliar LangGraph/SQLite agora que existe fluxo funcional; nenhuma adoção automática foi feita.
 - **Próximo passo:** checkpoint arquitetural e nova ADR, depois WS-002 a WS-007.
+## Checkpoint arquitetural pós-WS-001
+
+- **Fato novo:** o fluxo linear completo funciona sem LangGraph e sem dependências runtime obrigatórias.
+- **Lacuna real:** interrupção e retomada durável continuam ausentes no package de produto.
+- **Comparação:** substituir o runtime desperdiçaria implementação comprovada; criar engine próprio agora repetiria infraestrutura já demonstrada no spike.
+- **Recomendação da IA:** LangGraph/SQLite limitado por port aos waits humanos, mantendo domínio, policy, budgets e evidências no ASEF.
+- **Controle humano:** ADR-008 permanece proposta e nenhuma adoção foi inferida.
+- **Valor para o livro:** a decisão agora compara hype, spike e implementação real em três momentos distintos, preservando a reversão da ADR-007 como parte da jornada.
+- **Próximo passo:** decisão de Lucas sobre ADR-008; depois WS-002 e WS-007 serão as primeiras provas.

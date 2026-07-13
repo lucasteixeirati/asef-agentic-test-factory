@@ -238,3 +238,14 @@ O primeiro WS-001 está funcional e reproduzível. Isso satisfaz a condição de
 ### Próximo passo
 
 Revisar a arquitetura executada e decidir, em nova ADR, se LangGraph/SQLite agregam valor suficiente para entrar no runtime. Depois seguir para 4.R6 com WS-002 a WS-007; o Gate 4 permanece aberto até essas pendências serem sanadas.
+
+## Checkpoint arquitetural pós-WS-001
+
+- revisão baseada no fluxo funcional concluída;
+- três opções comparadas: substituição total, runtime próprio e adoção limitada;
+- substituição total não recomendada;
+- ADR-008 proposta para LangGraph/SQLite somente em checkpoint e retomada humana;
+- runtime explícito permanece canônico para WS-001;
+- extra opcional preserva core sem dependências obrigatórias;
+- dez critérios objetivos definidos para WS-002/WS-007;
+- decisão humana ainda pendente; nenhuma dependência ou implementação foi alterada neste checkpoint.
