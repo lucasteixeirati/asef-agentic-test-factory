@@ -58,14 +58,18 @@ Toda mudança relevante deve verificar impactos em:
 | `docs/architecture/contracts/` | Schemas e contratos conceituais do core |
 | `docs/architecture/adr/` | Decisões arquiteturais aceitas |
 | `docs/architecture/evidence-model.md` | Eventos, manifests e rastreabilidade |
+| `docs/architecture/observability.md` | Separação vigente entre audit trail e logs operacionais |
 | `docs/quality/security-strategy.md` | Threat model, sandbox e controles |
 | `docs/quality/evaluation-strategy.md` | Datasets, oracles, métricas e validade |
 | `docs/quality/sandbox-policy-baseline.md` | Baseline quantitativa de isolamento e budgets |
 | `docs/quality/datasets/` | Catálogos e futuros casos versionados |
+| `docs/quality/stage-04r8-test-hardening.md` | Baselines de coverage e mutation do hardening pré-Gate 4 |
 | `docs/project/open-source-strategy.md` | Publicação, experiência externa e comunidade |
 | `docs/reviews/` | Revisões independentes e respostas |
 | `docs/templates/` | Modelos operacionais para novos registros |
 | `book/README.md` | Estratégia editorial e estrutura provisória |
+| `book/PROVENANCE.md` | Classes de origem, autoria e estados editoriais |
+| `book/source-map.md` | Relação provisória entre capítulos, evidências e lacunas |
 | `journal/` | Registro factual da jornada |
 | `docs/context/` | Contratos e governança do contexto operacional |
 | `docs/skills/` | Catálogo e contratos planejados das skills ASEF |

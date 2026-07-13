@@ -13,6 +13,12 @@ requires-python = ">=3.13"
 dependencies = []
 
 [project.optional-dependencies]
+test = [
+  "coverage==7.10.7",
+]
+mutation = [
+  "mutmut==3.6.0",
+]
 workflow-langgraph = [
   "langgraph==1.2.9",
   "langgraph-checkpoint-sqlite==3.1.0",
@@ -32,3 +38,34 @@ packages = ["src/asef"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.coverage.run]
+branch = true
+source = ["asef"]
+omit = [
+  "src/asef/legacy/*",
+  "src/asef/adapters/langgraph_checkpoint.py",
+  "src/asef/application/human_decision.py",
+]
+
+[tool.coverage.report]
+fail_under = 85
+show_missing = true
+skip_covered = true
+
+[tool.mutmut]
+source_paths = [
+  "src/asef/runtime/",
+  "src/asef/outcomes.py",
+]
+also_copy = [
+  "src/asef/__init__.py",
+  "src/asef/contracts.py",
+  "src/asef/legacy/",
+  "examples/state/",
+]
+pytest_add_cli_args_test_selection = [
+  "tests/test_budgets.py",
+  "tests/test_skeleton_contracts.py",
+]
+mutate_only_covered_lines = true

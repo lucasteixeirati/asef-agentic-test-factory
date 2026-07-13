@@ -364,3 +364,56 @@ A primeira auditoria mostrou que os defaults públicos apontavam para arquivos d
 ### Estado
 
 G4-01, G4-13 e G4-15 passam para atendidos. Todos os critérios técnicos obrigatórios possuem evidência; o Gate 4 continua aberto até a decisão explícita do responsável.
+
+## Incremento 4.R8 — hardening pré-Gate 4
+
+### Motivação
+
+Antes de aprovar o gate, Lucas solicitou três revisões: força da suíte, existência de logs e saúde do conteúdo do livro. A revisão encontrou 80% de coverage geral/85% no recorte inicial, audit trail sem logging operacional completo e material editorial factual sem mapa de fontes ou retrospectiva da Etapa 4.
+
+### 4.R8.1 — qualidade
+
+- coverage de linhas e branches incorporado à CI;
+- baseline do core canônico elevada para 89%, threshold 85%;
+- workflow opcional medido separadamente em 85%, threshold 85%;
+- testes adversariais de cassettes, gateway live simulado, run store e persistência;
+- mutation pilot Mutmut 3.6.0 executado em Linux;
+- primeira execução: 8/13 mortos e 5 sobreviventes;
+- após melhorar asserts: 13/13 mortos;
+- workflow de mutation separado, manual e semanal.
+
+### 4.R8.2 — observabilidade
+
+- audit trail enriquecido com event ID, run ID, timestamp e elapsed;
+- stream incremental sem duplicação e fail-closed se corrompido;
+- escrita de documentos JSON por atomic replace;
+- logging operacional JSONL com níveis, campos estruturados, rotação e redaction;
+- stdout público da CLI preservado;
+- limitações de multiwriter, transação e exportação remota documentadas.
+
+### 4.R8.3 — livro
+
+- proveniência editorial formalizada;
+- mapa dos 16 capítulos para fontes reais;
+- retrospectiva assistida da Etapa 4;
+- nota sobre checkout versus produto;
+- Lesson 002;
+- lacunas de voz do autor explicitadas sem fabricar percepções.
+
+### Regressão final
+
+- core: 123 testes descobertos, 104 aprovados e 19 opt-in/skip;
+- branch coverage core: 89%, com threshold de 85%;
+- frameworks/workflow opcional: 18/18 e coverage específica de 85%;
+- Docker/security/multilanguage: 11/11;
+- mutation pilot: 13/13 mutantes mortos;
+- wheel final instalado sem dependências em venv novo e fora do checkout;
+- demo sem `OPENAI_API_KEY`: `SUCCEEDED`/`ACCEPTED`;
+- secret scan aprovado em source, wheel, logs e artifacts;
+- wheel final: 52.008 bytes;
+- SHA-256: `395d869b08df41b747e4f24fe5fb5d2ad7a813d8eef53f9ab225229eddf5fcb6`;
+- ajuste final restrito à ampliação de redaction; wheel anterior reinstalado e executado fora do checkout.
+
+### Estado
+
+As três condições adicionais foram implementadas e a regressão local está verde. A decisão do Gate 4 permanece humana; falta somente confirmar a CI pública deste incremento.

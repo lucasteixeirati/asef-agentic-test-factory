@@ -74,6 +74,13 @@ class PublicExitCodeMatrixTests(unittest.TestCase):
                 self.assertEqual(stderr, "")
                 self.assertTrue(Path(payload["report_path"]).is_file())
                 self.assertTrue(Path(".asef/demo/v1/context.json").is_file())
+                logs = [
+                    json.loads(line)
+                    for line in Path(".asef/logs/asef.jsonl").read_text(encoding="utf-8").splitlines()
+                ]
+                self.assertEqual(logs[0]["message"], "command_started")
+                self.assertEqual(logs[-1]["message"], "command_completed")
+                self.assertEqual(logs[-1]["run_id"], payload["run_id"])
             finally:
                 os.chdir(original)
 

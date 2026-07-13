@@ -282,6 +282,8 @@ class SkeletonStateAndOutcomeTests(unittest.TestCase):
                 RunClassification.INFRASTRUCTURE_ERROR,
             ): ExitCode.PROVIDER_OR_INFRASTRUCTURE,
             (RunStatus.CANCELLED, RunClassification.CANCELLED_BY_USER): ExitCode.CANCELLED,
+            (RunStatus.SUCCEEDED, RunClassification.UNCLASSIFIED): ExitCode.FUNCTIONAL_FAILURE,
+            (RunStatus.FAILED, RunClassification.ACCEPTED): ExitCode.FUNCTIONAL_FAILURE,
         }
         for (status, classification), expected in cases.items():
             with self.subTest(status=status, classification=classification):

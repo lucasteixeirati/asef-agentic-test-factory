@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -8,7 +9,6 @@ from ..contracts import (
     SkeletonRunRequest,
     SkeletonRunState,
     resolve_new_run_context,
-    utc_now,
 )
 from ..outcomes import RunStatus
 from .ports import QualityContextPort, ResolvedQualityContext, RunStorePort
@@ -54,7 +54,19 @@ class PrepareRunService:
     def _move(state: SkeletonRunState, target: RunStatus, reason: str) -> None:
         source = state.status
         state.status = target
-        state.updated_at = utc_now()
-        state.history.append(
-            {"event": "STATE_TRANSITION", "source": source.value, "target": target.value, "reason": reason}
+        state.record_event(
+            "STATE_TRANSITION",
+            source=source.value,
+            target=target.value,
+            reason=reason,
+        )
+        logging.getLogger("asef.workflow").info(
+            "state_transition",
+            extra={
+                "run_id": state.run_id,
+                "operation": reason,
+                "component": "workflow",
+                "status": target.value,
+                "classification": state.classification.value,
+            },
         )

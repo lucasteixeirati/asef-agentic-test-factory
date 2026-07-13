@@ -95,6 +95,13 @@ class HumanWorkflowTests(unittest.TestCase):
             self.assertEqual(completed.state.usage.model_calls, 2)
             self.assertEqual(len(completed.state.facts["human_decisions"]), 1)
             self.assertEqual(
+                sum(
+                    event.get("event") == "HUMAN_DECISION_RECORDED"
+                    for event in completed.state.history
+                ),
+                1,
+            )
+            self.assertEqual(
                 completed.state.facts["analysis"]["response_id"],
                 "cassette-calculator-clarification-001",
             )
@@ -111,6 +118,13 @@ class HumanWorkflowTests(unittest.TestCase):
                 cancelled.state.classification, RunClassification.CANCELLED_BY_USER
             )
             self.assertEqual(cancelled.state.usage.model_calls, 1)
+            self.assertTrue(
+                any(
+                    event.get("event") == "HUMAN_DECISION_RECORDED"
+                    and event.get("action") == "cancel"
+                    for event in cancelled.state.history
+                )
+            )
             self.assertFalse((cancelled.run_dir / "workspace").exists())
             self.assertFalse((cancelled.run_dir / "artifacts").exists())
             self.assertTrue((cancelled.run_dir / "report.json").is_file())

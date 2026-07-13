@@ -302,6 +302,27 @@ class SkeletonRunState:
     imported_usage: dict[str, Any] = field(default_factory=dict)
     imported_budgets: dict[str, Any] = field(default_factory=dict)
 
+    def record_event(self, event: str, **details: Any) -> dict[str, Any]:
+        timestamp = utc_now()
+        try:
+            previous = datetime.fromisoformat(self.updated_at)
+            current = datetime.fromisoformat(timestamp)
+            elapsed_ms = max(0, int((current - previous).total_seconds() * 1_000))
+        except ValueError:
+            elapsed_ms = 0
+        item = {
+            "schema_version": "1.0.0",
+            "event_id": str(uuid4()),
+            "run_id": self.run_id,
+            "timestamp": timestamp,
+            "elapsed_since_previous_ms": elapsed_ms,
+            "event": event,
+            **details,
+        }
+        self.history.append(item)
+        self.updated_at = timestamp
+        return item
+
     def validate(self) -> None:
         ensure_compatible_state_schema(self.schema_version)
         self.request.validate()
@@ -447,8 +468,7 @@ def resolve_new_run_context(
         raise ContractValidationError("context snapshot reference is required")
     state.context_snapshot_ref = context_snapshot_ref
     state.context_resolution = ContextResolution.RESOLVED
-    state.updated_at = utc_now()
-    state.history.append({"event": "CONTEXT_RESOLVED", "snapshot_ref": context_snapshot_ref})
+    state.record_event("CONTEXT_RESOLVED", snapshot_ref=context_snapshot_ref)
     state.validate()
     return state
 

@@ -23,7 +23,7 @@
 | G4-13 | `tools/secret_scan.py` sobre arquivos públicos, wheel e artifacts; revisão de fixtures fictícias |
 | G4-14 | core sem dependências runtime; LangGraph/SQLite apenas no extra opcional |
 
-Regressão final: core com 108 testes descobertos, 89 aprovados e 19 opt-in/skip; suíte opcional 18/18; integrações Docker 11/11.
+Regressão 4.R7: core com 108 testes descobertos, 89 aprovados e 19 opt-in/skip; suíte opcional 18/18; integrações Docker 11/11.
 
 ## Auditoria de instalação limpa
 
@@ -34,7 +34,7 @@ Regressão final: core com 108 testes descobertos, 89 aprovados e 19 opt-in/skip
 5. `asef prepare`, `asef generate` e `asef run` retornaram 0.
 6. O run completo terminou `SUCCEEDED`/`ACCEPTED` e produziu relatório.
 
-O wheel final mediu 49.478 bytes e apresentou SHA-256 `dd5b11b0df513a8475fd9c1f7312a33ffe4707a8eae579fb12b71eec6465caf0`.
+O wheel da 4.R7 mediu 49.478 bytes e apresentou SHA-256 `dd5b11b0df513a8475fd9c1f7312a33ffe4707a8eae579fb12b71eec6465caf0`.
 
 ## Auditoria de dados e secrets
 
@@ -63,3 +63,30 @@ Limite da evidência: pattern matching não substitui análise de entropia, scan
 **Decisão/condição:** pendente.
 
 **Data:** pendente.
+
+## Hardening adicional solicitado antes da decisão
+
+Em 2026-07-13, Lucas adiou a decisão e solicitou revisão de testes, logs e livro. A 4.R8 implementou:
+
+| Condição | Evidência | Estado |
+|---|---|---|
+| Coverage com branches e proteção contra regressão | core 89%/threshold 85%; opcional 85%/threshold 85% | Atendida |
+| Ampliação orientada a risco | 123 testes core descobertos; gateway, cassettes, store, atomicidade, eventos e logging | Atendida |
+| Mutation pilot | 13/13 mutantes mortos após reforço dos asserts | Atendida |
+| Logging operacional separado de evidência | `observability.md`, JSONL rotativo e testes de redaction | Atendida |
+| Audit trail incremental | eventos correlacionados, deduplicação e fail-closed | Atendida |
+| Saúde editorial | proveniência, source map, retrospectiva, nota e Lesson 002 | Atendida tecnicamente; voz autoral continua pendente |
+
+### Regressão 4.R8
+
+- core: 123 descobertos, 104 aprovados e 19 opt-in/skip;
+- coverage core: 89%, threshold 85%;
+- workflow opcional: 18/18 e coverage 85%, threshold 85%;
+- Docker: 11/11;
+- mutation: 13/13 mortos no recorte;
+- wheel instalado sem dependências fora do checkout;
+- demo sem API key: `SUCCEEDED`/`ACCEPTED`;
+- source, wheel, logs e artifacts: secret scan sem findings;
+- wheel final: 52.008 bytes, SHA-256 `395d869b08df41b747e4f24fe5fb5d2ad7a813d8eef53f9ab225229eddf5fcb6`; wheel funcional anterior reinstalado e demo repetida antes do ajuste isolado de redaction.
+
+**Parecer atualizado:** aprovar o Gate 4 com os riscos residuais já registrados. A caixa de decisão acima continua desmarcada até manifestação explícita de Lucas.

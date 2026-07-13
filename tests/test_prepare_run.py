@@ -35,9 +35,8 @@ def request(**overrides: object) -> SkeletonRunRequest:
 class PrepareRunServiceTests(unittest.TestCase):
     def test_prepares_state_snapshot_and_manifest_at_agentic_boundary(self) -> None:
         with tempfile.TemporaryDirectory(dir=Path(".asef")) as directory:
-            result = PrepareRunService(
-                FileQualityContextAdapter(), JsonRunStore(Path(directory))
-            ).execute(request())
+            store = JsonRunStore(Path(directory))
+            result = PrepareRunService(FileQualityContextAdapter(), store).execute(request())
             self.assertEqual(result.state.status, RunStatus.ANALYZING_REQUIREMENT)
             self.assertEqual(result.state.context_resolution, ContextResolution.RESOLVED)
             self.assertEqual(
@@ -49,8 +48,23 @@ class PrepareRunServiceTests(unittest.TestCase):
             events = (result.run_dir / "events.jsonl").read_text(encoding="utf-8").splitlines()
             self.assertEqual(json.loads(events[0])["target"], "VALIDATING_INPUT")
             self.assertEqual(json.loads(events[-1])["target"], "ANALYZING_REQUIREMENT")
+            for event in map(json.loads, events):
+                self.assertTrue(
+                    {"schema_version", "event_id", "run_id", "timestamp", "elapsed_since_previous_ms"}
+                    <= set(event)
+                )
             manifest = json.loads((result.run_dir / "manifest.json").read_text(encoding="utf-8"))
             self.assertEqual(manifest["status"], "ANALYZING_REQUIREMENT")
+
+            event_path = result.run_dir / "events.jsonl"
+            original = event_path.read_bytes()
+            store.save_state(result.state)
+            self.assertEqual(event_path.read_bytes(), original)
+            result.state.record_event("AUDIT_TEST_EVENT", purpose="append_only_regression")
+            store.save_state(result.state)
+            updated = event_path.read_bytes()
+            self.assertTrue(updated.startswith(original))
+            self.assertEqual(len(updated.splitlines()), len(events) + 1)
 
     def test_unknown_system_fails_before_creating_run_directory(self) -> None:
         with tempfile.TemporaryDirectory(dir=Path(".asef")) as directory:

@@ -31,6 +31,12 @@ runs/<run-id>/
 - política ou aprovação relacionada;
 - indicador de sanitização.
 
+## Baseline implementada no walking skeleton
+
+A implementação atual cobre identidade do evento e da run, timestamp UTC, tempo desde o evento anterior, transições, motivos, decisões humanas sem duplicação e sequência append-only. O schema completo acima continua como alvo evolutivo: parent/correlation IDs, duração de operações agênticas, custo estimado por evento e indicador explícito de sanitização ainda não estão todos presentes.
+
+Logs operacionais não são confundidos com evidência. A separação, o formato e as limitações estão em [`observability.md`](observability.md).
+
 ## Manifest mínimo
 
 - versão e hash do workflow;
@@ -48,4 +54,3 @@ runs/<run-id>/
 ## Privacidade
 
 Prompts, logs e artefatos não serão publicados automaticamente. Conteúdo sensível deve ser removido ou substituído por referências sanitizadas antes de qualquer publicação.
-

@@ -103,13 +103,20 @@ class HumanDecisionService:
         decisions = state.facts.setdefault("human_decisions", [])
         if any(item.get("action") == action and item.get("value") == value for item in decisions):
             return
+        decision_id = str(uuid4())
         decisions.append(
             {
-                "decision_id": str(uuid4()),
+                "decision_id": decision_id,
                 "action": action,
                 "value": value,
                 "created_at": utc_now(),
             }
+        )
+        state.record_event(
+            "HUMAN_DECISION_RECORDED",
+            action=action,
+            decision_id=decision_id,
+            value_recorded_in_facts=True,
         )
 
     @staticmethod

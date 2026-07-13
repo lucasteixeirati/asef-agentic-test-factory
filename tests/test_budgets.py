@@ -10,8 +10,15 @@ class BudgetControllerTests(unittest.TestCase):
     def test_model_call_limit(self) -> None:
         controller = BudgetController(BudgetLimits(max_model_calls=1), BudgetUsage())
         controller.reserve_model_call()
-        with self.assertRaises(BudgetExceeded):
+        with self.assertRaises(BudgetExceeded) as raised:
             controller.reserve_model_call()
+        self.assertEqual(raised.exception.budget, "model_calls")
+        self.assertEqual(raised.exception.used, 2)
+        self.assertEqual(raised.exception.limit, 1)
+        self.assertEqual(
+            str(raised.exception),
+            "budget exceeded: model_calls used=2 limit=1",
+        )
 
     def test_token_limit_does_not_partially_update_usage(self) -> None:
         usage = BudgetUsage()

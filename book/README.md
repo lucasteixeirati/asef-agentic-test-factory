@@ -8,6 +8,8 @@
 
 O livro emergirá da construção. Journals, ADRs, experimentos, commits, releases, revisões e retrospectivas formarão a base factual. O índice é provisório e não obrigará o projeto a produzir acontecimentos imaginados antecipadamente.
 
+A origem editorial de cada texto segue [`PROVENANCE.md`](PROVENANCE.md). O mapa entre capítulos e evidências está em [`source-map.md`](source-map.md); uma aprovação técnica não transforma automaticamente um rascunho assistido em voz aprovada do autor.
+
 ## Ritmo
 
 - journal factual durante toda a construção;
@@ -38,3 +40,9 @@ Quando houver conflito de capacidade, código e evidências têm prioridade, sem
 15. Impacto da IA na velocidade e qualidade.
 16. O que eu faria diferente.
 
+## Material vivo atual
+
+- [`notes/`](notes/) — percepções e hipóteses contemporâneas;
+- [`retrospectives/`](retrospectives/) — síntese por milestone;
+- [`source-map.md`](source-map.md) — cobertura e lacunas dos capítulos;
+- [`PROVENANCE.md`](PROVENANCE.md) — autoria, estruturação por IA e estados editoriais.

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import logging
 import sys
 from pathlib import Path
 
@@ -23,6 +24,7 @@ from .context import ContextValidationError
 from .contracts import ContractValidationError, SkeletonRunRequest
 from .demo import materialize_demo_assets
 from .outcomes import exit_code_for
+from .observability import close_operational_logging, configure_operational_logging
 from .skills.unit import UnitSkill
 
 
@@ -73,6 +75,7 @@ def _recorded_arguments(
 def _decision_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--run-id", required=True)
     parser.add_argument("--output", type=Path, default=Path(".asef/runs"))
+    _logging_argument(parser)
     parser.add_argument(
         "--artifact-cassette",
         type=Path,
@@ -94,10 +97,24 @@ def _common_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--mode", choices=("demo", "live"), default="demo")
     parser.add_argument("--api-budget-brl", type=float, default=0.0)
     parser.add_argument("--output", type=Path, default=Path(".asef/runs"))
+    _logging_argument(parser)
+
+
+def _logging_argument(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument(
+        "--log-level",
+        choices=("DEBUG", "INFO", "WARNING", "ERROR"),
+        default="INFO",
+    )
 
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
+    logger = configure_operational_logging(Path.cwd() / ".asef" / "logs", args.log_level)
+    logger.info(
+        "command_started",
+        extra={"operation": args.command, "component": "cli"},
+    )
     try:
         allowed_output_root = (Path.cwd() / ".asef").resolve()
         resolved_output = args.output.resolve()
@@ -159,7 +176,9 @@ def main(argv: list[str] | None = None) -> int:
                 ),
             }
             code = int(exit_code_for(decided.state.status, decided.state.classification))
+            _log_completion(logger, args.command, decided.state.run_id, payload, code)
             print(json.dumps(payload))
+            close_operational_logging(logger)
             return code
 
         request = SkeletonRunRequest(
@@ -229,15 +248,49 @@ def main(argv: list[str] | None = None) -> int:
                 }
                 code = int(exit_code_for(completed.state.status, completed.state.classification))
     except (OptionalWorkflowDependencyError, HumanCheckpointError) as exc:
+        logger.error(
+            "command_failed",
+            extra={"operation": args.command, "component": "cli", "classification": "INFRASTRUCTURE_ERROR"},
+            exc_info=True,
+        )
         print(json.dumps({"status": "FAILED", "classification": "INFRASTRUCTURE_ERROR"}))
         print(f"asef: {exc}", file=sys.stderr)
+        close_operational_logging(logger)
         return 7
     except (ContractValidationError, ContextValidationError, RecordedAgentError, OSError, ValueError) as exc:
+        logger.warning(
+            "command_rejected: %s",
+            exc,
+            extra={"operation": args.command, "component": "cli", "classification": "INPUT_OR_CONTEXT_ERROR"},
+        )
         print(json.dumps({"status": "REJECTED", "classification": "INPUT_OR_CONTEXT_ERROR"}), file=sys.stdout)
         print(f"asef: {exc}", file=sys.stderr)
+        close_operational_logging(logger)
         return 2
+    _log_completion(logger, args.command, payload["run_id"], payload, code)
     print(json.dumps(payload))
+    close_operational_logging(logger)
     return code
+
+
+def _log_completion(
+    logger: logging.Logger,
+    operation: str,
+    run_id: str,
+    payload: dict[str, object],
+    code: int,
+) -> None:
+    logger.info(
+        "command_completed",
+        extra={
+            "run_id": run_id,
+            "operation": operation,
+            "component": "cli",
+            "status": payload["status"],
+            "classification": payload["classification"],
+            "exit_code": code,
+        },
+    )
 
 
 if __name__ == "__main__":

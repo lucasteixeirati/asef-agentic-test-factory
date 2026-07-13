@@ -1,0 +1,25 @@
+name: Mutation pilot
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 5 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  deterministic-core:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Install mutation pilot
+        run: python -m pip install -e ".[mutation]"
+      - name: Run bounded mutation pilot
+        run: mutmut run
+      - name: Report mutation results
+        if: always()
+        run: mutmut results

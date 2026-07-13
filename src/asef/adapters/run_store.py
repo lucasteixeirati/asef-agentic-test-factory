@@ -4,6 +4,7 @@ import json
 import hashlib
 from pathlib import Path
 from typing import Any
+from uuid import uuid4
 
 from ..application.ports import ExecutionOutput
 from ..contracts import (
@@ -148,13 +149,7 @@ class JsonRunStore:
 
     def _write_state_files(self, run_dir: Path, state: SkeletonRunState) -> None:
         self._write_json(run_dir / "state.json", state.to_dict())
-        (run_dir / "events.jsonl").write_text(
-            "".join(
-                json.dumps(event, ensure_ascii=False, sort_keys=True) + "\n"
-                for event in state.history
-            ),
-            encoding="utf-8",
-        )
+        self._append_new_events(run_dir / "events.jsonl", state.history)
         manifest_path = run_dir / "manifest.json"
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
         manifest["status"] = state.status.value
@@ -194,10 +189,45 @@ class JsonRunStore:
 
     @staticmethod
     def _write_json(path: Path, value: dict[str, Any]) -> None:
-        path.write_text(
-            json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
-            encoding="utf-8",
-        )
+        temporary = path.with_name(f".{path.name}.{uuid4().hex}.tmp")
+        try:
+            temporary.write_text(
+                json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+                encoding="utf-8",
+            )
+            temporary.replace(path)
+        finally:
+            try:
+                temporary.unlink(missing_ok=True)
+            except OSError:
+                pass
+
+    @classmethod
+    def _append_new_events(cls, path: Path, events: list[dict[str, Any]]) -> None:
+        known: set[str] = set()
+        if path.exists():
+            try:
+                for line in path.read_text(encoding="utf-8").splitlines():
+                    value = json.loads(line)
+                    if not isinstance(value, dict):
+                        raise ValueError("event must be an object")
+                    known.add(cls._event_identity(value))
+            except (OSError, json.JSONDecodeError, ValueError) as exc:
+                raise ValueError(f"cannot append to corrupt events.jsonl: {exc}") from exc
+        with path.open("a", encoding="utf-8", newline="\n") as stream:
+            for event in events:
+                identity = cls._event_identity(event)
+                if identity in known:
+                    continue
+                stream.write(json.dumps(event, ensure_ascii=False, sort_keys=True) + "\n")
+                known.add(identity)
+
+    @staticmethod
+    def _event_identity(event: dict[str, Any]) -> str:
+        if event.get("event_id"):
+            return str(event["event_id"])
+        canonical = json.dumps(event, ensure_ascii=False, sort_keys=True).encode("utf-8")
+        return "legacy:" + hashlib.sha256(canonical).hexdigest()
 
     @staticmethod
     def _sha256(path: Path) -> str:

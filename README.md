@@ -79,6 +79,8 @@ O resultado esperado é um JSON com `"status": "SUCCEEDED"` e `"classification":
 
 O comando executa o WS-001 completo no Docker Desktop, sem rede no container e sem escrever no SUT original. Estado, snapshot de contexto, manifest, eventos, artifact, resultado e relatórios permanecem sob `.asef/runs`. Por policy, `--output` também deve permanecer dentro de `.asef`.
 
+O audit trail de cada run é append-only. Logs operacionais JSONL ficam em `.asef/logs/asef.jsonl`, com rotação e redaction básica. Use `--log-level DEBUG|INFO|WARNING|ERROR` sem alterar o JSON público do stdout. Veja [`docs/architecture/observability.md`](docs/architecture/observability.md).
+
 Para observar fronteiras intermediárias sem executar o container:
 
 ```powershell
