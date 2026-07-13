@@ -1,0 +1,11 @@
+{
+  "schema_name": "wf001_unit_artifact",
+  "model": "recorded-invalid",
+  "response_id": "cassette-invalid-shape-001",
+  "usage": {"input_tokens": 10, "output_tokens": 10},
+  "output": {
+    "relative_path": "tests_generated/test_calculator.py",
+    "content": "def test_invalid():\n    pass\n",
+    "scenario_ids": "SCN-001"
+  }
+}

@@ -15,10 +15,10 @@
 | G4-06 | Docker executa sem rede, secrets ou escrita no original | integration tests + manifest | Atendido |
 | G4-07 | Run de sucesso é reproduzível | WS-001 repetido com mesmos fatos essenciais | Atendido |
 | G4-08 | Espera humana persiste e retoma sem repetir nós concluídos | WS-002 + checkpoint | Atendido |
-| G4-09 | Falhas de input, policy, budget e infraestrutura são distintas | WS-003 a WS-006 | Pendente |
+| G4-09 | Falhas de input, policy, budget e infraestrutura são distintas | WS-003 a WS-006 | Atendido |
 | G4-10 | Cancelamento encerra de forma explicável | WS-007 | Atendido |
 | G4-11 | Eventos, state, manifest, contexto e reports são consistentes | schema/contract tests | Atendido |
-| G4-12 | Exit codes e stdout/stderr seguem o contrato público | CLI end-to-end | Pendente |
+| G4-12 | Exit codes e stdout/stderr seguem o contrato público | CLI end-to-end | Atendido |
 | G4-13 | Nenhum secret ou dado privado aparece nos artifacts | secret scan + fixtures públicas | Pendente |
 | G4-14 | Core não depende diretamente de OpenAI, LangGraph ou Docker | dependency/import test ou revisão | Atendido |
 | G4-15 | Quickstart descreve limitações e funciona sem API key | README + execução CI | Pendente |

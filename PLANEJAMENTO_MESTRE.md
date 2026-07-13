@@ -737,7 +737,7 @@ As datas serão estimadas após a baseline das primeiras sessões. Os gates são
 - [ ] Nenhuma etapa essencial depende apenas de logs informais?
 - [ ] É possível explicar qual contexto, skill, MCP/model policy e aprovação orientaram a run?
 
-**Status:** Opção C aprovada; 4.R1 a 4.R5 e 4.R6a concluídos. ADR-008 implementada de forma opcional; WS-002 e WS-007 aprovados. Próximo: WS-003 a WS-006 e critérios restantes do Gate 4. Progresso: `docs/project/stage-04-progress.md`.
+**Status:** Opção C aprovada; 4.R1 a 4.R6 concluídos. WS-001 a WS-007 e toda a matriz de exit codes possuem evidência automatizada. Próximo: 4.R7, auditoria e pacote de decisão do Gate 4. Progresso: `docs/project/stage-04-progress.md`.
 
 ### Etapa 5 — Alpha Python de referência
 
@@ -1073,13 +1073,13 @@ Estas questões serão decididas nas etapas indicadas, não agora:
 
 ## 27. Próxima decisão
 
-Continuar 4.R6 após WS-002/WS-007:
+Executar 4.R7 e preparar o Gate 4:
 
-1. consolidar WS-003 para contexto inválido antes de modelo/Docker;
-2. consolidar WS-004 para policy blocked pela CLI;
-3. implementar WS-005 no estado 1.1 com budget exhausted;
-4. consolidar WS-006 para Docker indisponível/timeout e exit 7;
-5. automatizar a matriz pública de exit codes do G4-12;
-6. preservar runtime ASEF como autoridade de policy, budgets e outcomes;
+1. validar instalação em ambiente/clone limpo e modo demo sem API key;
+2. executar secret scan sobre source, fixtures, wheel e artifacts de exemplo;
+3. revisar e testar o quickstart público;
+4. consolidar evidências de todos os critérios G4-01 a G4-15;
+5. registrar riscos residuais e limitações do skeleton;
+6. preparar o pacote documental para decisão humana do Gate 4;
 6. concluir quickstart e evidências faltantes do Gate 4;
 7. submeter o Gate 4 somente após sanar ou aceitar formalmente cada pendência.

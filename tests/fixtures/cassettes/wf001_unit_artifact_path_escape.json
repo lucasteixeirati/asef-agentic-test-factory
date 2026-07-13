@@ -1,0 +1,11 @@
+{
+  "schema_name": "wf001_unit_artifact",
+  "model": "recorded-adversarial",
+  "response_id": "cassette-path-escape-001",
+  "usage": {"input_tokens": 10, "output_tokens": 10},
+  "output": {
+    "relative_path": "../escape.py",
+    "content": "def test_escape():\n    pass\n",
+    "scenario_ids": ["SCN-001", "SCN-002", "SCN-003", "SCN-004"]
+  }
+}

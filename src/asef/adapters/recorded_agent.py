@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from ..application.ports import AnalysisResult, GeneratedArtifactResult
+from ..application.ports import AnalysisResult, GeneratedArtifactResult, InvalidAgentOutputError
 from ..contracts import SkeletonRunRequest, UnitTestArtifact
 
 
@@ -25,14 +25,14 @@ class RecordedAgentAdapter:
         output = cassette["output"]
         expected = {"behaviors", "risks", "scenarios", "clarification_required"}
         if set(output) != expected:
-            raise RecordedAgentError("analysis cassette has an invalid output shape")
+            raise InvalidAgentOutputError("analysis cassette has an invalid output shape")
         for key in ("behaviors", "risks", "scenarios"):
             if not isinstance(output[key], list) or not output[key] or not all(
                 isinstance(item, str) and item.strip() for item in output[key]
             ):
-                raise RecordedAgentError(f"analysis cassette {key} must be non-empty strings")
+                raise InvalidAgentOutputError(f"analysis cassette {key} must be non-empty strings")
         if not isinstance(output["clarification_required"], bool):
-            raise RecordedAgentError("analysis clarification_required must be boolean")
+            raise InvalidAgentOutputError("analysis clarification_required must be boolean")
         usage = cassette.get("usage", {})
         return AnalysisResult(
             behaviors=tuple(output["behaviors"]),
@@ -54,13 +54,13 @@ class RecordedAgentAdapter:
         cassette = self._load(self.artifact_cassette, "wf001_unit_artifact")
         output = cassette["output"]
         if set(output) != {"relative_path", "content", "scenario_ids"}:
-            raise RecordedAgentError("artifact cassette has an invalid output shape")
+            raise InvalidAgentOutputError("artifact cassette has an invalid output shape")
         if not isinstance(output["relative_path"], str) or not isinstance(output["content"], str):
-            raise RecordedAgentError("artifact path and content must be strings")
+            raise InvalidAgentOutputError("artifact path and content must be strings")
         if not isinstance(output["scenario_ids"], list) or not all(
             isinstance(item, str) for item in output["scenario_ids"]
         ):
-            raise RecordedAgentError("artifact scenario_ids must be a list of strings")
+            raise InvalidAgentOutputError("artifact scenario_ids must be a list of strings")
         try:
             artifact = UnitTestArtifact(
                 relative_path=output["relative_path"],
@@ -68,7 +68,7 @@ class RecordedAgentAdapter:
                 scenario_ids=tuple(output["scenario_ids"]),
             )
         except (KeyError, TypeError) as exc:
-            raise RecordedAgentError(f"artifact cassette violates the contract: {exc}") from exc
+            raise InvalidAgentOutputError(f"artifact cassette violates the contract: {exc}") from exc
         usage = cassette.get("usage", {})
         return GeneratedArtifactResult(
             artifact=artifact,

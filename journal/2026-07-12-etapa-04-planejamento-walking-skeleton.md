@@ -159,3 +159,12 @@ O primeiro teste criado para detectar imports do package removido encontrou a st
 - **Dependência:** LangGraph/SQLite entrou somente como extra opcional; core passou sem instalá-lo.
 - **Evidência:** 97 testes no core e 7 testes opcionais novos; CLI resume também passou pelo Docker real.
 - **Próximo passo:** WS-003 a WS-006 e matriz completa de exit codes.
+## Continuação — incremento 4.R6b
+
+- **Objetivo:** fechar WS-003 a WS-006 e provar a matriz pública de outcomes.
+- **Resultado:** contexto, falha funcional, policy, budget e infraestrutura possuem classificações e exit codes distintos.
+- **WS-005:** duas respostas de artifact inválidas, uma tentativa adicional, três model calls totais incluindo análise e terminal `BUDGET_EXHAUSTED`.
+- **Matriz:** 0, 2, 3, 4, 5, 6, 7 e 130 automatizados entre core e extra opcional.
+- **Evidência:** 104 testes no core, 85 aprovados e 19 opt-in; 18/18 no job de frameworks/opcional.
+- **Decisão de qualidade:** erro de output do modelo virou contrato da porta, permitindo retry no runtime sem importar o adapter.
+- **Próximo passo:** 4.R7, instalação limpa, secret scan, quickstart e pacote do Gate 4.

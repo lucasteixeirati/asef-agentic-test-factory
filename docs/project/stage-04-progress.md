@@ -290,3 +290,35 @@ Revisar a arquitetura executada e decidir, em nova ADR, se LangGraph/SQLite agre
 ### Próximo passo
 
 Continuar 4.R6 com WS-003 a WS-006 e fechar G4-09/G4-12 antes do Gate 4.
+
+## Incremento 4.R6b — WS-003 a WS-006 e exit codes
+
+### Concluído
+
+- erro tipado `InvalidAgentOutputError` na porta agêntica;
+- retry de artifact inválido controlado pelo runtime;
+- duas saídas inválidas encerram `BUDGET_EXHAUSTED` no estado 1.1;
+- model calls e provider retries contabilizados mesmo sem output válido;
+- fixture adversarial de path traversal;
+- fixture de structured output inválido repetido;
+- WS-003 rejeita contexto inexistente antes de criar run;
+- WS-004 retorna `POLICY_BLOCKED` sem workspace;
+- WS-005 retorna `BUDGET_EXHAUSTED` com erros e histórico preservados;
+- WS-006 retorna `INFRASTRUCTURE_ERROR` com relatório;
+- matriz pública automatizada para 0, 2, 3, 4, 5, 6, 7 e 130.
+
+### Evidência
+
+- core: 104 testes descobertos, 85 aprovados e 19 opt-in/skip;
+- job de frameworks/opcional: 18/18 aprovados;
+- matriz core: 6/6 testes aprovados;
+- comandos humanos opcionais também validam 3, 0 e 130;
+- Docker permanece coberto pelas 11 integrações e pelo WS-001 real.
+
+### Resultado
+
+WS-001 a WS-007 possuem evidência automatizada. G4-09 e G4-12 passam para atendidos. O 4.R6 está concluído; as pendências do Gate 4 ficam concentradas em instalação limpa, secret scan público e quickstart final.
+
+### Próximo passo
+
+4.R7 — executar auditoria final, validar clone/instalação limpa, fechar G4-01/G4-13/G4-15 e preparar o pacote de decisão do Gate 4.

@@ -92,6 +92,8 @@ python -m asef.cli cancel --output .asef\runs --run-id <RUN_ID> --reason "No lon
 
 `wait` retorna 3, `resume` reutiliza a mesma run e `cancel` retorna 130. O modo linear continua funcionando sem instalar o extra.
 
+Exit codes públicos: 0 sucesso, 2 input/contexto, 3 espera humana, 4 falha funcional, 5 policy, 6 budget, 7 provider/infraestrutura e 130 cancelamento. A matriz é exercitada automaticamente nos testes.
+
 Testes Docker são opt-in:
 
 ```powershell

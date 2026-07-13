@@ -13,6 +13,10 @@ from ..contracts import (
 )
 
 
+class InvalidAgentOutputError(ValueError):
+    """A provider response was received but violates the typed application contract."""
+
+
 @dataclass(slots=True, frozen=True)
 class ResolvedQualityContext:
     snapshot: ContextSnapshot

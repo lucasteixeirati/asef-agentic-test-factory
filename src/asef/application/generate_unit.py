@@ -10,6 +10,7 @@ from .ports import (
     AgenticTestPort,
     AnalysisResult,
     HumanCheckpointPort,
+    InvalidAgentOutputError,
     ResolvedQualityContext,
     RunStorePort,
     WorkspacePort,
@@ -103,7 +104,9 @@ class GenerateUnitTestService:
             "scenario_count": len(analysis.scenarios),
         }
         PrepareRunService._move(state, RunStatus.GENERATING_TESTS, "design_ready")
-        generated = self.agent.generate(state.request, analysis)
+        generated = self._generate_with_recovery(state, analysis)
+        if generated is None:
+            return GenerateUnitResult(state, prepared.run_dir, prepared.context)
         self._record_usage(state, generated.input_tokens, generated.output_tokens)
         artifact = generated.artifact
         state.attempts["test_generation"] = 1
@@ -158,3 +161,32 @@ class GenerateUnitTestService:
         state.usage.input_tokens += input_tokens
         state.usage.output_tokens += output_tokens
         state.validate()
+
+    def _generate_with_recovery(
+        self,
+        state: SkeletonRunState,
+        analysis: AnalysisResult,
+    ):
+        while True:
+            try:
+                return self.agent.generate(state.request, analysis)
+            except InvalidAgentOutputError as exc:
+                state.usage.model_calls += 1
+                state.errors.append(
+                    {
+                        "type": "PROVIDER_OUTPUT_INVALID",
+                        "attempt": state.usage.provider_retries + 1,
+                        "message": str(exc)[:500],
+                    }
+                )
+                if state.usage.provider_retries >= state.budgets.max_provider_retries:
+                    state.classification = RunClassification.BUDGET_ERROR
+                    PrepareRunService._move(
+                        state,
+                        RunStatus.BUDGET_EXHAUSTED,
+                        "invalid_output_retry_budget_exhausted",
+                    )
+                    self.run_store.save_state(state)
+                    return None
+                state.usage.provider_retries += 1
+                state.validate()
