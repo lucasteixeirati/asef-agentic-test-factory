@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0",
+  "case_id": "SMK-003",
+  "version": "1.0.0",
+  "kind": "SMOKE",
+  "title": "Normalização de string e entradas vazias",
+  "objective": "Provar partições de whitespace, vazio e fronteiras.",
+  "origin": "curated-for-asef",
+  "license": "MIT",
+  "curator": "Lucas Teixeira",
+  "language_profile": "python-pytest",
+  "sut_ref": "examples/python-alpha/reference_sut",
+  "requirement_ref": "datasets/smoke/SMK-003/requirement.md",
+  "oracle_ref": "datasets/smoke/SMK-003/oracle/test_oracle.py",
+  "generation_input_refs": [
+    "datasets/smoke/SMK-003/requirement.md",
+    "examples/python-alpha/reference_sut/src/reference_sut/text.py"
+  ],
+  "evaluation_input_refs": ["datasets/smoke/SMK-003/oracle/test_oracle.py"],
+  "expected_classifications": ["ACCEPTED"],
+  "allowed_modes": ["demo", "live"],
+  "exposure": "PUBLIC",
+  "oracle_policy": "PROMPT_ISOLATED",
+  "tags": ["unit", "text", "boundary"]
+}

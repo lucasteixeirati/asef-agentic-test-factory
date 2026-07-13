@@ -1,7 +1,4 @@
-"""Public ASEF skeleton contracts.
-
-The package deliberately contains no framework adapters in Stage 4.1.
-"""
+"""Public, framework-neutral ASEF contracts."""
 
 from .contracts import (
     ContextSnapshot,
@@ -20,14 +17,29 @@ from .contracts import (
     start_replay,
 )
 from .outcomes import ExitCode, RunClassification, RunStatus, exit_code_for
+from .evaluation_contracts import (
+    CoverageResult,
+    DatasetCase,
+    DatasetExposure,
+    DatasetKind,
+    MutationResult,
+    OraclePolicy,
+    dataset_case_from_dict,
+)
 
 __all__ = [
     "ContextSnapshot",
     "ContextResolution",
     "ContractValidationError",
+    "CoverageResult",
+    "DatasetCase",
+    "DatasetExposure",
+    "DatasetKind",
     "EvidenceRef",
     "ExitCode",
     "NormalizedExecutionResult",
+    "MutationResult",
+    "OraclePolicy",
     "RunClassification",
     "RunOrigin",
     "RunStatus",
@@ -37,6 +49,7 @@ __all__ = [
     "SkeletonRunState",
     "UnitTestArtifact",
     "exit_code_for",
+    "dataset_case_from_dict",
     "import_state_v1",
     "resolve_new_run_context",
     "start_replay",

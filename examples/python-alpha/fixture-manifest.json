@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0.0",
+  "files": {
+    "examples/python-alpha/reference_sut/src/reference_sut/arithmetic.py": "aa2d69c3889792317c114b5b6ca38e2b2782a8dcb84b22dd0974a6c48f2bc8f4",
+    "examples/python-alpha/reference_sut/src/reference_sut/text.py": "6306f6cf63f7a8815450abc7d1edc6111183be73fa1c5640dbe56fff0c25a766",
+    "examples/python-alpha/defective_sut/src/reference_sut/arithmetic.py": "073df8994385fd57ad268700602cf3a5a698658a724d7b55190c0650b2504f8e",
+    "examples/python-alpha/defective_sut/src/reference_sut/text.py": "6306f6cf63f7a8815450abc7d1edc6111183be73fa1c5640dbe56fff0c25a766"
+  },
+  "purpose": "Detect accidental fixture changes; intentional changes require manifest and dataset version review."
+}

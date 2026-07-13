@@ -2,7 +2,7 @@
 
 > Documento vivo para orientar a construção da aplicação, da documentação pública e do futuro livro.
 
-**Status:** vigente — Gate 4 aprovado em 2026-07-13; planejamento detalhado da Etapa 5 autorizado
+**Status:** vigente — Gate 4 e plano da Etapa 5 aprovados; 5.1 concluído e ADR-009 aceita em 2026-07-13
 **Data de início:** 2026-07-11  
 **Responsável:** Lucas  
 **Natureza:** projeto open source, educacional, experimental e de portfólio  
@@ -743,6 +743,11 @@ As datas serão estimadas após a baseline das primeiras sessões. Os gates são
 
 **Objetivo:** completar o primeiro workflow em Python sem confundi-lo com o escopo final da plataforma.
 
+**Plano executável:** `docs/project/stage-05-alpha-python-plan.md`
+
+**Plano de aceite:** `docs/project/gates/gate-05-acceptance-plan.md`
+**Status:** planejamento detalhado e baseline do Gate 5 aprovados por Lucas em 2026-07-13. O 5.1 foi concluído com regressões verdes e ADR-009 aceita; 5.2 autorizado após confirmação da publicação/CI.
+
 **Aplicação**
 
 - implementar o workflow completo;
@@ -787,7 +792,7 @@ As datas serão estimadas após a baseline das primeiras sessões. Os gates são
 - implementar o perfil TypeScript e seus adaptadores de capacidade;
 - implementar ou experimentar o perfil Java e seus adaptadores de capacidade;
 - executar casos equivalentes entre linguagens;
-- integrar cobertura e mutation testing por adaptador;
+- expandir coverage e mutation, iniciados no perfil Python, para os adapters TypeScript/Java e comparar a normalização entre ecossistemas;
 - introduzir testes metamórficos onde houver relações válidas;
 - ampliar testes adversariais da sandbox;
 - evoluir o Eval Dataset de forma estratificada.
@@ -1073,11 +1078,12 @@ Estas questões serão decididas nas etapas indicadas, não agora:
 
 ## 27. Próxima decisão
 
-Planejar detalhadamente a Etapa 5 — Alpha Python:
+Executar o incremento 5.2 — adapter `pytest` e normalização:
 
-1. revisar objetivos, entradas, saídas e Gate 5 já previstos neste planejamento;
-2. decompor o alpha em incrementos pequenos com critérios de aceite;
-3. decidir o SUT de referência e a fronteira do modo live;
-4. definir datasets, coverage, mutation, observabilidade e segurança exigidos no alpha;
-5. separar capacidades obrigatórias de experimentos e possibilidades futuras;
-6. submeter o plano detalhado à aprovação de Lucas antes de alterar a implementação.
+1. confirmar a CI pública do 5.1;
+2. definir a saída estruturada preferencial do `pytest` sem acoplar o core;
+3. implementar o adapter dentro do perfil Python e do sandbox Docker;
+4. distinguir coleta, sintaxe/import, assertion e falha de tooling/infra;
+5. preservar o raw result por referência e normalizar apenas fatos comprováveis;
+6. manter capabilities parciais/planejadas explicitamente declaradas até suas evidências;
+6. não considerar o Gate 5 aprovado nem iniciar a Etapa 6 automaticamente.

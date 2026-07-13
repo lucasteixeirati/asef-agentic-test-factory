@@ -96,11 +96,11 @@ Os casos validam contratos, não código idêntico.
 | LCF-009 | Executar mutação quando suportada |
 | LCF-010 | Declarar capability ausente explicitamente |
 
-## Estrutura proposta por caso
+## Estrutura implementada por caso no Alpha Python
 
 ```text
 datasets/<tipo>/<case-id>/
-├── case.yaml
+├── case.json
 ├── requirement.md
 ├── sut/
 ├── oracle/
@@ -108,5 +108,4 @@ datasets/<tipo>/<case-id>/
 └── README.md
 ```
 
-Os schemas exatos de `case.yaml` serão implementados após validação dos contratos conceituais.
-
+`case.json` segue `DatasetCase` em `src/asef/evaluation_contracts.py`. JSON foi escolhido para evitar uma dependência YAML no core. SMK-001, SMK-002, SMK-003 e SMK-007 são os seeds do 5.1; os demais casos Smoke serão materializados em 5.5 e os casos Security em 5.7.

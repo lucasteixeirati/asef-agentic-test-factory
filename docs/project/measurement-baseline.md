@@ -56,6 +56,16 @@ O custo de R$ 100,00 não será dividido artificialmente entre entregáveis. Dur
 | Estimativa inicial da IA | semanas de desenvolvimento | Estimativa original ainda sem decomposição comparável |
 | Andamento observado | Etapa 3 em andamento no Dia 2 | Fato documental; não equivale à conclusão do produto |
 
+### Atualização no Dia 3
+
+| Indicador | Valor informado | Natureza |
+|---|---:|---|
+| Interações acumuladas estimadas | aproximadamente 300 | Derivação da média informada de cerca de 100 interações por dia em três dias; não é telemetria |
+| Horas acumuladas | não atualizadas | Permanecem conhecidas apenas as aproximadamente 10 horas relatadas até o Dia 2 |
+| Velocidade percebida | alta | Percepção do autor após o walking skeleton |
+| Desgaste percebido | não significativo | O autor relata progresso sólido, verificações e clareza de objetivo |
+| Confiança | crescente a cada etapa concluída com qualidade | Percepção qualitativa do autor |
+
 Os números não serão convertidos artificialmente em percentual de produtividade. As próximas comparações usarão dias por entregável, retrabalho, critérios de gate e evidências de qualidade.
 
 ## Baseline do Marco Zero

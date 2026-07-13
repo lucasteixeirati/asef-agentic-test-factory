@@ -17,7 +17,9 @@
 - exit codes distinguem input, espera, falha, policy, budget e infraestrutura;
 - critérios detalhados em `docs/project/gates/gate-04-acceptance-plan.md`.
 
-## Alpha Python — Gate 5 futuro
+## Alpha Python — Gate 5 planejado
+
+Os critérios abaixo foram detalhados na matriz executável `docs/project/gates/gate-05-acceptance-plan.md`.
 
 - WF-001 completo com função Python existente;
 - pytest executado em Docker Desktop/WSL2;

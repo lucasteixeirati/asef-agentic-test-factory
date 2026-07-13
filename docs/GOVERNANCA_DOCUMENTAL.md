@@ -48,6 +48,9 @@ Toda mudança relevante deve verificar impactos em:
 | `docs/project/stage-04-walking-skeleton-plan.md` | Plano executável aprovado/pendente da Etapa 4 |
 | `docs/project/stage-04-progress.md` | Progresso e checkpoints da implementação do skeleton |
 | `docs/project/gates/gate-04-acceptance-plan.md` | Critérios objetivos previstos para o Gate 4 |
+| `docs/project/stage-05-alpha-python-plan.md` | Escopo, incrementos, dependências e Definition of Done da Etapa 5 |
+| `docs/project/stage-05-progress.md` | Progresso e checkpoints da implementação do Alpha Python |
+| `docs/project/gates/gate-05-acceptance-plan.md` | Critérios objetivos previstos para o Gate 5 |
 | `docs/project/requirements-v01.md` | Requisitos e atributos de qualidade pretendidos para v0.1 |
 | `docs/project/language-matrix.md` | Níveis de suporte e toolchains candidatos |
 | `docs/project/first-workflow.md` | Seleção conceitual do primeiro workflow |
@@ -56,6 +59,7 @@ Toda mudança relevante deve verificar impactos em:
 | `docs/architecture/language-adapters.md` | Contratos e extensibilidade multilíngue |
 | `docs/architecture/workflows/` | Topologia e estado dos workflows |
 | `docs/architecture/contracts/` | Schemas e contratos conceituais do core |
+| `docs/architecture/contracts/alpha-python-contracts.md` | Contratos concretos de datasets e métricas iniciados no 5.1 |
 | `docs/architecture/adr/` | Decisões arquiteturais aceitas |
 | `docs/architecture/evidence-model.md` | Eventos, manifests e rastreabilidade |
 | `docs/architecture/observability.md` | Separação vigente entre audit trail e logs operacionais |
@@ -63,6 +67,7 @@ Toda mudança relevante deve verificar impactos em:
 | `docs/quality/evaluation-strategy.md` | Datasets, oracles, métricas e validade |
 | `docs/quality/sandbox-policy-baseline.md` | Baseline quantitativa de isolamento e budgets |
 | `docs/quality/datasets/` | Catálogos e futuros casos versionados |
+| `datasets/` | Casos executáveis versionados e separação entre geração e avaliação |
 | `docs/quality/stage-04r8-test-hardening.md` | Baselines de coverage e mutation do hardening pré-Gate 4 |
 | `docs/project/open-source-strategy.md` | Publicação, experiência externa e comunidade |
 | `docs/reviews/` | Revisões independentes e respostas |

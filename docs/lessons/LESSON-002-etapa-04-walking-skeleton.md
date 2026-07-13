@@ -1,7 +1,7 @@
 # Lição aprendida — Etapa 4: o ambiente de entrega também é requisito
 
 - **Data:** 2026-07-13
-- **Estado:** evidência técnica consolidada; revisão autoral pendente
+- **Estado:** evidência técnica e relato aprovados pelo autor em 2026-07-13
 
 ## O que esperávamos
 
@@ -24,6 +24,10 @@ Uma revisão adicional encontrou 80% de branch coverage geral e 85% no recorte p
 
 O finding mais valioso veio de mudar contexto e oracle, não de repetir o mesmo teste. Um artefato open source precisa ser exercitado como entrega instalada. Evidência de execução e log operacional resolvem problemas diferentes. Coverage é baseline estrutural; mutation ajuda a investigar a força dos asserts.
 
+Na percepção de Lucas, a confiança aumenta a cada etapa concluída com qualidade. A velocidade permanece alta no terceiro dia — aproximadamente cem interações diárias — sem se tornar desgastante, porque explicações e pequenas revisões ajudam a manter clareza, verificações e objetivo. O finding do wheel reforçou que estudar continuamente e aplicar senso crítico experiente continuam essenciais mesmo com uma IA muito potente.
+
+Como especialista e líder, Lucas identifica sua contribuição no conjunto das decisões, não em uma única intervenção. Sua visão procura conectar o que está sendo construído agora com arquitetura, qualidade, segurança, contexto e evolução futura.
+
 ## O que faremos diferente
 
 - testar o artefato distribuído desde o primeiro incremento executável;
@@ -31,3 +35,5 @@ O finding mais valioso veio de mudar contexto e oracle, não de repetir o mesmo 
 - separar audit trail, logs operacionais e relatórios desde o contrato inicial;
 - criar retrospectiva e mapa de fontes ao fechar cada milestone;
 - capturar a voz do autor antes que a memória seja substituída pela narrativa dos commits.
+
+Esta lista técnica foi aprovada por Lucas e poderá ser complementada futuramente por sua resposta sobre o que faria diferente se reiniciasse o projeto hoje.

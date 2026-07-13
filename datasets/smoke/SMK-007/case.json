@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0",
+  "case_id": "SMK-007",
+  "version": "1.0.0",
+  "kind": "SMOKE",
+  "title": "Defeito do SUT revelado por oracle independente",
+  "objective": "Provar suspeita de defeito e revisão humana sem correção do SUT.",
+  "origin": "curated-for-asef",
+  "license": "MIT",
+  "curator": "Lucas Teixeira",
+  "language_profile": "python-pytest",
+  "sut_ref": "examples/python-alpha/defective_sut",
+  "requirement_ref": "datasets/smoke/SMK-007/requirement.md",
+  "oracle_ref": "datasets/smoke/SMK-007/oracle/test_oracle.py",
+  "generation_input_refs": [
+    "datasets/smoke/SMK-007/requirement.md",
+    "examples/python-alpha/defective_sut/src/reference_sut/arithmetic.py"
+  ],
+  "evaluation_input_refs": ["datasets/smoke/SMK-007/oracle/test_oracle.py"],
+  "expected_classifications": ["SUT_DEFECT_SUSPECTED"],
+  "allowed_modes": ["demo", "live"],
+  "exposure": "PUBLIC",
+  "oracle_policy": "PROMPT_ISOLATED",
+  "tags": ["unit", "seeded-defect", "human-review"]
+}

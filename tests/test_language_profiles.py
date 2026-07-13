@@ -9,6 +9,7 @@ class LanguageProfileTests(unittest.TestCase):
     def test_reference_ecosystems_are_registered_by_digest(self) -> None:
         self.assertEqual(set(LANGUAGE_PROFILES), {"python-pytest", "node-typescript", "java-junit"})
         for profile in LANGUAGE_PROFILES.values():
+            profile.validate()
             self.assertIn("@sha256:", profile.image)
             self.assertTrue(profile.version_command)
             self.assertIn("unit", profile.test_capabilities)

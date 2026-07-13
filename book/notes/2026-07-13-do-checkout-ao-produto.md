@@ -2,8 +2,8 @@
 
 - **Data:** 2026-07-13
 - **Origem:** auditoria 4.R7 e hardening 4.R8
-- **Proveniência:** evidência verificável estruturada por GPT-5.6 Sol
-- **Estado:** rascunho assistido; percepção do autor pendente
+- **Proveniência:** evidência verificável e relato explícito de Lucas; estruturação por GPT-5.6 Sol
+- **Estado:** revisado e aprovado pelo autor em 2026-07-13
 
 ## A suíte estava verde
 
@@ -21,8 +21,12 @@ Na 4.R8, o mesmo princípio foi aplicado à suíte: contar testes deu lugar a me
 
 IA pode acelerar a construção de caminhos coerentes dentro das premissas fornecidas. O QA agrega valor ao variar ambiente, perspectiva, oracle e hipótese. A velocidade da implementação aumenta a importância dessa mudança deliberada de ponto de observação.
 
-## Voz do autor a incorporar
+## Voz do autor
 
-- O finding do wheel surpreendeu você ou confirmou uma suspeita?
-- Depois desse episódio, o que passou a significar “pronto” neste projeto?
-- A velocidade da IA aumentou ou diminuiu sua necessidade de desconfiança profissional?
+Para Lucas, o finding reforçou a necessidade de estudar e se aprofundar continuamente. O episódio também demonstrou que, embora a IA seja muito potente, o senso crítico de um engenheiro experiente continua tendo grande valor: é ele que orienta a ferramenta e ajuda a impedir que a construção se desvie do foco.
+
+Essa orientação não aparece apenas em uma intervenção. Com a visão macro adquirida como especialista e líder, Lucas procura enxergar o projeto como um todo e não somente resolver o problema do momento. A revisão do wheel, a ampliação dos testes, os logs, o contexto do QA e as decisões arquiteturais são manifestações complementares desse mesmo modo de trabalhar.
+
+## Questão ainda aberta
+
+- Depois desse episódio, qual critério pessoal passou a definir que uma entrega está realmente pronta?

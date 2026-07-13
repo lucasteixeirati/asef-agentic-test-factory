@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0",
+  "case_id": "SMK-002",
+  "version": "1.0.0",
+  "kind": "SMOKE",
+  "title": "Divisão com zero especificado",
+  "objective": "Provar partições válidas e o comportamento negativo explícito.",
+  "origin": "curated-for-asef",
+  "license": "MIT",
+  "curator": "Lucas Teixeira",
+  "language_profile": "python-pytest",
+  "sut_ref": "examples/python-alpha/reference_sut",
+  "requirement_ref": "datasets/smoke/SMK-002/requirement.md",
+  "oracle_ref": "datasets/smoke/SMK-002/oracle/test_oracle.py",
+  "generation_input_refs": [
+    "datasets/smoke/SMK-002/requirement.md",
+    "examples/python-alpha/reference_sut/src/reference_sut/arithmetic.py"
+  ],
+  "evaluation_input_refs": ["datasets/smoke/SMK-002/oracle/test_oracle.py"],
+  "expected_classifications": ["ACCEPTED"],
+  "allowed_modes": ["demo", "live"],
+  "exposure": "PUBLIC",
+  "oracle_policy": "PROMPT_ISOLATED",
+  "tags": ["unit", "arithmetic", "negative-path"]
+}

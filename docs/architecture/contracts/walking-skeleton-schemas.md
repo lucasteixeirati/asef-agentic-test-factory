@@ -115,7 +115,7 @@ Status representa posição/terminal do workflow. Classificação representa sig
 
 ## Independência de frameworks
 
-O package `asef` não importa LangGraph, OpenAI, Docker ou PydanticAI. Esses componentes serão adapters. Um teste lê o source dos contratos e protege essa fronteira durante o skeleton.
+Os módulos públicos de contratos e domínio não importam LangGraph, OpenAI, Docker ou PydanticAI. Esses componentes permanecem em adapters. Testes de fronteira baseados em source/AST protegem essa separação.
 
 ## Evidência de teste
 

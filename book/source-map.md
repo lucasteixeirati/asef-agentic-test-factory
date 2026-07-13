@@ -18,13 +18,13 @@ Este mapa evita reconstrução retrospectiva e não transforma o índice provis�
 | 12. Falhas, retrabalho e decisões revertidas | journals das Etapas 3 e 4; ADR-007; auditoria do wheel | forte |
 | 13. Evolução baseada em evidências | ADR-004, ADR-007, ADR-008; checkpoints | parcial |
 | 14. Open source e comunidade | publicação GitHub; feedback comunitário ainda ausente | inicial |
-| 15. Impacto da IA na velocidade e qualidade | baseline de 10 horas/150 interações; dias por etapa | desatualizada após Dia 2 |
+| 15. Impacto da IA na velocidade e qualidade | baseline do Dia 2; atualização do Dia 3 para aproximadamente 300 interações; percepção pós-walking skeleton | evidência contemporânea em evolução |
 | 16. O que eu faria diferente | lessons e retrospectivas; exige distância temporal | aberta |
 
 ## Lacunas que exigem voz do autor
 
-- percepção atual de velocidade após o walking skeleton;
-- confiança antes e depois dos testes adversariais;
-- reação à falha do wheel fora do checkout;
-- custo cognitivo de revisar código e documentação produzidos rapidamente;
-- decisões que Lucas considera mais representativas de sua experiência de QA.
+- o que Lucas faria diferente se reiniciasse o projeto hoje;
+- estimativa de horas acumuladas após o Dia 2, se houver uma lembrança defensável;
+- critério pessoal para considerar uma entrega realmente pronta;
+- experiência de um usuário externo real, quando ocorrer;
+- percepção após o Alpha Python e as etapas multilíngues.
