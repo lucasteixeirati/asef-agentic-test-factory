@@ -737,7 +737,7 @@ As datas serão estimadas após a baseline das primeiras sessões. Os gates são
 - [ ] Nenhuma etapa essencial depende apenas de logs informais?
 - [ ] É possível explicar qual contexto, skill, MCP/model policy e aprovação orientaram a run?
 
-**Status:** Opção C aprovada; 4.R1 e 4.R2 concluídos em 2026-07-12 com package único, contexto calculator e estado `1.1`. Próximo: application service em 4.R3. Progresso: `docs/project/stage-04-progress.md`.
+**Status:** Opção C aprovada; 4.R1, 4.R2 e 4.R3 concluídos em 2026-07-12. Package único, estado `1.1`, application service e CLI pública preparados. Próximo: artifact e skill `unit` em 4.R4. Progresso: `docs/project/stage-04-progress.md`.
 
 ### Etapa 5 — Alpha Python de referência
 
@@ -1073,13 +1073,13 @@ Estas questões serão decididas nas etapas indicadas, não agora:
 
 ## 27. Próxima decisão
 
-Executar 4.R3 da sequência revisada da Etapa 4:
+Executar 4.R4 da sequência revisada da Etapa 4:
 
-1. criar ports e application service do WF-001;
-2. expor o fluxo determinístico pela CLI pública `asef`;
-3. selecionar a skill `unit` para o perfil Python;
-4. integrar o gateway gravado e evidências sob o runtime ASEF;
-5. executar o primeiro caminho determinístico do WS-001;
+1. selecionar e implementar a skill `unit` para o perfil Python;
+2. conectar análise e geração pelo gateway gravado através de ports;
+3. validar policy, path, tamanho, conteúdo e sintaxe do artifact;
+4. montar workspace efêmero sem alterar o SUT original;
+5. aproximar o primeiro caminho determinístico do WS-001 da execução real;
 6. avançar depois para LangGraph e Docker pelas portas estabilizadas;
 7. publicar quickstart e arquitetura real do skeleton;
 8. submeter nova ADR após WS-001 funcional e o Gate 4 após execução reproduzível.

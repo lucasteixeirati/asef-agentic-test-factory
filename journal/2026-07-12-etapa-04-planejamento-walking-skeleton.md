@@ -103,3 +103,11 @@ O primeiro teste criado para detectar imports do package removido encontrou a st
 - **Falha útil:** a primeira proteção do import tratou `input_tokens` como secret; a regressão revelou o falso positivo e a regra foi refinada para chaves sensíveis específicas.
 - **Fricção:** a tentativa inicial via paths falhou no harness; discovery executou corretamente.
 - **Próximo passo:** 4.R3, application service determinístico antes de nova ADR.
+## Continuação — incremento 4.R3
+
+- **Objetivo:** criar o primeiro application service e a CLI pública sem consolidar frameworks prematuramente.
+- **Resultado:** `asef prepare` valida request, contexto, scopes e SUT, persistindo evidências até `ANALYZING_REQUIREMENT`.
+- **Decisão de transparência:** a preparação não recebe status `SUCCEEDED`; permanece não terminal e `UNCLASSIFIED` porque análise e testes ainda não aconteceram.
+- **Finding:** o contexto criado em 4.R2 referenciava `examples/calculator`, mas o SUT ainda não existia. O arquivo controlado foi incluído em 4.R3.
+- **Evidência:** 73 testes descobertos, 63 aprovados e 10 Docker desabilitados; 6 testes novos cobrem serviço e CLI.
+- **Próximo passo:** 4.R4, gateway gravado, artifact, skill unit, policy e workspace efêmero.

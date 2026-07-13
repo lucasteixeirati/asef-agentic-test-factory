@@ -79,6 +79,19 @@ O relatório identifica a natureza de cada afirmação e sua evidência relacion
 - import preserva evidência `1.0`, mas não concede capacidade de execução;
 - replay cria nova identidade e exige snapshot contextual válido;
 - o resolver transforma `QualityContext` validado em snapshot primitivo antes dos efeitos;
+
+## Implementação 4.R3
+
+O primeiro application service termina na fronteira agêntica `ANALYZING_REQUIREMENT`:
+
+```text
+CLI pública
+  -> FileQualityContextAdapter
+  -> PrepareRunService (ports)
+  -> JsonRunStore
+```
+
+O serviço conhece somente contratos e protocols. Paths e JSON pertencem aos adapters. A validação completa de request, contexto, scopes e existência do SUT ocorre antes da criação do diretório da run. O estado preparado contém manifest mínimo do SUT, mas não afirma que análise, geração ou execução já aconteceram.
 - nova ADR será criada apenas após o primeiro WS-001 funcional.
 
 ## Questões que a implementação deve responder

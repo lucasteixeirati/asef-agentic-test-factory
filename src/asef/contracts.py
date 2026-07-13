@@ -297,6 +297,7 @@ class SkeletonRunState:
     usage: SkeletonBudgetUsage = field(default_factory=SkeletonBudgetUsage)
     errors: list[dict[str, Any]] = field(default_factory=list)
     history: list[dict[str, Any]] = field(default_factory=list)
+    facts: dict[str, Any] = field(default_factory=dict)
     imported_facts: dict[str, Any] = field(default_factory=dict)
     imported_usage: dict[str, Any] = field(default_factory=dict)
     imported_budgets: dict[str, Any] = field(default_factory=dict)

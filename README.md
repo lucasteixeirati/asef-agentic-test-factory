@@ -70,8 +70,10 @@ Requisitos atuais: Python 3.13 e, para integrações, Docker Desktop.
 ```powershell
 $env:PYTHONPATH='src'
 python -m unittest discover -s tests -v
-python -m asef.legacy.cli --mode demo --output .asef\runs
+python -m asef.cli prepare --output .asef\runs
 ```
+
+O comando `prepare` valida request, QualityContext, scopes e o SUT controlado. Ele persiste estado, snapshot, manifest e eventos, encerrando em `ANALYZING_REQUIREMENT`, pronto para o próximo adapter. O alias `asef-spike` mantém a demo legada temporariamente.
 
 Testes Docker são opt-in:
 
@@ -85,7 +87,7 @@ Nunca coloque uma chave real em arquivos do repositório. O modo live exige `OPE
 
 ## Estrutura
 
-- `src/asef/` — contratos, runtime, adapters e baseline legada durante a consolidação;
+- `src/asef/` — contratos, application services, runtime, adapters e baseline legada temporária;
 - `spikes/` — comparações descartáveis ou isoladas;
 - `tests/` — testes unitários e integrações Docker;
 - `docs/` — arquitetura, projeto, qualidade, contexto e experimentos;

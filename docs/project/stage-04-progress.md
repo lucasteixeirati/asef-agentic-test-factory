@@ -116,3 +116,36 @@ A primeira execução específica usou paths como módulos em uma pasta `tests` 
 ### Próximo incremento
 
 4.R3 — ports, application service e CLI pública para o primeiro fluxo determinístico.
+
+## Incremento 4.R3 — Application service determinístico
+
+### Concluído
+
+- ports `QualityContextPort` e `RunStorePort` independentes de frameworks;
+- `PrepareRunService` como primeiro application service do WF-001;
+- adapter de QualityContext em arquivo, com contenção no workspace;
+- validação de repository local, scopes concretos e existência dos arquivos autorizados;
+- `JsonRunStore` para estado, snapshot, manifest e eventos;
+- CLI pública `asef prepare`, separada do alias legado `asef-spike`;
+- SUT controlado `examples/calculator/calculator.py`;
+- preparação determinística até a fronteira `ANALYZING_REQUIREMENT`;
+- falhas de input/contexto retornam exit code 2 sem criar diretório de run.
+
+### Limite honesto
+
+4.R3 não conclui o WS-001 e não classifica a run como sucesso. Exit code 0 indica que a operação de preparação terminou corretamente; o estado permanece não terminal e `UNCLASSIFIED`, pronto para análise. Geração do artifact, execução e avaliação ainda não ocorreram.
+
+### Verificação
+
+- 73 testes descobertos: 63 aprovados e 10 integrações Docker desabilitadas por design;
+- 6 testes novos de application service e CLI;
+- execução manual da CLI produziu JSON legível por máquina e os quatro documentos mínimos;
+- application core sem imports de OpenAI, LangGraph, Docker, PydanticAI ou adapters de filesystem.
+
+### Finding
+
+O contexto do calculator já existia em 4.R2, mas apontava para um diretório de SUT ainda ausente. A inspeção do 4.R3 revelou e corrigiu a lacuna antes de qualquer alegação de fluxo vertical.
+
+### Próximo incremento
+
+4.R4 — gateway gravado, artifact tipado, skill `unit`, policy e workspace efêmero. O checkpoint de nova ADR continua condicionado ao WS-001 funcional.
