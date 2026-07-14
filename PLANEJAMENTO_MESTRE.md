@@ -2,7 +2,7 @@
 
 > Documento vivo para orientar a construção da aplicação, da documentação pública e do futuro livro.
 
-**Status:** vigente — 5.1 e 5.2 concluídos; 5.3 aprovado localmente e aguardando publicação/CI
+**Status:** vigente — incrementos 5.1, 5.2 e 5.3 concluídos; versão pré-alpha `0.1.0a2` publicada
 **Data de início:** 2026-07-11  
 **Responsável:** Lucas  
 **Natureza:** projeto open source, educacional, experimental e de portfólio  
@@ -746,7 +746,7 @@ As datas serão estimadas após a baseline das primeiras sessões. Os gates são
 **Plano executável:** `docs/project/stage-05-alpha-python-plan.md`
 
 **Plano de aceite:** `docs/project/gates/gate-05-acceptance-plan.md`
-**Status:** 5.1 e 5.2 concluídos e publicados. A ADR-009 foi aceita. O 5.3 passou pela segunda revisão técnica local após correção de sete findings; aguarda commit, CI pública e decisão de publicação, sem integração à CLI pública.
+**Status:** 5.1, 5.2 e 5.3 concluídos e publicados. A ADR-009 foi aceita. O 5.3 passou pela segunda revisão técnica após correção de sete findings e pelos três jobs da CI pública; permanece sem integração à CLI pública.
 
 **Aplicação**
 

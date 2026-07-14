@@ -2,7 +2,7 @@
 
 - **Data:** 2026-07-14
 - **Incremento:** 5.3
-- **Estado:** implementação interna concluída; hardening e revisão pendentes
+- **Estado:** concluído, revisado e publicado como pré-alpha `0.1.0a2`
 
 ## Resultado observado
 
@@ -28,6 +28,8 @@ O hardening revelou ainda uma diferença LF/CRLF no Windows. Artifacts e oracle 
 
 Após as correções, o core executou 178 testes com 88% de branch coverage; o workflow opcional passou 18/18; e Docker passou 14 de 15 testes, com um skip conhecido por privilégio de symlink no host Windows.
 
-## Limite da conclusão
+## Publicação e limite da conclusão
 
-O código ainda não é o fluxo padrão da CLI. A revisão técnica local está aprovada, mas publicação e encerramento dependem de commit, CI pública e decisão humana sobre a versão.
+O commit funcional `1cf687f` foi publicado e a execução pública `29360824309` aprovou os jobs `core`, `framework-spikes` e `docker-security`. Wheel e sdist passaram por auditoria, secret scan e instalação limpa; a demo keyless terminou em `SUCCEEDED/ACCEPTED`.
+
+O incremento foi encerrado como pré-alpha `0.1.0a2`. O novo código ainda não é o fluxo padrão da CLI, e a publicação não amplia a alegação de segurança para código hostil ou uso em produção.

@@ -2,7 +2,7 @@
 
 - **Plano:** `docs/project/stage-05-alpha-python-plan.md`
 - **Gate:** `docs/project/gates/gate-05-acceptance-plan.md`
-- **Estado atual:** incrementos 5.1 e 5.2 concluídos; 5.3 implementado internamente, em hardening e aguardando revisão
+- **Estado atual:** incrementos 5.1, 5.2 e 5.3 concluídos; versão pré-alpha `0.1.0a2` publicada
 
 ## 5.1 — Contratos, ADRs e suíte de referência
 
@@ -110,7 +110,7 @@ Com os três jobs aprovados, o incremento 5.2 está concluído. O próximo passo
 
 ### Estado de desenvolvimento
 
-A implementação interna foi autorizada e concluída em fatias em 2026-07-14. A primeira revisão rejeitou provisoriamente o incremento por sete findings. Todos foram corrigidos e a segunda revisão técnica foi aprovada localmente. O incremento ainda não foi publicado nem conectado à CLI pública.
+A implementação interna foi autorizada e concluída em fatias em 2026-07-14. A primeira revisão rejeitou provisoriamente o incremento por sete findings. Todos foram corrigidos; a segunda revisão técnica, o empacotamento e a CI pública foram aprovados. O incremento foi publicado como pré-alpha `0.1.0a2`, mas ainda não está conectado à CLI pública.
 
 Entregas presentes:
 
@@ -135,8 +135,13 @@ Evidência local após correções da revisão:
 - schema de estado `1.2.0`, com leitura comprovada de estado `1.1.0` sem os novos campos;
 - falhas de provider e infraestrutura normalizadas com budgets persistidos.
 
-Pendências antes da publicação:
+### Publicação e CI
 
-- decisão explícita sobre exposição na CLI;
-- commit, CI pública e registro da execução como evidência;
-- decisão humana final de publicação do pré-alpha `0.1.0a2`.
+- commit funcional publicado: `1cf687f` (`feat: complete stage 5.3 oracle correction workflow`);
+- versão do pacote: `0.1.0a2`;
+- execução pública: `29360824309`;
+- jobs `core`, `framework-spikes` e `docker-security`: aprovados;
+- wheel e sdist construídos, inspecionados e aprovados pelo secret scan;
+- instalação limpa do wheel e execução da demo keyless: `SUCCEEDED/ACCEPTED`.
+
+Com a revisão, o empacotamento e os três jobs aprovados, o incremento 5.3 está concluído. A exposição desse fluxo na CLI permanece uma decisão futura e não faz parte desta publicação.

@@ -2,8 +2,8 @@
 
 - **Data:** 2026-07-14
 - **Escopo:** oracle independente, correção limitada, evidências por tentativa e revisão humana
-- **Decisão técnica local:** aprovada
-- **Publicação:** pendente de commit e CI pública
+- **Decisão técnica:** aprovada
+- **Publicação:** aprovada como pré-alpha `0.1.0a2`
 
 ## Histórico da decisão
 
@@ -28,15 +28,19 @@ Durante o hardening, escrita textual no Windows revelou conversão LF/CRLF capaz
 - Docker: 15 descobertos, 14 aprovados e um skip por privilégio local de symlink no Windows;
 - integração 5.3 real: teste gerado e oracle executados em containers, workspaces separados/read-only, evidências distintas e cleanup confirmado;
 - `git diff --check`: sem erros;
-- secret scan e auditoria do pacote devem ser repetidos imediatamente antes do commit.
+- secret scan do código e dos artefatos de distribuição: aprovado;
+- wheel e sdist: construídos e inspecionados;
+- instalação limpa do wheel e demo keyless: `SUCCEEDED/ACCEPTED`;
+- commit funcional: `1cf687f`;
+- CI pública `29360824309`: jobs `core`, `framework-spikes` e `docker-security` aprovados.
 
 ## Limites preservados
 
 - o fluxo 5.3 ainda não é o default da CLI;
 - não há alegação de execução segura de código hostil ou uso em produção;
 - `SUT_DEFECT_SUSPECTED` continua exigindo decisão humana;
-- aprovação local não substitui CI pública nem decisão humana de publicação.
+- o incremento publicado permanece pré-alpha e experimental.
 
 ## Parecer
 
-Os critérios técnicos do incremento 5.3 estão atendidos localmente. Recomenda-se publicar como pré-alpha `0.1.0a2` somente após secret scan, package audit, commit e três jobs verdes na CI pública.
+Os critérios técnicos e de publicação do incremento 5.3 estão atendidos. Os sete findings estão encerrados, os artefatos foram auditados e os três jobs da CI pública passaram. A revisão recomenda e aprova o fechamento como pré-alpha `0.1.0a2`.
