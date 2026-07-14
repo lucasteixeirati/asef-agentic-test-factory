@@ -63,7 +63,7 @@ O relatório identifica a natureza de cada afirmação e sua evidência relacion
 ## Realizado no incremento 4.1
 
 - package `asef` criado sem imports de frameworks;
-- contratos `1.0.0` e estado `1.1.0` após a revisão 4.R2;
+- contratos-base `1.0.0`, execução `1.1.0` e estado persistido `1.2.0` após o hardening do 5.3;
 - status, classificações e exit codes separados;
 - estado `1.x` dos spikes explicitamente incompatível;
 - budgets e evidências serializáveis em tipos primitivos;

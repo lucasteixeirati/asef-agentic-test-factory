@@ -10,7 +10,7 @@ Este repositório também registra a jornada de desenvolvimento assistido por IA
 
 ## Estado atual
 
-**Experimental — pré-alpha.** O 5.1 foi concluído e a ADR-009 aceita. O adapter pytest do 5.2 foi aprovado e aguarda confirmação da CI pública; ainda não é o runner padrão da CLI. O projeto não deve ser usado para executar código arbitrariamente hostil ou em produção.
+**Experimental — pré-alpha.** Os incrementos 5.1 e 5.2 foram concluídos. O 5.3 passou pela revisão técnica local e aguarda publicação/CI; ainda não integra a CLI pública. O projeto não deve ser usado para executar código arbitrariamente hostil ou em produção.
 
 Já demonstrado:
 
@@ -129,7 +129,7 @@ Nunca coloque uma chave real em arquivos do repositório. O modo live exige `OPE
 2. Contratos, workflow e avaliação — concluído.
 3. Spikes arquiteturais — revisão técnica concluída.
 4. Walking skeleton e hardening — concluídos; Gate 4 aprovado.
-5. Alpha Python — 5.1 concluído; 5.2 aprovado, aguardando CI pública.
+5. Alpha Python — 5.1 e 5.2 concluídos; 5.3 aprovado localmente e aguardando publicação/CI.
 6. Perfis TypeScript e Java.
 7. Developer preview e hardening da v0.1.
 

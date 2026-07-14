@@ -1,7 +1,7 @@
 # Adapter pytest do Alpha Python
 
 - **Incremento:** 5.2
-- **Estado:** aprovado em 2026-07-13; aguardando confirmação da CI pública
+- **Estado:** concluído; aprovado localmente e na CI pública em 2026-07-13
 - **Código:** `src/asef/adapters/pytest_execution.py`
 - **Toolchain:** `tooling/python-pytest/`
 

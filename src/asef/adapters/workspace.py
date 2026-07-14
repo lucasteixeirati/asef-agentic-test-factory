@@ -15,7 +15,25 @@ class EphemeralWorkspaceAdapter:
         context: ResolvedQualityContext,
         artifact: UnitTestArtifact,
     ) -> WorkspaceResult:
-        workspace = run_dir / "workspace"
+        return self._stage(run_dir / "workspace", context, artifact)
+
+    def stage_attempt(
+        self,
+        run_dir: Path,
+        context: ResolvedQualityContext,
+        artifact: UnitTestArtifact,
+        attempt: int,
+    ) -> WorkspaceResult:
+        if attempt < 0 or attempt > 999:
+            raise ValueError("attempt must be between 0 and 999")
+        return self._stage(run_dir / "attempt-workspaces" / f"{attempt:03d}" / "generated", context, artifact)
+
+    def _stage(
+        self,
+        workspace: Path,
+        context: ResolvedQualityContext,
+        artifact: UnitTestArtifact,
+    ) -> WorkspaceResult:
         workspace.mkdir(parents=True, exist_ok=False)
         copied: list[str] = []
         source_hashes: dict[Path, str] = {}
@@ -32,7 +50,7 @@ class EphemeralWorkspaceAdapter:
             copied.append(relative)
         generated = workspace / PurePosixPath(artifact.relative_path)
         generated.parent.mkdir(parents=True, exist_ok=True)
-        generated.write_text(artifact.content, encoding="utf-8")
+        generated.write_bytes(artifact.content.encode("utf-8"))
         for source, before in source_hashes.items():
             if self._sha256(source) != before:
                 raise RuntimeError(f"source changed while staging workspace: {source.name}")

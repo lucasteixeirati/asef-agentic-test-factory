@@ -12,7 +12,7 @@ from uuid import uuid4
 from .outcomes import RunClassification, RunStatus
 
 
-STATE_SCHEMA_VERSION = "1.1.0"
+STATE_SCHEMA_VERSION = "1.2.0"
 CONTRACT_SCHEMA_VERSION = "1.0.0"
 EXECUTION_SCHEMA_VERSION = "1.1.0"
 WORKFLOW_ID = "WF-001"
@@ -265,6 +265,7 @@ class NormalizedExecutionResult:
 class SkeletonBudgetLimits:
     max_model_calls: int = 4
     max_provider_retries: int = 1
+    max_test_corrections: int = 2
     max_workflow_seconds: int = 300
     max_input_tokens: int = 30_000
     max_output_tokens: int = 10_000
@@ -275,6 +276,8 @@ class SkeletonBudgetLimits:
             raise ContractValidationError("max_model_calls must be positive")
         if self.max_provider_retries < 0:
             raise ContractValidationError("max_provider_retries cannot be negative")
+        if self.max_test_corrections < 0 or self.max_test_corrections > 2:
+            raise ContractValidationError("max_test_corrections must be between zero and two")
         for name in ("max_workflow_seconds", "max_input_tokens", "max_output_tokens"):
             if getattr(self, name) < 1:
                 raise ContractValidationError(f"{name} must be positive")
@@ -286,6 +289,7 @@ class SkeletonBudgetLimits:
 class SkeletonBudgetUsage:
     model_calls: int = 0
     provider_retries: int = 0
+    test_corrections: int = 0
     input_tokens: int = 0
     output_tokens: int = 0
     elapsed_ms: int = 0
@@ -294,6 +298,7 @@ class SkeletonBudgetUsage:
         for name in (
             "model_calls",
             "provider_retries",
+            "test_corrections",
             "input_tokens",
             "output_tokens",
             "elapsed_ms",
@@ -378,9 +383,12 @@ class SkeletonRunState:
             raise ContractValidationError("model call usage exceeds state budget")
         if self.usage.provider_retries > self.budgets.max_provider_retries:
             raise ContractValidationError("provider retry usage exceeds state budget")
-        if self.usage.input_tokens > self.budgets.max_input_tokens:
+        if self.usage.test_corrections > self.budgets.max_test_corrections:
+            raise ContractValidationError("test correction usage exceeds state budget")
+        budget_exhausted = self.status is RunStatus.BUDGET_EXHAUSTED
+        if self.usage.input_tokens > self.budgets.max_input_tokens and not budget_exhausted:
             raise ContractValidationError("input token usage exceeds state budget")
-        if self.usage.output_tokens > self.budgets.max_output_tokens:
+        if self.usage.output_tokens > self.budgets.max_output_tokens and not budget_exhausted:
             raise ContractValidationError("output token usage exceeds state budget")
         if any(value < 0 for value in self.attempts.values()):
             raise ContractValidationError("attempt counters cannot be negative")
@@ -404,7 +412,9 @@ def import_state_v1(document: dict[str, Any], request: SkeletonRunRequest) -> Sk
     _reject_sensitive_structure(document)
     version = str(document.get("schema_version", ""))
     if version != "1.0.0":
-        raise IncompatibleSchemaError("only state schema 1.0.0 can be imported into 1.1.0")
+        raise IncompatibleSchemaError(
+            f"only state schema 1.0.0 can be imported into {STATE_SCHEMA_VERSION}"
+        )
     source_run_id = str(document.get("run_id", "")).strip()
     if not source_run_id:
         raise ContractValidationError("imported state requires run_id")

@@ -1,11 +1,19 @@
 from __future__ import annotations
 
+import hashlib
+import re
 from dataclasses import asdict, dataclass
-from enum import StrEnum
+from enum import Enum, StrEnum
 from pathlib import PurePosixPath
 from typing import Any
 
-from .contracts import CONTRACT_SCHEMA_VERSION, ContractValidationError, EvidenceRef
+from .contracts import (
+    CONTRACT_SCHEMA_VERSION,
+    ContractValidationError,
+    EvidenceRef,
+    TestExecutionOutcome,
+)
+from .outcomes import RunClassification
 
 
 DATASET_SCHEMA_VERSION = "1.0.0"
@@ -46,6 +54,139 @@ class DatasetExposure(StrEnum):
 class OraclePolicy(StrEnum):
     NONE = "NONE"
     PROMPT_ISOLATED = "PROMPT_ISOLATED"
+
+
+class EvaluationAction(StrEnum):
+    ACCEPT = "ACCEPT"
+    CORRECT_TEST = "CORRECT_TEST"
+    HUMAN_REVIEW = "HUMAN_REVIEW"
+    STOP = "STOP"
+
+
+@dataclass(slots=True, frozen=True)
+class CorrectionFeedback:
+    outcome: TestExecutionOutcome
+    diagnostic: str
+    fingerprint: str
+    truncated: bool = False
+
+
+def build_correction_feedback(
+    outcome: TestExecutionOutcome,
+    stdout: str,
+    stderr: str,
+    *,
+    max_bytes: int = 4096,
+) -> CorrectionFeedback:
+    if max_bytes < 128:
+        raise ValueError("correction feedback max_bytes must be at least 128")
+    combined = "\n".join(part for part in (stderr, stdout) if part).replace("\x00", "")
+    combined = re.sub(
+        r"(?i)(api[_-]?key|password|token|secret)\s*[:=]\s*\S+",
+        r"\1=[REDACTED]",
+        combined,
+    )
+    combined = "\n".join(line.rstrip() for line in combined.splitlines()).strip()
+    encoded = combined.encode("utf-8")
+    truncated = len(encoded) > max_bytes
+    if truncated:
+        combined = encoded[:max_bytes].decode("utf-8", errors="ignore").rstrip() + "\n[TRUNCATED]"
+    canonical = f"{outcome.value}\n{combined}".encode("utf-8")
+    return CorrectionFeedback(
+        outcome=outcome,
+        diagnostic=combined,
+        fingerprint=hashlib.sha256(canonical).hexdigest(),
+        truncated=truncated,
+    )
+
+
+@dataclass(slots=True, frozen=True)
+class CombinedOracleEvaluation:
+    generated_outcome: TestExecutionOutcome
+    oracle_outcome: TestExecutionOutcome | None
+    classification: RunClassification
+    action: EvaluationAction
+    conclusion: str
+    generated_result_ref: EvidenceRef
+    oracle_result_ref: EvidenceRef | None = None
+    schema_version: str = CONTRACT_SCHEMA_VERSION
+
+    def validate(self) -> None:
+        if self.schema_version != CONTRACT_SCHEMA_VERSION:
+            raise ContractValidationError(
+                f"oracle evaluation schema {self.schema_version!r} must be {CONTRACT_SCHEMA_VERSION!r}"
+            )
+        if not self.conclusion.strip():
+            raise ContractValidationError("oracle evaluation conclusion is required")
+        self.generated_result_ref.validate()
+        if self.oracle_result_ref:
+            self.oracle_result_ref.validate()
+        expected = evaluate_generated_and_oracle(
+            self.generated_outcome,
+            self.oracle_outcome,
+            self.generated_result_ref,
+            self.oracle_result_ref,
+        )
+        if (self.classification, self.action) != (expected.classification, expected.action):
+            raise ContractValidationError("oracle evaluation classification and action are inconsistent")
+
+    def to_dict(self) -> dict[str, Any]:
+        self.validate()
+        return _primitive(asdict(self))
+
+
+def evaluate_generated_and_oracle(
+    generated: TestExecutionOutcome,
+    oracle: TestExecutionOutcome | None,
+    generated_result_ref: EvidenceRef,
+    oracle_result_ref: EvidenceRef | None = None,
+) -> CombinedOracleEvaluation:
+    """Apply the deterministic 5.3 decision matrix without model judgment."""
+    infrastructure = {TestExecutionOutcome.TOOL_ERROR, TestExecutionOutcome.INFRASTRUCTURE_ERROR}
+    invalid_test = {TestExecutionOutcome.TEST_ERROR, TestExecutionOutcome.NO_TESTS}
+
+    if generated in infrastructure or oracle in infrastructure:
+        classification = RunClassification.INFRASTRUCTURE_ERROR
+        action = EvaluationAction.STOP
+        conclusion = "Execution infrastructure or tooling did not produce conclusive evidence"
+    elif generated in invalid_test:
+        classification = RunClassification.TEST_ERROR
+        action = EvaluationAction.CORRECT_TEST
+        conclusion = "The generated test is invalid and may be corrected within budget"
+    elif oracle is None or oracle in invalid_test or oracle is TestExecutionOutcome.UNCLASSIFIED:
+        classification = RunClassification.INCONCLUSIVE
+        action = EvaluationAction.STOP
+        conclusion = "The independent oracle did not produce conclusive evidence"
+    elif oracle is TestExecutionOutcome.ASSERTION_FAILURE:
+        classification = RunClassification.SUT_DEFECT_SUSPECTED
+        action = EvaluationAction.HUMAN_REVIEW
+        conclusion = "The independent oracle found a possible SUT defect requiring human review"
+    elif oracle is TestExecutionOutcome.PASSED and generated is TestExecutionOutcome.PASSED:
+        classification = RunClassification.ACCEPTED
+        action = EvaluationAction.ACCEPT
+        conclusion = "Generated test and independent oracle both passed"
+    elif oracle is TestExecutionOutcome.PASSED and generated is TestExecutionOutcome.ASSERTION_FAILURE:
+        classification = RunClassification.TEST_ERROR
+        action = EvaluationAction.CORRECT_TEST
+        conclusion = "The generated test conflicts with a passing independent oracle"
+    else:
+        classification = RunClassification.INCONCLUSIVE
+        action = EvaluationAction.STOP
+        conclusion = "The available execution evidence is not sufficient for a deterministic conclusion"
+
+    if oracle is not None and oracle_result_ref is None:
+        raise ContractValidationError("oracle_result_ref is required when oracle outcome is present")
+    if oracle is None and oracle_result_ref is not None:
+        raise ContractValidationError("oracle_result_ref requires an oracle outcome")
+    return CombinedOracleEvaluation(
+        generated_outcome=generated,
+        oracle_outcome=oracle,
+        classification=classification,
+        action=action,
+        conclusion=conclusion,
+        generated_result_ref=generated_result_ref,
+        oracle_result_ref=oracle_result_ref,
+    )
 
 
 @dataclass(slots=True, frozen=True)
@@ -318,7 +459,7 @@ def _percent(numerator: int, denominator: int) -> float | None:
 
 
 def _primitive(value: Any) -> Any:
-    if isinstance(value, StrEnum):
+    if isinstance(value, Enum):
         return value.value
     if isinstance(value, dict):
         return {str(key): _primitive(item) for key, item in value.items()}

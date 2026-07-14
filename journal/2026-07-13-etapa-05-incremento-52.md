@@ -3,7 +3,7 @@
 - **Data:** 2026-07-13
 - **Incremento:** 5.2
 - **Participantes:** Lucas e GPT-5.6 Sol
-- **Estado:** aprovado; aguardando confirmação da CI pública
+- **Estado:** concluído e publicado
 
 ## Intenção
 
@@ -43,4 +43,6 @@ A revisão final tornou explícita outra diferença importante: `pytest` pode en
 
 ## Decisão humana e próximo passo
 
-Lucas aprovou explicitamente o incremento 5.2 em 2026-07-13. Após a publicação e a confirmação dos três jobs da CI pública, o 5.3 poderá combinar essa evidência com o oracle independente e aplicar correção limitada.
+Lucas aprovou explicitamente o incremento 5.2 em 2026-07-13. A publicação e a confirmação dos três jobs da CI pública autorizaram o planejamento do 5.3, que poderá combinar essa evidência com o oracle independente e aplicar correção limitada.
+
+O commit `7d549a8` foi publicado. A execução pública `29287409883` aprovou `core`, `docker-security` e `framework-spikes`. Além da regressão e da varredura de segredos, a CI Linux construiu a imagem pytest pinada, executou as 14 integrações Docker, instalou o package e confirmou a demo sem chave fora do checkout. O 5.2 está encerrado; somente o planejamento detalhado do 5.3 fica autorizado neste momento.

@@ -19,24 +19,32 @@ from .contracts import (
 )
 from .outcomes import ExitCode, RunClassification, RunStatus, exit_code_for
 from .evaluation_contracts import (
+    CombinedOracleEvaluation,
+    CorrectionFeedback,
     CoverageResult,
     DatasetCase,
     DatasetExposure,
     DatasetKind,
+    EvaluationAction,
     MutationResult,
     OraclePolicy,
     dataset_case_from_dict,
+    build_correction_feedback,
+    evaluate_generated_and_oracle,
 )
 
 __all__ = [
     "ContextSnapshot",
     "ContextResolution",
     "ContractValidationError",
+    "CombinedOracleEvaluation",
+    "CorrectionFeedback",
     "CoverageResult",
     "DatasetCase",
     "DatasetExposure",
     "DatasetKind",
     "EvidenceRef",
+    "EvaluationAction",
     "ExitCode",
     "NormalizedExecutionResult",
     "MutationResult",
@@ -52,6 +60,8 @@ __all__ = [
     "UnitTestArtifact",
     "exit_code_for",
     "dataset_case_from_dict",
+    "build_correction_feedback",
+    "evaluate_generated_and_oracle",
     "import_state_v1",
     "resolve_new_run_context",
     "start_replay",

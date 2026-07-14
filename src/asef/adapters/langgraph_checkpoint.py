@@ -83,7 +83,7 @@ class LangGraphHumanCheckpointAdapter:
         def wait_for_human(state: _CheckpointState) -> dict[str, object]:
             decision = interrupt(
                 {
-                    "kind": "requirement_clarification",
+                    "kind": state["payload"].get("checkpoint_kind", "requirement_clarification"),
                     "run_id": state["run_id"],
                 }
             )

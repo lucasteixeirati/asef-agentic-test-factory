@@ -2,7 +2,7 @@
 
 - **Plano:** `docs/project/stage-05-alpha-python-plan.md`
 - **Gate:** `docs/project/gates/gate-05-acceptance-plan.md`
-- **Estado atual:** incremento 5.1 concluído; 5.2 aprovado e aguardando confirmação da CI pública
+- **Estado atual:** incrementos 5.1 e 5.2 concluídos; 5.3 implementado internamente, em hardening e aguardando revisão
 
 ## 5.1 — Contratos, ADRs e suíte de referência
 
@@ -94,4 +94,49 @@ Com os três jobs aprovados, a condição de publicação do 5.1 está atendida.
 
 ### Decisão humana e próximo passo
 
-Lucas aprovou explicitamente o incremento 5.2 em 2026-07-13. O código e as evidências locais serão publicados; com os três jobs da CI pública aprovados, o 5.2 será encerrado e o planejamento detalhado do 5.3 — oracle e loop de correção — ficará autorizado.
+Lucas aprovou explicitamente o incremento 5.2 em 2026-07-13. A publicação e os três jobs verdes da CI pública encerraram o incremento e autorizaram o planejamento detalhado do 5.3 — oracle e loop de correção.
+
+### Publicação e CI
+
+- commit publicado: `7d549a8` (`feat: add pytest docker adapter and structured results`);
+- GitHub Actions: run `29287409883`;
+- `core`: aprovado, incluindo 147 testes descobertos, branch coverage e secret scan;
+- `docker-security`: aprovado, incluindo build pinado da imagem pytest, 14 integrações Docker, instalação pública e demo keyless fora do checkout;
+- `framework-spikes`: aprovado, incluindo frameworks opcionais e coverage do workflow humano.
+
+Com os três jobs aprovados, o incremento 5.2 está concluído. O próximo passo autorizado é planejar detalhadamente o 5.3; sua implementação dependerá de aprovação específica.
+
+## 5.3 — Oracle e correção limitada
+
+### Estado de desenvolvimento
+
+A implementação interna foi autorizada e concluída em fatias em 2026-07-14. A primeira revisão rejeitou provisoriamente o incremento por sete findings. Todos foram corrigidos e a segunda revisão técnica foi aprovada localmente. O incremento ainda não foi publicado nem conectado à CLI pública.
+
+Entregas presentes:
+
+- matriz determinística entre teste gerado e oracle independente;
+- classificação `SUT_DEFECT_SUSPECTED` somente com evidência do oracle;
+- workspaces separados para geração, tentativas e oracle;
+- evidências imutáveis por tentativa e papel;
+- no máximo duas correções, com budgets públicos;
+- feedback sanitizado, truncado e identificado por fingerprint;
+- parada antecipada para diagnóstico repetido;
+- checkpoint e revisão humana idempotente;
+- coordenador interno que aceita, corrige, pausa ou encerra sem delegar transições ao modelo.
+
+Evidência local após correções da revisão:
+
+- 178 testes descobertos, 155 aprovados e 23 opt-in no core sem Docker;
+- branch coverage de 88%, acima do gate de 85%;
+- frameworks e workflow opcional: 18/18;
+- Docker: 15 descobertos, 14 aprovados e um skip local por privilégio de symlink no Windows;
+- integração Docker específica do 5.3 aprovada com teste e oracle em workspaces read-only distintos;
+- artifacts corrigidos, identidade do oracle e avaliações preservados antes do cleanup;
+- schema de estado `1.2.0`, com leitura comprovada de estado `1.1.0` sem os novos campos;
+- falhas de provider e infraestrutura normalizadas com budgets persistidos.
+
+Pendências antes da publicação:
+
+- decisão explícita sobre exposição na CLI;
+- commit, CI pública e registro da execução como evidência;
+- decisão humana final de publicação do pré-alpha `0.1.0a2`.

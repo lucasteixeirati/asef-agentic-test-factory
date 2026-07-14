@@ -23,6 +23,7 @@ from asef.contracts import (
     import_state_v1,
     resolve_new_run_context,
     start_replay,
+    state_from_dict,
 )
 from asef.outcomes import ExitCode, RunClassification, RunStatus, exit_code_for
 
@@ -210,12 +211,22 @@ class SkeletonStateAndOutcomeTests(unittest.TestCase):
     def test_state_is_json_serializable_with_primitive_enums(self) -> None:
         state = SkeletonRunState(request())
         value = state.to_dict()
-        self.assertEqual(value["schema_version"], "1.1.0")
+        self.assertEqual(value["schema_version"], "1.2.0")
         self.assertEqual(value["origin"], "NEW")
         self.assertEqual(value["context_resolution"], "CONTEXT_UNRESOLVED")
         self.assertEqual(value["status"], "RECEIVED")
         self.assertEqual(value["classification"], "UNCLASSIFIED")
         json.dumps(value)
+
+    def test_state_1_1_without_correction_fields_remains_readable(self) -> None:
+        value = SkeletonRunState(request()).to_dict()
+        value["schema_version"] = "1.1.0"
+        value["budgets"].pop("max_test_corrections")
+        value["usage"].pop("test_corrections")
+        restored = state_from_dict(value)
+        self.assertEqual(restored.schema_version, "1.1.0")
+        self.assertEqual(restored.budgets.max_test_corrections, 2)
+        self.assertEqual(restored.usage.test_corrections, 0)
 
     def test_state_rejects_budget_usage_above_limit(self) -> None:
         state = SkeletonRunState(

@@ -68,6 +68,7 @@ class GenerateUnitTestService:
             if self.checkpoint is not None:
                 payload: dict[str, object] = {
                     "schema_version": "1.0.0",
+                    "checkpoint_kind": "requirement_clarification",
                     "analysis": {
                         "behaviors": list(analysis.behaviors),
                         "risks": list(analysis.risks),

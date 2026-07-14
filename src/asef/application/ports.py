@@ -12,6 +12,7 @@ from ..contracts import (
     TestExecutionOutcome,
     UnitTestArtifact,
 )
+from ..evaluation_contracts import CorrectionFeedback
 
 
 class InvalidAgentOutputError(ValueError):
@@ -54,6 +55,14 @@ class WorkspaceResult:
 
 
 @dataclass(slots=True, frozen=True)
+class OracleWorkspaceResult:
+    workspace: Path
+    copied_files: tuple[str, ...]
+    oracle_file: str
+    oracle_sha256: str
+
+
+@dataclass(slots=True, frozen=True)
 class ExecutionOutput:
     image: str
     command: tuple[str, ...]
@@ -91,6 +100,15 @@ class AgenticTestPort(Protocol):
     ) -> GeneratedArtifactResult: ...
 
 
+class TestCorrectionPort(Protocol):
+    def correct(
+        self,
+        request: SkeletonRunRequest,
+        previous: UnitTestArtifact,
+        feedback: CorrectionFeedback,
+    ) -> GeneratedArtifactResult: ...
+
+
 class WorkspacePort(Protocol):
     def stage(
         self,
@@ -98,6 +116,23 @@ class WorkspacePort(Protocol):
         context: ResolvedQualityContext,
         artifact: UnitTestArtifact,
     ) -> WorkspaceResult: ...
+
+    def stage_attempt(
+        self,
+        run_dir: Path,
+        context: ResolvedQualityContext,
+        artifact: UnitTestArtifact,
+        attempt: int,
+    ) -> WorkspaceResult: ...
+
+
+class OracleWorkspacePort(Protocol):
+    def stage_oracle(
+        self,
+        run_dir: Path,
+        context: ResolvedQualityContext,
+        oracle_ref: str,
+    ) -> OracleWorkspaceResult: ...
 
 
 class TestExecutionPort(Protocol):
@@ -137,6 +172,36 @@ class RunStorePort(Protocol):
         state: SkeletonRunState,
         output: ExecutionOutput,
     ) -> NormalizedExecutionResult: ...
+
+    def save_attempt_execution(
+        self,
+        state: SkeletonRunState,
+        output: ExecutionOutput,
+        attempt: int,
+        role: str,
+    ) -> NormalizedExecutionResult: ...
+
+    def save_attempt_evaluation(
+        self,
+        state: SkeletonRunState,
+        evaluation: dict[str, object],
+        attempt: int,
+    ) -> EvidenceRef: ...
+
+    def save_attempt_artifact(
+        self,
+        state: SkeletonRunState,
+        artifact: UnitTestArtifact,
+        metadata: dict[str, object],
+    ) -> tuple[EvidenceRef, EvidenceRef]: ...
+
+    def save_oracle_evidence(
+        self,
+        state: SkeletonRunState,
+        oracle_ref: str,
+        content: bytes,
+        sha256: str,
+    ) -> tuple[EvidenceRef, EvidenceRef]: ...
 
     def save_report(
         self,

@@ -2,7 +2,7 @@
 
 > Documento vivo para orientar a construção da aplicação, da documentação pública e do futuro livro.
 
-**Status:** vigente — 5.1 concluído; 5.2 aprovado e aguardando confirmação da CI pública
+**Status:** vigente — 5.1 e 5.2 concluídos; 5.3 aprovado localmente e aguardando publicação/CI
 **Data de início:** 2026-07-11  
 **Responsável:** Lucas  
 **Natureza:** projeto open source, educacional, experimental e de portfólio  
@@ -746,7 +746,7 @@ As datas serão estimadas após a baseline das primeiras sessões. Os gates são
 **Plano executável:** `docs/project/stage-05-alpha-python-plan.md`
 
 **Plano de aceite:** `docs/project/gates/gate-05-acceptance-plan.md`
-**Status:** 5.1 concluído e publicado com ADR-009 aceita. O 5.2 foi implementado localmente com pytest/JUnit, 88% de branch coverage e 14/14 integrações Docker; aguarda revisão e CI pública.
+**Status:** 5.1 e 5.2 concluídos e publicados. A ADR-009 foi aceita. O 5.3 passou pela segunda revisão técnica local após correção de sete findings; aguarda commit, CI pública e decisão de publicação, sem integração à CLI pública.
 
 **Aplicação**
 
@@ -1078,11 +1078,11 @@ Estas questões serão decididas nas etapas indicadas, não agora:
 
 ## 27. Próxima decisão
 
-Publicar e confirmar o incremento 5.2 — adapter `pytest` e normalização:
+Planejar detalhadamente o incremento 5.3 — oracle independente e correção limitada:
 
-1. publicar o código e as evidências aprovadas;
-2. validar os três jobs da CI pública;
-3. registrar a execução pública como evidência do incremento;
-4. então iniciar o planejamento detalhado do 5.3 — oracle e correção limitada;
+1. definir como oracle curado, resultado pytest e artefato gerado serão comparados;
+2. separar falha do teste, falha do SUT e insuficiência de evidência;
+3. limitar tentativas, tokens, tempo e tamanho de contexto do loop de correção;
+4. preservar revisão humana antes da exportação;
 5. manter capabilities parciais/planejadas explicitamente declaradas até suas evidências;
 6. não considerar o Gate 5 aprovado nem iniciar a Etapa 6 automaticamente.
