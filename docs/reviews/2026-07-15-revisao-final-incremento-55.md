@@ -1,9 +1,9 @@
-# Revisão final local — incremento 5.5
+# Revisão final — incremento 5.5
 
 - **Data:** 2026-07-15
 - **Escopo:** Smoke Dataset executável, determinístico e keyless
-- **Parecer local:** aprovado; publicação do commit funcional recomendada
-- **Pendência:** CI pública com o novo job `alpha-smoke`
+- **Parecer final:** aprovado
+- **CI:** run `29442732993`, quatro jobs verdes
 
 ## Resultado
 
@@ -34,4 +34,4 @@ O dataset é público, curado, pequeno e não estatístico. Ele mede conformidad
 
 ## Parecer
 
-Não há finding local aberto que impeça o commit funcional. O incremento só deve ser marcado como concluído após os jobs públicos `core`, `framework-spikes`, `docker-security` e `alpha-smoke` aprovarem o commit. O Gate 5 continua aberto.
+Não há finding aberto no incremento. O commit funcional `06cc892` foi publicado e os jobs públicos `core`, `framework-spikes`, `docker-security` e `alpha-smoke` aprovaram a CI `29442732993`. O incremento 5.5 está concluído. O Gate 5 continua aberto porque os incrementos 5.6 a 5.9 e os demais critérios ainda não foram encerrados.

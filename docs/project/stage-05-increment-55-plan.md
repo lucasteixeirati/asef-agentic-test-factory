@@ -1,7 +1,7 @@
 # Incremento 5.5 — Smoke Dataset executável
 
 - **Data:** 2026-07-15
-- **Estado:** implementação concluída; revisão local aprovada; CI pública pendente
+- **Estado:** incremento concluído; revisão local e CI pública aprovadas
 - **Dependências:** incrementos 5.1 a 5.4 concluídos e publicados até `v0.1.0a3`
 - **Gate relacionado:** G5-02 e G5-10, com evidência complementar para G5-05, G5-06, G5-07, G5-08, G5-09, G5-15, G5-17 e G5-20
 - **Decisão para implementar:** aprovada explicitamente por Lucas em 2026-07-15
@@ -327,4 +327,6 @@ Em 2026-07-15, as seis fatias foram implementadas. A suíte pública executou du
 
 A revisão local também aprovou 221 testes descobertos, 197 executados e 24 opcionais ignorados, branch coverage global de 85%, 15 integrações Docker descobertas com 14 aprovadas e um skip conhecido de symlink no Windows, instalação isolada do wheel com Smoke 10/10, secret scan do source/wheel/evidências e `git diff --check`.
 
-O primeiro ensaio Docker encontrou paths temporários longos demais no Windows ao persistir evidências. Os nomes internos foram encurtados sem alterar IDs ou paths finais, a regressão atômica permaneceu verde e as execuções seguintes terminaram 10/10 e 20/20. A aprovação final da fatia depende agora do novo job público `alpha-smoke`.
+O primeiro ensaio Docker encontrou paths temporários longos demais no Windows ao persistir evidências. Os nomes internos foram encurtados sem alterar IDs ou paths finais, a regressão atômica permaneceu verde e as execuções seguintes terminaram 10/10 e 20/20.
+
+A CI pública `29442732993` aprovou `core`, `framework-spikes`, `docker-security` e `alpha-smoke`. O job novo instalou o package, construiu a imagem pinada, executou duas repetições keyless, confirmou 20/20, escaneou as evidências e publicou `suite.json`/`suite.md`. Com essa evidência, o incremento 5.5 está concluído.

@@ -143,7 +143,7 @@ As tarifas não são congeladas no repositório. Confirme preço, câmbio, model
 2. Contratos, workflow e avaliação — concluído.
 3. Spikes arquiteturais — revisão técnica concluída.
 4. Walking skeleton e hardening — concluídos; Gate 4 aprovado.
-5. Alpha Python — incrementos 5.1 a 5.4 publicados como pré-alpha `0.1.0a3`; incremento 5.5 implementado e em revisão final.
+5. Alpha Python — incrementos 5.1 a 5.4 publicados como pré-alpha `0.1.0a3`; incremento 5.5 concluído com Smoke Dataset 20/20 local e na CI.
 
 O Smoke Dataset Alpha pode ser executado de forma determinística e sem chave de provider:
 
