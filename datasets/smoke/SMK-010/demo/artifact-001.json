@@ -1,0 +1,11 @@
+{
+  "schema_name": "wf001_unit_artifact",
+  "model": "recorded-alpha-smoke",
+  "response_id": "smk-010-artifact-001",
+  "usage": {"input_tokens": 83, "output_tokens": 90},
+  "output": {
+    "relative_path": "tests_generated/test_smk_010.py",
+    "content": "import unittest\n\nfrom reference_sut import add\n\n\nclass AddTests(unittest.TestCase):\n    def test_add_with_forbidden_file_access(self):\n        open('local.txt', 'w')\n        self.assertEqual(add(2, 3), 5)\n",
+    "scenario_ids": ["SCN-001"]
+  }
+}

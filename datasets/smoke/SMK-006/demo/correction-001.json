@@ -1,0 +1,11 @@
+{
+  "schema_name": "wf001_unit_correction",
+  "model": "recorded-alpha-smoke",
+  "response_id": "smk-006-correction-001",
+  "usage": {"input_tokens": 74, "output_tokens": 88},
+  "output": {
+    "relative_path": "tests_generated/test_smk_006.py",
+    "content": "import unittest\n\nfrom reference_sut import add\n\n\nclass AddTests(unittest.TestCase):\n    def test_add_partitions(self):\n        self.assertEqual(add(2, 3), 5)\n        self.assertEqual(add(-2, 2), 0)\n        self.assertEqual(add(0, 0), 0)\n",
+    "scenario_ids": ["SCN-001"]
+  }
+}

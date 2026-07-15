@@ -239,6 +239,13 @@ class DatasetCase:
                 raise ContractValidationError(f"dataset {name} is required")
         if not self.expected_classifications:
             raise ContractValidationError("dataset expected_classifications cannot be empty")
+        valid_classifications = {item.value for item in RunClassification}
+        unknown_classifications = set(self.expected_classifications) - valid_classifications
+        if unknown_classifications:
+            raise ContractValidationError(
+                "dataset expected_classifications contains unknown values: "
+                f"{sorted(unknown_classifications)}"
+            )
         if not self.generation_input_refs:
             raise ContractValidationError("dataset generation_input_refs cannot be empty")
         for name, values in (
@@ -413,6 +420,8 @@ def _validate_repo_ref(value: str) -> None:
     path = PurePosixPath(value)
     if path.is_absolute() or ".." in path.parts or path == PurePosixPath("."):
         raise ContractValidationError("dataset refs must remain inside the repository")
+    if path.as_posix() != value:
+        raise ContractValidationError("dataset refs must use canonical POSIX paths")
     lowered = value.lower()
     if any(marker in lowered for marker in ("api_key=", "password=", "token=", "secret=")):
         raise ContractValidationError("dataset ref contains a sensitive value")

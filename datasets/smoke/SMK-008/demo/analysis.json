@@ -1,0 +1,12 @@
+{
+  "schema_name": "wf001_analysis",
+  "model": "recorded-alpha-smoke",
+  "response_id": "smk-008-analysis",
+  "usage": {"input_tokens": 58, "output_tokens": 50},
+  "output": {
+    "behaviors": ["Somar dois inteiros"],
+    "risks": ["Resposta estruturada do provider fora do contrato"],
+    "scenarios": ["Soma básica"],
+    "clarification_required": false
+  }
+}

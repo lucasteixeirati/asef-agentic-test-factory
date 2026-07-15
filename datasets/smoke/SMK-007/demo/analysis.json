@@ -1,0 +1,12 @@
+{
+  "schema_name": "wf001_analysis",
+  "model": "recorded-alpha-smoke",
+  "response_id": "smk-007-analysis",
+  "usage": {"input_tokens": 63, "output_tokens": 56},
+  "output": {
+    "behaviors": ["Dividir números e rejeitar divisor zero"],
+    "risks": ["Implementação pode não respeitar a regra de zero"],
+    "scenarios": ["Divisão normal observável pelo teste gerado"],
+    "clarification_required": false
+  }
+}

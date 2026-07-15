@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0.0",
+  "case_id": "SMK-005",
+  "case_version": "1.0.0",
+  "context_ref": "examples/context/python-alpha-smoke-context.json",
+  "system_id": "alpha-reference-sut",
+  "analysis_cassette_ref": "datasets/smoke/SMK-005/demo/analysis.json",
+  "artifact_cassette_refs": [],
+  "executor": "NOT_REACHED",
+  "expected": {
+    "status": "WAITING_FOR_CLARIFICATION",
+    "classification": "WAITING_HUMAN",
+    "action": "NOT_REACHED",
+    "usage": {"model_calls": 1, "provider_retries": 0, "corrections": 0, "execution_attempts": 0},
+    "docker_called": false,
+    "oracle_executed": false,
+    "human_checkpoint_requested": false
+  }
+}

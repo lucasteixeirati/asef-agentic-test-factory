@@ -1,0 +1,12 @@
+{
+  "schema_name": "wf001_analysis",
+  "model": "recorded-alpha-smoke",
+  "response_id": "smk-002-analysis",
+  "usage": {"input_tokens": 64, "output_tokens": 58},
+  "output": {
+    "behaviors": ["Dividir números e rejeitar divisor zero"],
+    "risks": ["Divisão por zero aceita silenciosamente"],
+    "scenarios": ["Divisão normal, negativa e por zero"],
+    "clarification_required": false
+  }
+}

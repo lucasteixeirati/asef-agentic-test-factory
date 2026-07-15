@@ -1,0 +1,12 @@
+{
+  "schema_name": "wf001_analysis",
+  "model": "recorded-alpha-smoke",
+  "response_id": "smk-003-analysis",
+  "usage": {"input_tokens": 62, "output_tokens": 57},
+  "output": {
+    "behaviors": ["Normalizar sequências de whitespace"],
+    "risks": ["Entradas vazias e quebras de linha tratadas incorretamente"],
+    "scenarios": ["Texto espaçado, vazio e somente whitespace"],
+    "clarification_required": false
+  }
+}

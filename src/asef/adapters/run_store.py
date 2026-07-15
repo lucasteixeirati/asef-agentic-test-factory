@@ -142,7 +142,7 @@ class JsonRunStore:
         target = attempt_dir / role
         if target.exists():
             raise FileExistsError(f"execution evidence already exists for attempt {attempt:03d}/{role}")
-        temporary = attempt_dir / f".{role}.{uuid4().hex}.tmp"
+        temporary = attempt_dir / f".{role[0]}.{uuid4().hex[:8]}"
         temporary.mkdir()
         prefix = f"attempts/{attempt:03d}/{role}"
         try:
@@ -345,7 +345,7 @@ class JsonRunStore:
 
     @staticmethod
     def _write_json(path: Path, value: dict[str, Any]) -> None:
-        temporary = path.with_name(f".{path.name}.{uuid4().hex}.tmp")
+        temporary = path.with_name(f".tmp-{uuid4().hex[:8]}")
         try:
             temporary.write_text(
                 json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n",

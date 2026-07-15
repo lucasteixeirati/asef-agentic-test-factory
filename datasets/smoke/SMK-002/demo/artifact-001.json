@@ -1,0 +1,11 @@
+{
+  "schema_name": "wf001_unit_artifact",
+  "model": "recorded-alpha-smoke",
+  "response_id": "smk-002-artifact-001",
+  "usage": {"input_tokens": 91, "output_tokens": 111},
+  "output": {
+    "relative_path": "tests_generated/test_smk_002.py",
+    "content": "import unittest\n\nfrom reference_sut import divide\n\n\nclass DivideTests(unittest.TestCase):\n    def test_division_and_zero_policy(self):\n        self.assertEqual(divide(9, 3), 3)\n        self.assertEqual(divide(-8, 2), -4)\n        with self.assertRaisesRegex(ValueError, 'division by zero'):\n            divide(1, 0)\n",
+    "scenario_ids": ["SCN-001"]
+  }
+}

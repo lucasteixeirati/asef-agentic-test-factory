@@ -223,6 +223,27 @@ class AlphaEvaluationCoordinatorTests(unittest.TestCase):
             self.assertFalse((run_dir / "oracle-workspace").exists())
         self.assertEqual((result.state.status, result.state.classification), (RunStatus.FAILED, RunClassification.INFRASTRUCTURE_ERROR))
 
+    def test_missing_oracle_is_allowed_for_an_injected_executor_failure(self) -> None:
+        class BrokenGenerated:
+            def execute(self, *args):
+                raise OSError("injected docker unavailable")
+
+        class OracleMustNotRun:
+            def execute(self, *args):
+                raise AssertionError("oracle must not run when no oracle_ref is declared")
+
+        state = SkeletonRunState(request())
+        store = Store()
+        with tempfile.TemporaryDirectory() as directory:
+            result = self.coordinator(BrokenGenerated(), OracleMustNotRun(), store).execute(
+                state, Path(directory), self.context(), artifact(), None
+            )
+        self.assertEqual(result.attempts_executed, 1)
+        self.assertEqual(
+            (result.state.status, result.state.classification),
+            (RunStatus.FAILED, RunClassification.INFRASTRUCTURE_ERROR),
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

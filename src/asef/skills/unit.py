@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import ast
+import keyword
+from collections.abc import Iterable
 from typing import Any
 
 from ..contracts import ContractValidationError, UnitTestArtifact
@@ -14,6 +16,17 @@ class UnitSkill:
     allowed_import_roots = frozenset({"calculator", "unittest"})
     forbidden_calls = frozenset({"open", "exec", "eval", "compile", "__import__", "input"})
     sensitive_markers = ("sk-", "api_key=", "password=", "access_token=", "secret=")
+
+    def __init__(self, allowed_import_roots: Iterable[str] | None = None) -> None:
+        roots = self.allowed_import_roots if allowed_import_roots is None else frozenset(allowed_import_roots)
+        if not roots or any(
+            not isinstance(root, str)
+            or not root.isidentifier()
+            or keyword.iskeyword(root)
+            for root in roots
+        ):
+            raise ValueError("allowed import roots must be non-empty Python root names")
+        self.allowed_import_roots = frozenset(roots)
 
     def validate(self, artifact: UnitTestArtifact) -> dict[str, Any]:
         try:

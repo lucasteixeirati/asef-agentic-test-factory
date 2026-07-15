@@ -1,0 +1,11 @@
+{
+  "schema_name": "wf001_unit_artifact",
+  "model": "recorded-alpha-smoke",
+  "response_id": "smk-009-artifact-001",
+  "usage": {"input_tokens": 82, "output_tokens": 84},
+  "output": {
+    "relative_path": "tests_generated/test_smk_009.py",
+    "content": "import unittest\n\nfrom reference_sut import add\n\n\nclass AddTests(unittest.TestCase):\n    def test_add(self):\n        self.assertEqual(add(2, 3), 5)\n",
+    "scenario_ids": ["SCN-001"]
+  }
+}

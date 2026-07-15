@@ -1,0 +1,12 @@
+{
+  "schema_name": "wf001_analysis",
+  "model": "recorded-alpha-smoke",
+  "response_id": "smk-010-analysis",
+  "usage": {"input_tokens": 57, "output_tokens": 51},
+  "output": {
+    "behaviors": ["Somar dois inteiros"],
+    "risks": ["Teste tenta acessar arquivo fora de sua autoridade"],
+    "scenarios": ["Soma com operação proibida embutida"],
+    "clarification_required": false
+  }
+}

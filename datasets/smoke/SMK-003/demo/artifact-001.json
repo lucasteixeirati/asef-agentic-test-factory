@@ -1,0 +1,11 @@
+{
+  "schema_name": "wf001_unit_artifact",
+  "model": "recorded-alpha-smoke",
+  "response_id": "smk-003-artifact-001",
+  "usage": {"input_tokens": 90, "output_tokens": 109},
+  "output": {
+    "relative_path": "tests_generated/test_smk_003.py",
+    "content": "import unittest\n\nfrom reference_sut import normalize_whitespace\n\n\nclass NormalizeWhitespaceTests(unittest.TestCase):\n    def test_text_partitions(self):\n        self.assertEqual(normalize_whitespace('  Quality   Engineering '), 'Quality Engineering')\n        self.assertEqual(normalize_whitespace(''), '')\n        self.assertEqual(normalize_whitespace('   '), '')\n        self.assertEqual(normalize_whitespace('\\tQuality\\nEngineering'), 'Quality Engineering')\n",
+    "scenario_ids": ["SCN-001"]
+  }
+}

@@ -2,10 +2,12 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from collections.abc import Sequence
 from typing import Any
 
 from ..application.ports import AnalysisResult, GeneratedArtifactResult, InvalidAgentOutputError
 from ..contracts import SkeletonRunRequest, UnitTestArtifact
+from ..evaluation_contracts import CorrectionFeedback
 
 
 class RecordedAgentError(ValueError):
@@ -15,9 +17,18 @@ class RecordedAgentError(ValueError):
 class RecordedAgentAdapter:
     """Replay two typed model outputs without giving cassettes control over the workflow."""
 
-    def __init__(self, analysis_cassette: Path, artifact_cassette: Path) -> None:
+    def __init__(
+        self,
+        analysis_cassette: Path,
+        artifact_cassette: Path | None,
+        correction_cassettes: Sequence[Path] = (),
+    ) -> None:
         self.analysis_cassette = analysis_cassette
         self.artifact_cassette = artifact_cassette
+        self.correction_cassettes = tuple(correction_cassettes)
+        if len(self.correction_cassettes) > 2:
+            raise ValueError("recorded agent allows at most two correction cassettes")
+        self._correction_index = 0
 
     def analyze(self, request: SkeletonRunRequest) -> AnalysisResult:
         del request
@@ -51,7 +62,35 @@ class RecordedAgentAdapter:
         analysis: AnalysisResult,
     ) -> GeneratedArtifactResult:
         del request, analysis
-        cassette = self._load(self.artifact_cassette, "wf001_unit_artifact")
+        if self.artifact_cassette is None:
+            raise RecordedAgentError("recorded artifact cassette was not declared")
+        return self._artifact_result(self.artifact_cassette, "wf001_unit_artifact", attempt=1)
+
+    def correct(
+        self,
+        request: SkeletonRunRequest,
+        previous: UnitTestArtifact,
+        feedback: CorrectionFeedback,
+    ) -> GeneratedArtifactResult:
+        del request, feedback
+        if self._correction_index >= len(self.correction_cassettes):
+            raise RecordedAgentError("recorded correction cassette sequence is exhausted")
+        path = self.correction_cassettes[self._correction_index]
+        self._correction_index += 1
+        return self._artifact_result(
+            path,
+            "wf001_unit_correction",
+            attempt=previous.attempt + 1,
+        )
+
+    def _artifact_result(
+        self,
+        path: Path,
+        schema_name: str,
+        *,
+        attempt: int,
+    ) -> GeneratedArtifactResult:
+        cassette = self._load(path, schema_name)
         output = cassette["output"]
         if set(output) != {"relative_path", "content", "scenario_ids"}:
             raise InvalidAgentOutputError("artifact cassette has an invalid output shape")
@@ -66,6 +105,7 @@ class RecordedAgentAdapter:
                 relative_path=output["relative_path"],
                 content=output["content"],
                 scenario_ids=tuple(output["scenario_ids"]),
+                attempt=attempt,
             )
         except (KeyError, TypeError) as exc:
             raise InvalidAgentOutputError(f"artifact cassette violates the contract: {exc}") from exc

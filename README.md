@@ -143,7 +143,19 @@ As tarifas não são congeladas no repositório. Confirme preço, câmbio, model
 2. Contratos, workflow e avaliação — concluído.
 3. Spikes arquiteturais — revisão técnica concluída.
 4. Walking skeleton e hardening — concluídos; Gate 4 aprovado.
-5. Alpha Python — incrementos 5.1 a 5.4 concluídos e publicados como pré-alpha `0.1.0a3`; 5.5 é a próxima decisão.
+5. Alpha Python — incrementos 5.1 a 5.4 publicados como pré-alpha `0.1.0a3`; incremento 5.5 implementado e em revisão final.
+
+O Smoke Dataset Alpha pode ser executado de forma determinística e sem chave de provider:
+
+```powershell
+asef smoke `
+  --dataset-root datasets/smoke `
+  --context examples/context/python-alpha-smoke-context.json `
+  --output .asef/smoke `
+  --repeat 1
+```
+
+Os dez resultados incluem caminhos felizes e encerramentos negativos esperados. O exit code da suíte é `0` quando todos correspondem às expectativas, `4` em caso de mismatch e `7` quando há erro do runner; classificações negativas esperadas de um caso não tornam a suíte falha.
 6. Perfis TypeScript e Java.
 7. Developer preview e hardening da v0.1.
 

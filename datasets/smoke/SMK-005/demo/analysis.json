@@ -1,0 +1,12 @@
+{
+  "schema_name": "wf001_analysis",
+  "model": "recorded-alpha-smoke",
+  "response_id": "smk-005-analysis",
+  "usage": {"input_tokens": 54, "output_tokens": 46},
+  "output": {
+    "behaviors": ["Definir o comportamento para divisor zero"],
+    "risks": ["Exceção e retorno normal são exigidos simultaneamente"],
+    "scenarios": ["Solicitar precedência entre as regras incompatíveis"],
+    "clarification_required": true
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "schema_name": "wf001_analysis",
+  "model": "recorded-alpha-smoke",
+  "response_id": "smk-004-analysis",
+  "usage": {"input_tokens": 51, "output_tokens": 44},
+  "output": {
+    "behaviors": ["Arredondar o resultado da divisão"],
+    "risks": ["Casas e regra de empate não especificadas"],
+    "scenarios": ["Esclarecer precisão, direção e empates"],
+    "clarification_required": true
+  }
+}

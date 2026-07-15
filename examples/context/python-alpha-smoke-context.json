@@ -1,0 +1,73 @@
+{
+  "schema_version": "1.0.0-draft",
+  "qa_profile": {
+    "id": "qa-alpha-smoke",
+    "role": "quality-engineer",
+    "experience_level": "senior",
+    "approval_boundaries": ["export-tests", "confirm-sut-defect", "increase-budget"]
+  },
+  "team": {
+    "id": "asef-alpha-quality",
+    "quality_goals": ["deterministic-smoke", "isolated-oracle"],
+    "risk_taxonomy": ["functional", "test-validity", "infrastructure"],
+    "data_classification": "public"
+  },
+  "repositories": [
+    {
+      "id": "python-alpha-reference",
+      "provider": "local",
+      "repository_ref": "workspace:examples/python-alpha/reference_sut/src",
+      "default_branch": "main",
+      "language_profile": "python-pytest",
+      "execution_image": "python@sha256:399babc8b49529dabfd9c922f2b5eea81d611e4512e3ed250d75bd2e7683f4b0",
+      "read_scope": [
+        "reference_sut/__init__.py",
+        "reference_sut/arithmetic.py",
+        "reference_sut/text.py"
+      ],
+      "write_scope": [".asef/runs/**"]
+    },
+    {
+      "id": "python-alpha-defective",
+      "provider": "local",
+      "repository_ref": "workspace:examples/python-alpha/defective_sut/src",
+      "default_branch": "main",
+      "language_profile": "python-pytest",
+      "execution_image": "python@sha256:399babc8b49529dabfd9c922f2b5eea81d611e4512e3ed250d75bd2e7683f4b0",
+      "read_scope": [
+        "reference_sut/__init__.py",
+        "reference_sut/arithmetic.py",
+        "reference_sut/text.py"
+      ],
+      "write_scope": [".asef/runs/**"]
+    }
+  ],
+  "systems": [
+    {
+      "id": "alpha-reference-sut",
+      "kind": "python-library",
+      "repository_ids": ["python-alpha-reference"],
+      "critical_flows": ["arithmetic", "text-normalization"],
+      "quality_capabilities": ["unit"]
+    },
+    {
+      "id": "alpha-defective-sut",
+      "kind": "python-library",
+      "repository_ids": ["python-alpha-defective"],
+      "critical_flows": ["division-by-zero"],
+      "quality_capabilities": ["unit"]
+    }
+  ],
+  "skill_catalog": [
+    {"id": "unit", "capability": "unit", "enabled": true, "allowed_mcp_servers": []}
+  ],
+  "mcp_servers": [],
+  "llm_policy": {
+    "provider": "recorded",
+    "model": "cassette-alpha-smoke-v1",
+    "allowed_tasks": ["analysis", "test-generation", "test-correction"],
+    "data_rules": ["no-secrets", "respect-read-scope", "exclude-oracle"],
+    "default_mode": "recorded",
+    "live_requires_budget": true
+  }
+}

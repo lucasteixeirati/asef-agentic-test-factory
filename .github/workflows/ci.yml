@@ -57,3 +57,31 @@ jobs:
           cd "$RUNNER_TEMP/asef-clean"
           env -u OPENAI_API_KEY asef run
           python "$GITHUB_WORKSPACE/tools/secret_scan.py" .asef
+
+  alpha-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Install the public package
+        run: python -m pip install .
+      - name: Build pinned pytest tool image
+        run: docker build --tag asef/python-pytest:8.3.3 tooling/python-pytest
+      - name: Run deterministic keyless Alpha Smoke Dataset twice
+        run: env -u OPENAI_API_KEY asef smoke --dataset-root datasets/smoke --context examples/context/python-alpha-smoke-context.json --output .asef/smoke --repeat 2
+      - name: Validate aggregate Smoke report
+        run: python -c "import glob,json,pathlib; p=glob.glob('.asef/smoke/*/suite.json'); assert len(p)==1, p; d=json.loads(pathlib.Path(p[0]).read_text()); assert (d['total'],d['matched'],d['mismatched'],d['runner_errors'])==(20,20,0,0), d"
+      - name: Scan Smoke evidence for secret signatures
+        run: python tools/secret_scan.py .asef/smoke
+      - name: Publish sanitized Smoke reports
+        uses: actions/upload-artifact@v7
+        with:
+          name: alpha-smoke-reports
+          path: |
+            .asef/smoke/*/suite.json
+            .asef/smoke/*/suite.md
+          if-no-files-found: error
+          include-hidden-files: true
+          retention-days: 7

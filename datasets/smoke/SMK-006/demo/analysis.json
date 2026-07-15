@@ -1,0 +1,12 @@
+{
+  "schema_name": "wf001_analysis",
+  "model": "recorded-alpha-smoke",
+  "response_id": "smk-006-analysis",
+  "usage": {"input_tokens": 59, "output_tokens": 52},
+  "output": {
+    "behaviors": ["Somar inteiros"],
+    "risks": ["Teste pode referenciar símbolo inexistente"],
+    "scenarios": ["Soma positiva, negativa e com zero"],
+    "clarification_required": false
+  }
+}

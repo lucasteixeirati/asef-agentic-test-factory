@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0",
+  "case_id": "SMK-009",
+  "version": "1.0.0",
+  "kind": "SMOKE",
+  "title": "Executor Docker indisponível por injeção",
+  "objective": "Provar classificação de infraestrutura e continuidade da suíte sem manipular o Docker host.",
+  "origin": "curated-for-asef",
+  "license": "MIT",
+  "curator": "Lucas Teixeira",
+  "language_profile": "python-pytest",
+  "sut_ref": "examples/python-alpha/reference_sut",
+  "requirement_ref": "datasets/smoke/SMK-009/requirement.md",
+  "oracle_ref": null,
+  "generation_input_refs": [
+    "datasets/smoke/SMK-009/requirement.md",
+    "examples/python-alpha/reference_sut/src/reference_sut/arithmetic.py"
+  ],
+  "evaluation_input_refs": [],
+  "expected_classifications": ["INFRASTRUCTURE_ERROR"],
+  "allowed_modes": ["demo"],
+  "exposure": "PUBLIC",
+  "oracle_policy": "NONE",
+  "tags": ["fault-injection", "docker", "infrastructure"]
+}

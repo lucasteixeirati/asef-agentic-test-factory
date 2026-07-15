@@ -1,0 +1,11 @@
+{
+  "schema_name": "wf001_unit_artifact",
+  "model": "recorded-alpha-smoke",
+  "response_id": "smk-007-artifact-001",
+  "usage": {"input_tokens": 87, "output_tokens": 95},
+  "output": {
+    "relative_path": "tests_generated/test_smk_007.py",
+    "content": "import unittest\n\nfrom reference_sut import divide\n\n\nclass DivideTests(unittest.TestCase):\n    def test_regular_division(self):\n        self.assertEqual(divide(9, 3), 3)\n        self.assertEqual(divide(-8, 2), -4)\n",
+    "scenario_ids": ["SCN-001"]
+  }
+}

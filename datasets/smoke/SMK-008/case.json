@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0",
+  "case_id": "SMK-008",
+  "version": "1.0.0",
+  "kind": "SMOKE",
+  "title": "Structured output inválido repetido",
+  "objective": "Provar retry central limitado e encerramento por budget antes da static policy e do Docker.",
+  "origin": "curated-for-asef",
+  "license": "MIT",
+  "curator": "Lucas Teixeira",
+  "language_profile": "python-pytest",
+  "sut_ref": "examples/python-alpha/reference_sut",
+  "requirement_ref": "datasets/smoke/SMK-008/requirement.md",
+  "oracle_ref": null,
+  "generation_input_refs": [
+    "datasets/smoke/SMK-008/requirement.md",
+    "examples/python-alpha/reference_sut/src/reference_sut/arithmetic.py"
+  ],
+  "evaluation_input_refs": [],
+  "expected_classifications": ["BUDGET_ERROR"],
+  "allowed_modes": ["demo"],
+  "exposure": "PUBLIC",
+  "oracle_policy": "NONE",
+  "tags": ["invalid-output", "provider-retry", "budget"]
+}

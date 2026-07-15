@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0.0",
+  "case_id": "SMK-006",
+  "case_version": "1.0.0",
+  "context_ref": "examples/context/python-alpha-smoke-context.json",
+  "system_id": "alpha-reference-sut",
+  "analysis_cassette_ref": "datasets/smoke/SMK-006/demo/analysis.json",
+  "artifact_cassette_refs": [
+    "datasets/smoke/SMK-006/demo/artifact-001.json",
+    "datasets/smoke/SMK-006/demo/correction-001.json"
+  ],
+  "executor": "PYTEST_DOCKER",
+  "expected": {
+    "status": "SUCCEEDED",
+    "classification": "ACCEPTED",
+    "action": "ACCEPT",
+    "usage": {"model_calls": 3, "provider_retries": 0, "corrections": 1, "execution_attempts": 2},
+    "docker_called": true,
+    "oracle_executed": true,
+    "human_checkpoint_requested": false
+  }
+}

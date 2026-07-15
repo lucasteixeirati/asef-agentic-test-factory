@@ -1,0 +1,11 @@
+{
+  "schema_name": "wf001_unit_artifact",
+  "model": "recorded-alpha-smoke",
+  "response_id": "smk-008-artifact-invalid",
+  "usage": {"input_tokens": 80, "output_tokens": 42},
+  "output": {
+    "relative_path": 8,
+    "content": ["not", "a", "string"],
+    "scenario_ids": "SCN-001"
+  }
+}

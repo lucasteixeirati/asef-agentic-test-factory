@@ -43,7 +43,7 @@ class AlphaEvaluationCoordinator:
         run_dir: Path,
         context: ResolvedQualityContext,
         artifact: UnitTestArtifact,
-        oracle_ref: str,
+        oracle_ref: str | None,
     ) -> AlphaEvaluationResult:
         current = artifact
         executed = 0
@@ -62,20 +62,29 @@ class AlphaEvaluationCoordinator:
                 },
             )
             state.evidence_refs.extend(ref for ref in initial_refs if ref not in state.evidence_refs)
-            oracle = self.oracle.execute(state, run_dir, context, context.snapshot, oracle_ref, 0)
-            self._add_execution_refs(state, oracle.execution)
+            oracle = (
+                self.oracle.execute(state, run_dir, context, context.snapshot, oracle_ref, 0)
+                if oracle_ref is not None
+                else None
+            )
+            if oracle is not None:
+                self._add_execution_refs(state, oracle.execution)
             while True:
                 attempt = current.attempt - 1
                 PrepareRunService._move(state, RunStatus.EXECUTING_TESTS, "generated_attempt_ready")
-                generated = self.generated.execute(state, run_dir, context, current, attempt)
                 executed += 1
+                generated = self.generated.execute(state, run_dir, context, current, attempt)
                 self._add_execution_refs(state, generated.normalized)
                 PrepareRunService._move(state, RunStatus.EVALUATING_EVIDENCE, "attempt_evidence_saved")
                 evaluation = evaluate_generated_and_oracle(
                     generated.normalized.outcome,
-                    oracle.execution.outcome,
+                    oracle.execution.outcome if oracle is not None else None,
                     generated.normalized.raw_result_ref or generated.normalized.stdout_ref,
-                    oracle.execution.raw_result_ref or oracle.execution.stdout_ref,
+                    (
+                        oracle.execution.raw_result_ref or oracle.execution.stdout_ref
+                        if oracle is not None
+                        else None
+                    ),
                 )
                 evaluation_ref = self.run_store.save_attempt_evaluation(state, evaluation.to_dict(), attempt)
                 state.evidence_refs.append(evaluation_ref)

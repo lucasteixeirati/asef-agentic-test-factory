@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0.0",
+  "case_id": "SMK-008",
+  "case_version": "1.0.0",
+  "context_ref": "examples/context/python-alpha-smoke-context.json",
+  "system_id": "alpha-reference-sut",
+  "analysis_cassette_ref": "datasets/smoke/SMK-008/demo/analysis.json",
+  "artifact_cassette_refs": ["datasets/smoke/SMK-008/demo/artifact-invalid.json"],
+  "executor": "NOT_REACHED",
+  "expected": {
+    "status": "BUDGET_EXHAUSTED",
+    "classification": "BUDGET_ERROR",
+    "action": "NOT_REACHED",
+    "usage": {"model_calls": 3, "provider_retries": 1, "corrections": 0, "execution_attempts": 0},
+    "docker_called": false,
+    "oracle_executed": false,
+    "human_checkpoint_requested": false
+  }
+}

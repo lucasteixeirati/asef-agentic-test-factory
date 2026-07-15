@@ -1,0 +1,12 @@
+{
+  "schema_name": "wf001_analysis",
+  "model": "recorded-alpha-smoke",
+  "response_id": "smk-001-analysis",
+  "usage": {"input_tokens": 60, "output_tokens": 55},
+  "output": {
+    "behaviors": ["Somar dois inteiros"],
+    "risks": ["Sinais e zero tratados incorretamente"],
+    "scenarios": ["Soma positiva, negativa e com zero"],
+    "clarification_required": false
+  }
+}

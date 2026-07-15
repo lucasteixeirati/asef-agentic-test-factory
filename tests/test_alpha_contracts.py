@@ -25,18 +25,24 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class AlphaDatasetContractTests(unittest.TestCase):
-    def test_seed_cases_are_versioned_and_oracles_are_prompt_isolated(self) -> None:
+    def test_smoke_cases_are_versioned_and_oracles_are_prompt_isolated(self) -> None:
         paths = sorted((ROOT / "datasets" / "smoke").glob("SMK-*/case.json"))
-        self.assertEqual([path.parent.name for path in paths], ["SMK-001", "SMK-002", "SMK-003", "SMK-007"])
+        self.assertEqual(
+            [path.parent.name for path in paths],
+            [f"SMK-{number:03d}" for number in range(1, 11)],
+        )
         for path in paths:
             with self.subTest(case=path.parent.name):
                 case = dataset_case_from_dict(json.loads(path.read_text(encoding="utf-8")))
                 self.assertIs(case.kind, DatasetKind.SMOKE)
                 self.assertIs(case.exposure, DatasetExposure.PUBLIC)
-                self.assertIs(case.oracle_policy, OraclePolicy.PROMPT_ISOLATED)
                 self.assertEqual(case.case_id, path.parent.name)
-                self.assertNotIn(case.oracle_ref, case.generation_input_refs)
-                self.assertIn(case.oracle_ref, case.evaluation_input_refs)
+                if case.oracle_ref:
+                    self.assertIs(case.oracle_policy, OraclePolicy.PROMPT_ISOLATED)
+                    self.assertNotIn(case.oracle_ref, case.generation_input_refs)
+                    self.assertIn(case.oracle_ref, case.evaluation_input_refs)
+                else:
+                    self.assertIs(case.oracle_policy, OraclePolicy.NONE)
                 for ref in (
                     case.sut_ref,
                     case.requirement_ref,

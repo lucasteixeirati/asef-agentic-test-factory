@@ -1,0 +1,12 @@
+{
+  "schema_name": "wf001_analysis",
+  "model": "recorded-alpha-smoke",
+  "response_id": "smk-009-analysis",
+  "usage": {"input_tokens": 56, "output_tokens": 49},
+  "output": {
+    "behaviors": ["Somar dois inteiros"],
+    "risks": ["Executor isolado pode estar indisponível"],
+    "scenarios": ["Soma básica antes da falha injetada"],
+    "clarification_required": false
+  }
+}

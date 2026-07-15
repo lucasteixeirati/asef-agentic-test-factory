@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0",
+  "case_id": "SMK-004",
+  "version": "1.0.0",
+  "kind": "SMOKE",
+  "title": "Requisito ambíguo de arredondamento",
+  "objective": "Provar que a análise solicita esclarecimento sem inventar uma regra de arredondamento.",
+  "origin": "curated-for-asef",
+  "license": "MIT",
+  "curator": "Lucas Teixeira",
+  "language_profile": "python-pytest",
+  "sut_ref": "examples/python-alpha/reference_sut",
+  "requirement_ref": "datasets/smoke/SMK-004/requirement.md",
+  "oracle_ref": null,
+  "generation_input_refs": [
+    "datasets/smoke/SMK-004/requirement.md",
+    "examples/python-alpha/reference_sut/src/reference_sut/arithmetic.py"
+  ],
+  "evaluation_input_refs": [],
+  "expected_classifications": ["WAITING_HUMAN"],
+  "allowed_modes": ["demo"],
+  "exposure": "PUBLIC",
+  "oracle_policy": "NONE",
+  "tags": ["ambiguity", "clarification", "human-in-the-loop"]
+}

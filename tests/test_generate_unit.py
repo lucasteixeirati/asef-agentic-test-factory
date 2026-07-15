@@ -118,6 +118,20 @@ class GenerateUnitTestServiceTests(unittest.TestCase):
 
 
 class UnitSkillTests(unittest.TestCase):
+    def test_import_allowlist_can_be_composed_for_alpha_without_changing_default(self) -> None:
+        artifact = UnitTestArtifact(
+            "tests_generated/test_reference.py",
+            "import unittest\nfrom reference_sut import add\n\n"
+            "class ReferenceTests(unittest.TestCase):\n"
+            "    def test_add(self):\n"
+            "        self.assertEqual(add(2, 3), 5)\n",
+            ("SCN-001",),
+        )
+        alpha = UnitSkill({"reference_sut", "unittest"})
+        self.assertEqual(alpha.validate(artifact)["imports"], ["reference_sut", "unittest"])
+        with self.assertRaisesRegex(UnitSkillPolicyError, "forbidden imports"):
+            UnitSkill().validate(artifact)
+
     def artifact(self, content: str) -> UnitTestArtifact:
         return UnitTestArtifact("tests_generated/test_x.py", content, ("SCN-001",))
 

@@ -184,3 +184,15 @@ Wheel e sdist `0.1.0a3` foram construídos em ambiente isolado e passaram no sec
 - commit de fechamento: `f64f85d` (`docs: approve stage 5.4 release after ci`);
 - CI de fechamento: `29415300777`, aprovada;
 - tag anotada e pré-release `v0.1.0a3` publicadas em 2026-07-15.
+
+## 5.5 — Smoke Dataset executável
+
+O planejamento detalhado foi produzido e aprovado em 2026-07-15 e está em `docs/project/stage-05-increment-55-plan.md`. A implementação começou pela fatia 5.5.1, dedicada aos contratos tipados, loader global e testes adversariais. O plano mantém o dataset demo offline/keyless, materializa exatamente dez casos, conecta o coordenador Alpha do 5.3 e separa resultados esperadamente negativos de falhas da própria suíte.
+
+Na abertura da 5.5.1 foram introduzidos os contratos `SmokeDemoSpec`, `SmokeCaseResult` e `SmokeSuiteReport`, expectativas exatas ou intervalares de uso, fingerprint semântico e validações de coerência. O loader foi desenhado para aceitar somente `SMK-001` a `SMK-010`, validar todos os pares `case.json`/`demo.json`, limitar bytes, impedir escapes e vazamento do oracle e calcular o hash efetivo do dataset antes de qualquer run.
+
+As seis fatias foram implementadas: os dez casos e cassettes estão materializados; o contexto Alpha separa SUT de referência e defeituoso; a allowlist da skill é composta; correções gravadas são consumidas somente quando o coordenador solicita; e o runner produz comparação, fingerprints estáveis e reports JSON/Markdown atômicos. O comando `asef smoke` e o job `alpha-smoke` completam a superfície pública.
+
+Na revisão local, uma primeira execução encontrou excesso de comprimento nos nomes temporários aninhados da evidência no Windows. O ajuste encurtou apenas nomes internos, preservando paths finais e atomicidade. Em seguida, o Smoke passou 10/10 e 20/20 no Docker real, sem chave, com hash efetivo `c37834768ad1d2e457e30197a86766f631a49a5441e1ca1a02c7171c1e38019d`. A regressão descobriu 221 testes, executou 197 e ignorou 24 opcionais; coverage permaneceu em 85%. As integrações Docker ficaram 14 aprovadas de 15, com o skip conhecido de symlink no Windows. O wheel instalado isoladamente também executou Smoke 10/10. Source, wheel e evidências passaram no secret scan. Falta somente validar o novo job na CI pública para concluir formalmente o incremento.
+
+A revisão da baseline corrigiu o desenho do SMK-006: sintaxe inválida continua bloqueada antes do Docker; o caso usa erro de coleta sintaticamente válido, alcança `TEST_ERROR`, consome exatamente uma correção e termina aceito.

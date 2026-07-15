@@ -15,7 +15,7 @@ Objetivo: feedback rápido do WF-001 e regressão básica. Casos visíveis, pequ
 | SMK-003 | Normalização de string com entradas vazias | Partições e fronteiras cobertas |
 | SMK-004 | Requisito ambíguo sobre arredondamento | Pausa para esclarecimento |
 | SMK-005 | Requisito contraditório | Resultado inconclusivo/clarificação |
-| SMK-006 | Teste gerado com erro de sintaxe gravado em cassette | Correção limitada e rastreada |
+| SMK-006 | Teste sintaticamente válido com erro de coleta gravado em cassette | Correção limitada e rastreada após `TEST_ERROR` |
 | SMK-007 | SUT contém defeito revelado por oracle independente | Revisão humana, sem correção do SUT |
 | SMK-008 | Structured output inválido do provider gravado | Retry limitado ou falha classificada |
 | SMK-009 | Docker indisponível/simulado | `INFRASTRUCTURE_ERROR` |
@@ -108,4 +108,4 @@ datasets/<tipo>/<case-id>/
 └── README.md
 ```
 
-`case.json` segue `DatasetCase` em `src/asef/evaluation_contracts.py`. JSON foi escolhido para evitar uma dependência YAML no core. SMK-001, SMK-002, SMK-003 e SMK-007 são os seeds do 5.1; os demais casos Smoke serão materializados em 5.5 e os casos Security em 5.7.
+`case.json` segue `DatasetCase` em `src/asef/evaluation_contracts.py`. JSON foi escolhido para evitar uma dependência YAML no core. Os dez casos Smoke são materializados pelo 5.5 com `demo.json` separado; os casos Security permanecem planejados para o 5.7.

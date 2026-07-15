@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0",
+  "case_id": "SMK-006",
+  "version": "1.0.0",
+  "kind": "SMOKE",
+  "title": "Erro de coleta sintaticamente válido corrigido",
+  "objective": "Provar uma correção limitada após pytest classificar um artifact válido sintaticamente como TEST_ERROR.",
+  "origin": "curated-for-asef",
+  "license": "MIT",
+  "curator": "Lucas Teixeira",
+  "language_profile": "python-pytest",
+  "sut_ref": "examples/python-alpha/reference_sut",
+  "requirement_ref": "datasets/smoke/SMK-006/requirement.md",
+  "oracle_ref": "datasets/smoke/SMK-006/oracle/test_oracle.py",
+  "generation_input_refs": [
+    "datasets/smoke/SMK-006/requirement.md",
+    "examples/python-alpha/reference_sut/src/reference_sut/arithmetic.py"
+  ],
+  "evaluation_input_refs": ["datasets/smoke/SMK-006/oracle/test_oracle.py"],
+  "expected_classifications": ["ACCEPTED"],
+  "allowed_modes": ["demo"],
+  "exposure": "PUBLIC",
+  "oracle_policy": "PROMPT_ISOLATED",
+  "tags": ["collection-error", "bounded-correction", "oracle"]
+}
