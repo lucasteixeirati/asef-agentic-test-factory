@@ -1,6 +1,6 @@
 # Gate 5 — Plano de aceite do Alpha Python
 
-- **Estado:** baseline de aceite aprovada por Lucas em 2026-07-13; execução não iniciada
+- **Estado:** execução em andamento; evidências sincronizadas até o incremento 5.4 e a pré-alpha `v0.1.0a3`
 - **Responsável pela decisão final:** Lucas
 - **Ambiente de referência:** Windows, Docker Desktop com backend WSL2 e Python 3.13 suportado pelo package
 
@@ -8,26 +8,26 @@
 
 | ID | Critério | Evidência esperada | Estado |
 |---|---|---|---|
-| G5-01 | Wheel instala e executa fora do checkout | sessão limpa + CI de package audit | Não iniciado |
-| G5-02 | Demo completa funciona sem chave e sem rede de provider | Smoke Dataset + secret ausente | Não iniciado |
-| G5-03 | WF-001 live usa a mesma porta, policies e budgets do demo | contract tests + live smoke manual | Não iniciado |
-| G5-04 | Perfil Python executa `pytest` somente em Docker | manifest + integração | Parcial — adapter e 3 integrações reais no 5.2; CLI futura |
-| G5-05 | Análise, riscos, cenários, testes e resultados são rastreáveis | report + schema/contract tests | Parcial — casos e refs tipados no 5.1 |
-| G5-06 | Oracle curado não entra no prompt e é independente do teste gerado | payload test + hashes + fixtures | Parcial — schema, fixtures e hashes no 5.1; integração futura |
-| G5-07 | `TEST_ERROR` permite no máximo duas correções somente no teste | casos de correção e exaustão | Não iniciado |
-| G5-08 | `SUT_DEFECT_SUSPECTED` exige evidência independente e revisão humana | SUT defeituoso + oracle + checkpoint | Não iniciado |
-| G5-09 | Policy, budget, infraestrutura e resultado funcional são distintos | matriz de outcomes/exit codes | Parcial — outcomes pytest tipados no 5.2; oracle/budget futuros |
+| G5-01 | Wheel instala e executa fora do checkout | sessão limpa + CI de package audit | Atendido em `v0.1.0a3`: instalação limpa local e CI `29415101383` |
+| G5-02 | Demo completa funciona sem chave e sem rede de provider | Smoke Dataset + secret ausente | Parcial forte: demo keyless aprovada localmente e na CI; matriz 5.5 pendente |
+| G5-03 | WF-001 live usa a mesma porta, policies e budgets do demo | contract tests + live smoke manual | Atendido no 5.4: contratos falsos + smoke real autorizado |
+| G5-04 | Perfil Python executa `pytest` somente em Docker | manifest + integração | Parcial forte: adapter e integrações Docker aprovados; fluxo combinado ainda não está na CLI pública |
+| G5-05 | Análise, riscos, cenários, testes e resultados são rastreáveis | report + schema/contract tests | Parcial forte: refs, artifacts e provider calls tipados; consolidação do report fica no 5.8 |
+| G5-06 | Oracle curado não entra no prompt e é independente do teste gerado | payload test + hashes + fixtures | Atendido no 5.3: integração Docker, workspaces e evidências independentes |
+| G5-07 | `TEST_ERROR` permite no máximo duas correções somente no teste | casos de correção e exaustão | Atendido no 5.3 com regressões de limite, repetição e policy |
+| G5-08 | `SUT_DEFECT_SUSPECTED` exige evidência independente e revisão humana | SUT defeituoso + oracle + checkpoint | Atendido internamente no 5.3; exposição pública permanece futura |
+| G5-09 | Policy, budget, infraestrutura e resultado funcional são distintos | matriz de outcomes/exit codes | Atendido por contratos, matriz de avaliação e testes de exit code até o 5.4 |
 | G5-10 | `SMK-001` a `SMK-010` são executáveis e reproduzíveis em demo | relatório agregado 10/10 | Não iniciado |
-| G5-11 | `SEC-001` a `SEC-012` passam no ambiente de referência | job Docker/security 12/12 | Não iniciado |
-| G5-12 | Coverage Python é normalizada com escopo e limitações | fixture de conformance + report | Parcial — contrato neutro no 5.1; adapter futuro |
-| G5-13 | Mutation Python é normalizada e limitada por budget | fixture conhecida + timeout test | Parcial — contrato e budget no 5.1; adapter futuro |
-| G5-14 | Reports JSON e Markdown separam fatos, inferências e recomendações | schema + revisão de conteúdo | Não iniciado |
-| G5-15 | Logs/evidências são correlacionados, limitados e sem secrets | test logs + secret scan | Parcial — stdout/stderr/JUnit limitados e separados no 5.2 |
+| G5-11 | `SEC-001` a `SEC-012` passam no ambiente de referência | job Docker/security 12/12 | Parcial: baseline Docker verde; catálogo formal 5.7 pendente |
+| G5-12 | Coverage Python é normalizada com escopo e limitações | fixture de conformance + report | Parcial — contrato neutro no 5.1; adapter 5.6 pendente |
+| G5-13 | Mutation Python é normalizada e limitada por budget | fixture conhecida + timeout test | Parcial — contrato e pilot do core existem; adapter 5.6 pendente |
+| G5-14 | Reports JSON e Markdown separam fatos, inferências e recomendações | schema + revisão de conteúdo | Parcial: reports atuais existem; consolidação 5.8 pendente |
+| G5-15 | Logs/evidências são correlacionados, limitados e sem secrets | test logs + secret scan | Parcial forte: limites, correlação e scans aprovados; retenção 5.7 pendente |
 | G5-16 | `asef doctor` diagnostica requisitos sem expor credenciais | CLI end-to-end | Não iniciado |
-| G5-17 | Core não importa Python tooling, Docker, OpenAI ou LangGraph | import boundaries + job core mínimo | Parcial — fronteira AST e core mínimo aprovados localmente |
-| G5-18 | README, quickstart, tutorial, arquitetura, segurança e limitações refletem o Alpha real | auditoria documental | Não iniciado |
-| G5-19 | Métricas, falhas, decisões humanas e contribuição da IA estão registradas | journal + baseline + retrospectiva | Parcial — journals e baseline atualizados até 5.1 |
-| G5-20 | CI pública e regressões do Gate 4 permanecem verdes | execução GitHub Actions | Parcial — 5.1 e regressões anteriores verdes na run 29276529459 |
+| G5-17 | Core não importa Python tooling, Docker, OpenAI ou LangGraph | import boundaries + job core mínimo | Atendido até `v0.1.0a3`: fronteiras AST e job core aprovados |
+| G5-18 | README, quickstart, tutorial, arquitetura, segurança e limitações refletem o Alpha real | auditoria documental | Parcial: README/arquitetura live atualizados; consolidação 5.8 pendente |
+| G5-19 | Métricas, falhas, decisões humanas e contribuição da IA estão registradas | journal + baseline + retrospectiva | Parcial forte: sincronizado até o início do Dia 6; retrospectiva final 5.9 pendente |
+| G5-20 | CI pública e regressões do Gate 4 permanecem verdes | execução GitHub Actions | Atendido até `v0.1.0a3`: runs `29415101383` e `29415300777` verdes |
 
 ## Casos de aceite obrigatórios
 

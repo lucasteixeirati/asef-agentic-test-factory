@@ -1,7 +1,7 @@
 # Relato — Etapa 5, incremento 5.4
 
 - **Data:** 2026-07-14
-- **Estado:** concluído e aprovado para publicação como `v0.1.0a3`
+- **Estado:** concluído e publicado como `v0.1.0a3`
 
 O gateway OpenAI do spike não implementava as portas públicas e mantinha budget próprio do legado. O 5.4 separou transporte de autoridade: a aplicação reserva e persiste cada chamada, enquanto o adapter traduz análise, geração e correção para Structured Outputs.
 
@@ -17,4 +17,4 @@ Após autorização explícita, foi executada uma única chamada real com teto d
 
 Na revisão de fechamento foi encontrado um bypass de budget por valores monetários não finitos (`NaN`/`Infinity`). A correção passou a rejeitar esses valores no contrato, gateway e configuração live antes de qualquer transporte, além de revalidar o requisito em cada operação pública do adapter. As regressões dedicadas passaram.
 
-Com esse smoke e as verificações automáticas aprovadas, o incremento 5.4 foi aceito para a candidata pré-alpha `0.1.0a3`. O commit funcional `1d41383` foi publicado e a execução pública `29415101383` aprovou `core`, `framework-spikes` e `docker-security`, incluindo instalação do package e demo keyless. A publicação foi recomendada como `v0.1.0a3`.
+Com esse smoke e as verificações automáticas aprovadas, o incremento 5.4 foi aceito para a candidata pré-alpha `0.1.0a3`. O commit funcional `1d41383` foi publicado e a execução pública `29415101383` aprovou `core`, `framework-spikes` e `docker-security`, incluindo instalação do package e demo keyless. O commit documental `f64f85d` também passou na CI `29415300777`; tag anotada e pré-release `v0.1.0a3` foram publicadas em 2026-07-15.

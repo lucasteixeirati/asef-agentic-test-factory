@@ -29,12 +29,12 @@ Registrar a velocidade de criação dos módulos e demais entregáveis em dias, 
 
 | Item | Valor | Validade/período | Observação |
 |---|---:|---|---|
-| Licença ChatGPT Plus | R$ 100,00 | 1 mês a partir do início informado | Custo fixo inicial do projeto |
-| Créditos OpenAI API | R$ 10,00 | Adicionados em 2026-07-12 | Budget máximo informado para testes live |
+| ChatGPT Plus | R$ 0,00 efetivamente desembolsado no primeiro mês; preço nominal de R$ 100,00/mês | Primeiro mês promocional gratuito | O preço nominal não é contabilizado como gasto enquanto não houver cobrança |
+| Créditos OpenAI API | R$ 10,00 adquiridos | Adicionados em 2026-07-12 | Saldo pré-pago; consumo live observado até o Dia 5 foi de aproximadamente R$ 0,01533 |
 | Valor-hora de trabalho | Não aplicável | — | Não será contabilizado como custo financeiro |
 | Outros custos | R$ 0,00 | Baseline inicial | Registrar somente se ocorrerem |
 
-O custo de R$ 100,00 não será dividido artificialmente entre entregáveis. Durante o mês de validade, ele será referenciado como custo fixo vigente. Com os R$ 10,00 de créditos da API, o custo direto acumulado informado é R$ 110,00. Novos custos só serão adicionados quando efetivamente informados ou comprovados.
+O preço nominal do ChatGPT Plus não será tratado como desembolso no primeiro mês porque Lucas informou ter recebido esse período gratuitamente. O custo direto efetivamente informado até o início do Dia 6 é de R$ 10,00 em créditos pré-pagos da API; o único smoke medido consumiu aproximadamente R$ 0,01533 desse saldo. Aquisição de crédito e consumo efetivo permanecem métricas distintas. Novos custos só serão adicionados quando informados ou comprovados.
 
 ## Indicadores iniciais
 
@@ -68,6 +68,31 @@ O custo de R$ 100,00 não será dividido artificialmente entre entregáveis. Dur
 
 Os números não serão convertidos artificialmente em percentual de produtividade. As próximas comparações usarão dias por entregável, retrabalho, critérios de gate e evidências de qualidade.
 
+### Atualização no início do Dia 6
+
+Lucas declarou 2026-07-15 como início formal do Dia 6 de desenvolvimento. As estimativas abaixo são derivadas de sua percepção média, não de telemetria ou cronômetro:
+
+| Indicador | Valor informado/derivado | Natureza |
+|---|---:|---|
+| Dedicação média | aproximadamente 6 horas por dia | Estimativa do autor |
+| Horas acumuladas até o fim do Dia 5 | aproximadamente 30 horas | Derivação de cinco dias pela média informada |
+| Interações médias | aproximadamente 100 por dia | Percepção do autor mantida após o Dia 3 |
+| Interações acumuladas até o fim do Dia 5 | aproximadamente 500 | Derivação, não telemetria |
+| Produtividade percebida nos Dias 4 e 5 | alta | A ideia evoluiu da concepção à medida que o autor compreendeu e aprofundou o sistema |
+| Confiança | alta | Associada à revisão e validação antes de avançar etapas |
+| Desgaste | cansaço ao final do dia | Trabalho percebido como intelectualmente exigente e multidisciplinar |
+| Papel atual do autor | acompanhamento, leitura, compreensão e validação | O código é produzido com assistência da IA; a decisão de avanço permanece humana |
+
+Na percepção de Lucas, as interações recentes exigiram mais aprimoramentos do que correções diretas. A postura de revisão antes de cada etapa, porém, continua encontrando ajustes técnicos. O tempo entre interações aumentou porque ele lê e procura compreender o que foi construído e por quê; portanto, menor frequência momentânea não deve ser confundida com menor contribuição humana.
+
+### Ferramentas por período
+
+| Período | Ferramentas/modelos informados | Uso dominante |
+|---|---|---|
+| Concepção | GPT Free e Gemini Pro | Exploração inicial, comparação e formação da ideia |
+| Desenvolvimento | GPT-5.6 Sol na IDE Visual Studio Code | Análise, implementação, testes, documentação e revisão assistida |
+| Primeiro smoke live do produto | OpenAI API, modelo retornado `gpt-5.4-2026-03-05` | Validação controlada do adapter live com budget explícito |
+
 ## Baseline do Marco Zero
 
 | Entregável | Categoria | Início | Conclusão | Dias | Estado |
@@ -79,5 +104,9 @@ Os números não serão convertidos artificialmente em percentual de produtivida
 | Pacote da Etapa 2 — contratos, workflow e avaliação | Documentação | 2026-07-11 | 2026-07-11 | 1 | Concluído |
 | Etapa 3 — spikes arquiteturais | Implementação/experimento | 2026-07-12 | 2026-07-12 | 1 | Concluído |
 | Etapa 4 — walking skeleton, hardening e Gate 4 | Implementação/documentação | 2026-07-12 | 2026-07-13 | 2 | Concluído e aprovado |
+| Etapa 5.1 — contratos e referência Python | Implementação/documentação | 2026-07-13 | 2026-07-13 | 1 | Concluído e publicado |
+| Etapa 5.2 — adapter pytest em Docker | Implementação/integração | 2026-07-13 | 2026-07-13 | 1 | Concluído e publicado |
+| Etapa 5.3 — oracle e correção limitada | Implementação/revisão | 2026-07-14 | 2026-07-14 | 1 | Concluído com retrabalho de sete findings; publicado em `v0.1.0a2` |
+| Etapa 5.4 — adapter live e budgets | Implementação/revisão | 2026-07-14 | 2026-07-15 | 2 | Concluído com hardening de contexto e budget; publicado em `v0.1.0a3` |
 
 Esta baseline é retrospectiva e cobre apenas os registros disponíveis. A medição prospectiva começa após sua criação.

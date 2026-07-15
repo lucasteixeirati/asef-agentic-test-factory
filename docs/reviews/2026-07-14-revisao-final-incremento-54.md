@@ -3,7 +3,7 @@
 - **Data:** 2026-07-14
 - **Escopo:** adapter OpenAI live, Structured Outputs, budgets monetários, retry e evidência de provider
 - **Decisão técnica:** aprovada
-- **Publicação:** aprovada como pré-alpha `v0.1.0a3`
+- **Publicação:** concluída como pré-alpha `v0.1.0a3` em 2026-07-15
 
 ## Mudanças principais
 
@@ -33,6 +33,8 @@ Valores monetários `NaN` e `Infinity` não satisfazem comparações comuns como
 - secret scan do repositório, pacotes e artifacts da demo, além de `git diff --check`: aprovados.
 - commit funcional publicado: `1d41383`;
 - CI pública `29415101383`: jobs `core`, `framework-spikes` e `docker-security` aprovados.
+- commit de fechamento `f64f85d` e CI `29415300777`: aprovados;
+- tag anotada e pré-release `v0.1.0a3`: publicadas.
 
 ## Limites preservados
 
@@ -45,4 +47,4 @@ Valores monetários `NaN` e `Infinity` não satisfazem comparações comuns como
 
 ## Parecer
 
-Os critérios técnicos do incremento 5.4 estão atendidos e o finding de fechamento está encerrado. Artefatos, instalação limpa, demo keyless, scans locais e CI pública foram aprovados. A revisão recomenda e aprova a publicação como pré-alpha `v0.1.0a3`.
+Os critérios técnicos do incremento 5.4 estão atendidos e o finding de fechamento está encerrado. Artefatos, instalação limpa, demo keyless, scans locais e CI pública foram aprovados. A publicação foi concluída como pré-alpha `v0.1.0a3`.

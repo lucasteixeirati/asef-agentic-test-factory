@@ -72,9 +72,9 @@ As primeiras estimativas produzidas pela IA indicavam semanas de desenvolvimento
 
 ## Custos
 
-- ChatGPT Plus: R$ 100,00 já registrado;
+- ChatGPT Plus: preço nominal de R$ 100,00/mês; no Dia 6 Lucas esclareceu que o primeiro mês foi gratuito;
 - créditos OpenAI API: R$ 10,00 adicionados;
-- custo direto acumulado informado: R$ 110,00;
+- a estimativa original de R$ 110,00 foi corrigida no Dia 6: desembolso informado de R$ 10,00 em créditos no primeiro mês;
 - consumo live observado: 124 tokens de entrada e 161 de saída;
 - nenhuma conversão monetária por run implementada.
 

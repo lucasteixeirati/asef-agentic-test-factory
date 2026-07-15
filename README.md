@@ -10,7 +10,7 @@ Este repositório também registra a jornada de desenvolvimento assistido por IA
 
 ## Estado atual
 
-**Experimental — pré-alpha.** Os incrementos 5.1 a 5.4 foram concluídos e a versão `0.1.0a3` foi aprovada para publicação após revisão local e CI pública. O fluxo combinado do 5.3 ainda não integra a CLI pública. O projeto não deve ser usado para executar código arbitrariamente hostil ou em produção.
+**Experimental — pré-alpha.** Os incrementos 5.1 a 5.4 foram concluídos e publicados como [`v0.1.0a3`](https://github.com/lucasteixeirati/asef-agentic-test-factory/releases/tag/v0.1.0a3). O fluxo combinado do 5.3 ainda não integra a CLI pública. O projeto não deve ser usado para executar código arbitrariamente hostil ou em produção.
 
 Já demonstrado:
 
@@ -143,7 +143,7 @@ As tarifas não são congeladas no repositório. Confirme preço, câmbio, model
 2. Contratos, workflow e avaliação — concluído.
 3. Spikes arquiteturais — revisão técnica concluída.
 4. Walking skeleton e hardening — concluídos; Gate 4 aprovado.
-5. Alpha Python — incrementos 5.1 a 5.4 concluídos; pré-alpha `0.1.0a3` aprovada para publicação.
+5. Alpha Python — incrementos 5.1 a 5.4 concluídos e publicados como pré-alpha `0.1.0a3`; 5.5 é a próxima decisão.
 6. Perfis TypeScript e Java.
 7. Developer preview e hardening da v0.1.
 

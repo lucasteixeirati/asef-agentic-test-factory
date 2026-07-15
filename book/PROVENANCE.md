@@ -27,5 +27,6 @@ O livro trata de desenvolvimento assistido por IA. A origem de cada texto també
 | `notes/2026-07-12-o-contexto-do-qa-como-parte-do-produto.md` | percepção explícita do autor | GPT-5.6 Sol | matéria-prima |
 | `notes/2026-07-13-do-checkout-ao-produto.md` | evidências da 4.R7 + relato explícito do autor | GPT-5.6 Sol | revisado pelo autor em 2026-07-13 |
 | `retrospectives/2026-07-13-etapa-04.md` | código, testes, ADRs, journals + relato explícito do autor | GPT-5.6 Sol | revisado pelo autor em 2026-07-13 |
+| `notes/2026-07-15-dia-06-produtividade-e-revisao.md` | relato explícito de Lucas + evidências de `v0.1.0a3` | estruturação assistida por IA | rascunho assistido |
 
 Uma aprovação de gate não aprova automaticamente a voz ou a redação de um capítulo.

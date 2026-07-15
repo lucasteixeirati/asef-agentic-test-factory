@@ -2,7 +2,7 @@
 
 > Documento vivo para orientar a construção da aplicação, da documentação pública e do futuro livro.
 
-**Status:** vigente — incrementos 5.1 a 5.4 concluídos; pré-alpha `0.1.0a3` aprovada para publicação após CI pública
+**Status:** vigente — incrementos 5.1 a 5.4 concluídos e publicados como pré-alpha `0.1.0a3`; sincronização pré-5.5 em andamento
 **Data de início:** 2026-07-11  
 **Responsável:** Lucas  
 **Natureza:** projeto open source, educacional, experimental e de portfólio  
@@ -746,7 +746,7 @@ As datas serão estimadas após a baseline das primeiras sessões. Os gates são
 **Plano executável:** `docs/project/stage-05-alpha-python-plan.md`
 
 **Plano de aceite:** `docs/project/gates/gate-05-acceptance-plan.md`
-**Status:** 5.1 a 5.4 concluídos. A ADR-009 foi aceita. O 5.4 incorporou o adapter live e budgets, passou pelo smoke OpenAI autorizado, revisão final, empacotamento e três jobs da CI pública; a pré-alpha `0.1.0a3` foi aprovada para publicação.
+**Status:** 5.1 a 5.4 concluídos. A ADR-009 foi aceita. O 5.4 incorporou o adapter live e budgets, passou pelo smoke OpenAI autorizado, revisão final, empacotamento e três jobs da CI pública; a pré-alpha `v0.1.0a3` foi publicada em 2026-07-15.
 
 **Aplicação**
 

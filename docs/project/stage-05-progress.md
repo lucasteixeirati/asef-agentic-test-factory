@@ -2,7 +2,7 @@
 
 - **Plano:** `docs/project/stage-05-alpha-python-plan.md`
 - **Gate:** `docs/project/gates/gate-05-acceptance-plan.md`
-- **Estado atual:** incrementos 5.1 a 5.4 concluídos; pré-alpha `0.1.0a3` aprovada para publicação
+- **Estado atual:** incrementos 5.1 a 5.4 concluídos e publicados como pré-alpha `v0.1.0a3`
 
 ## 5.1 — Contratos, ADRs e suíte de referência
 
@@ -180,4 +180,7 @@ Wheel e sdist `0.1.0a3` foram construídos em ambiente isolado e passaram no sec
 - execução pública: `29415101383`;
 - jobs `core`, `framework-spikes` e `docker-security`: aprovados;
 - instalação do package e demo keyless fora do checkout: aprovadas na CI;
-- publicação recomendada como pré-alpha `v0.1.0a3`.
+- publicação recomendada como pré-alpha `v0.1.0a3`;
+- commit de fechamento: `f64f85d` (`docs: approve stage 5.4 release after ci`);
+- CI de fechamento: `29415300777`, aprovada;
+- tag anotada e pré-release `v0.1.0a3` publicadas em 2026-07-15.
