@@ -1,7 +1,7 @@
 # Incremento 5.4 — Adapter live e budgets
 
 - **Data:** 2026-07-14
-- **Estado:** concluído localmente; candidata `0.1.0a3` em fechamento
+- **Estado:** concluído e aprovado para publicação como `v0.1.0a3`
 - **Dependência:** incremento 5.3 concluído e publicado como `v0.1.0a2`
 
 ## Objetivo

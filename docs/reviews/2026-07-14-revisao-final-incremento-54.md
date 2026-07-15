@@ -2,9 +2,8 @@
 
 - **Data:** 2026-07-14
 - **Escopo:** adapter OpenAI live, Structured Outputs, budgets monetários, retry e evidência de provider
-- **Decisão técnica local:** aprovada
-- **Candidata de publicação:** pré-alpha `0.1.0a3`
-- **Publicação:** pendente de commit, CI pública, tag e release
+- **Decisão técnica:** aprovada
+- **Publicação:** aprovada como pré-alpha `v0.1.0a3`
 
 ## Mudanças principais
 
@@ -32,6 +31,8 @@ Valores monetários `NaN` e `Infinity` não satisfazem comparações comuns como
 - wheel instalado sem dependências em venv novo e identificado como `0.1.0a3`;
 - demo keyless executada fora do checkout: `SUCCEEDED`/`ACCEPTED`;
 - secret scan do repositório, pacotes e artifacts da demo, além de `git diff --check`: aprovados.
+- commit funcional publicado: `1d41383`;
+- CI pública `29415101383`: jobs `core`, `framework-spikes` e `docker-security` aprovados.
 
 ## Limites preservados
 
@@ -44,4 +45,4 @@ Valores monetários `NaN` e `Infinity` não satisfazem comparações comuns como
 
 ## Parecer
 
-Os critérios técnicos locais do incremento 5.4 estão atendidos e o finding de fechamento está encerrado. Artefatos, instalação limpa, demo keyless e scans locais foram aprovados. A revisão recomenda `0.1.0a3` como próxima pré-alpha; a aprovação definitiva de publicação depende agora do commit e da CI pública verde antes da tag/release.
+Os critérios técnicos do incremento 5.4 estão atendidos e o finding de fechamento está encerrado. Artefatos, instalação limpa, demo keyless, scans locais e CI pública foram aprovados. A revisão recomenda e aprova a publicação como pré-alpha `v0.1.0a3`.

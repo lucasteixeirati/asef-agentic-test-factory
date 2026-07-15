@@ -2,7 +2,7 @@
 
 > Documento vivo para orientar a construção da aplicação, da documentação pública e do futuro livro.
 
-**Status:** vigente — incrementos 5.1 a 5.4 concluídos localmente; candidata `0.1.0a3` em fechamento, publicação vigente ainda em `0.1.0a2`
+**Status:** vigente — incrementos 5.1 a 5.4 concluídos; pré-alpha `0.1.0a3` aprovada para publicação após CI pública
 **Data de início:** 2026-07-11  
 **Responsável:** Lucas  
 **Natureza:** projeto open source, educacional, experimental e de portfólio  
@@ -746,7 +746,7 @@ As datas serão estimadas após a baseline das primeiras sessões. Os gates são
 **Plano executável:** `docs/project/stage-05-alpha-python-plan.md`
 
 **Plano de aceite:** `docs/project/gates/gate-05-acceptance-plan.md`
-**Status:** 5.1, 5.2 e 5.3 concluídos e publicados. A ADR-009 foi aceita. O 5.3 passou pela segunda revisão técnica após correção de sete findings e pelos três jobs da CI pública; permanece sem integração à CLI pública.
+**Status:** 5.1 a 5.4 concluídos. A ADR-009 foi aceita. O 5.4 incorporou o adapter live e budgets, passou pelo smoke OpenAI autorizado, revisão final, empacotamento e três jobs da CI pública; a pré-alpha `0.1.0a3` foi aprovada para publicação.
 
 **Aplicação**
 
@@ -1078,11 +1078,4 @@ Estas questões serão decididas nas etapas indicadas, não agora:
 
 ## 27. Próxima decisão
 
-Implementar e revisar o incremento 5.4 — adapter live e budgets:
-
-1. promover o transporte OpenAI experimental para as portas públicas de análise, geração e correção;
-2. manter Structured Outputs e validação local sem delegar workflow ou retries ao provider;
-3. persistir reservas e consumo de chamadas, tokens, latência e custo estimado;
-4. separar falha transitória, permanente, recusa e output inválido;
-5. preservar demo keyless/offline e tornar o smoke live manual e explicitamente orçado;
-6. não considerar o Gate 5 aprovado nem iniciar a Etapa 6 automaticamente.
+Fechar a publicação da pré-alpha `0.1.0a3`, sincronizar livro, baseline de medição e Gate 5 com as evidências dos incrementos 5.2 a 5.4 e, somente depois, planejar detalhadamente o incremento 5.5 — Smoke Dataset. O Gate 5 não está aprovado e a Etapa 6 não começa automaticamente.

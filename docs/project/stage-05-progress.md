@@ -2,7 +2,7 @@
 
 - **Plano:** `docs/project/stage-05-alpha-python-plan.md`
 - **Gate:** `docs/project/gates/gate-05-acceptance-plan.md`
-- **Estado atual:** incrementos 5.1 a 5.4 concluídos localmente; candidata `0.1.0a3` em fechamento
+- **Estado atual:** incrementos 5.1 a 5.4 concluídos; pré-alpha `0.1.0a3` aprovada para publicação
 
 ## 5.1 — Contratos, ADRs e suíte de referência
 
@@ -173,3 +173,11 @@ O smoke live manual foi explicitamente autorizado e aprovado em 2026-07-14 com u
 Na revisão de fechamento, valores monetários não finitos (`NaN`/`Infinity`) foram identificados como bypass possível das comparações de budget. Contratos, gateway e configuração live passaram a rejeitá-los antes do transporte, com regressões dedicadas. Com o finding encerrado, regressão, coverage, integrações, secret scan e integridade do diff aprovados, o incremento compõe a candidata pré-alpha `0.1.0a3`.
 
 Wheel e sdist `0.1.0a3` foram construídos em ambiente isolado e passaram no secret scan. O wheel foi instalado sem dependências em venv novo; a demo keyless fora do checkout terminou `SUCCEEDED`/`ACCEPTED`. Os hashes e o parecer estão em `docs/reviews/2026-07-14-revisao-final-incremento-54.md`.
+
+### Publicação e CI
+
+- commit funcional publicado: `1d41383` (`feat: add live provider budgets and release candidate`);
+- execução pública: `29415101383`;
+- jobs `core`, `framework-spikes` e `docker-security`: aprovados;
+- instalação do package e demo keyless fora do checkout: aprovadas na CI;
+- publicação recomendada como pré-alpha `v0.1.0a3`.
