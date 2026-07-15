@@ -18,6 +18,60 @@ from ..evaluation_contracts import CorrectionFeedback
 class InvalidAgentOutputError(ValueError):
     """A provider response was received but violates the typed application contract."""
 
+    def __init__(
+        self,
+        message: str,
+        *,
+        provider: str = "unknown",
+        model: str = "unknown",
+        response_id: str = "unknown",
+        input_tokens: int = 0,
+        output_tokens: int = 0,
+        latency_ms: int = 0,
+        estimated_cost_brl: float = 0.0,
+        usage_observed: bool = False,
+    ) -> None:
+        super().__init__(message)
+        self.provider = provider
+        self.model = model
+        self.response_id = response_id
+        self.input_tokens = input_tokens
+        self.output_tokens = output_tokens
+        self.latency_ms = latency_ms
+        self.estimated_cost_brl = estimated_cost_brl
+        self.usage_observed = usage_observed
+
+
+class ProviderError(RuntimeError):
+    """Base error normalized at the provider boundary."""
+
+    def __init__(self, message: str) -> None:
+        super().__init__(message)
+        self.provider = "unknown"
+        self.model = "unknown"
+        self.response_id = "unknown"
+        self.input_tokens = 0
+        self.output_tokens = 0
+        self.latency_ms = 0
+        self.estimated_cost_brl = 0.0
+        self.usage_observed = False
+
+
+class ProviderTransientError(ProviderError):
+    """A provider failure that may consume an authorized retry."""
+
+
+class ProviderPermanentError(ProviderError):
+    """A provider failure that must not be retried automatically."""
+
+
+class ProviderRefusalError(ProviderPermanentError):
+    """The provider explicitly refused the requested structured output."""
+
+
+class ProviderEvidenceError(ProviderPermanentError):
+    """The response arrived, but explicitly requested local provider evidence could not persist."""
+
 
 @dataclass(slots=True, frozen=True)
 class ResolvedQualityContext:
@@ -36,6 +90,9 @@ class AnalysisResult:
     response_id: str
     input_tokens: int = 0
     output_tokens: int = 0
+    provider: str = "recorded"
+    latency_ms: int = 0
+    estimated_cost_brl: float = 0.0
 
 
 @dataclass(slots=True, frozen=True)
@@ -45,6 +102,9 @@ class GeneratedArtifactResult:
     response_id: str
     input_tokens: int = 0
     output_tokens: int = 0
+    provider: str = "recorded"
+    latency_ms: int = 0
+    estimated_cost_brl: float = 0.0
 
 
 @dataclass(slots=True, frozen=True)

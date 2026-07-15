@@ -14,6 +14,11 @@ from asef.adapters.gateway import (
     OpenAIResponsesGateway,
     RecordedModelGateway,
 )
+from asef.application.ports import (
+    ProviderPermanentError,
+    ProviderRefusalError,
+    ProviderTransientError,
+)
 from asef.legacy.domain import BudgetLimits, BudgetUsage
 from asef.runtime.budgets import BudgetController
 
@@ -57,6 +62,13 @@ class RecordedGatewayTests(unittest.TestCase):
             gateway.generate(prompt="x", schema={}, schema_name="result")
         transport.assert_not_called()
 
+    def test_live_gateway_rejects_non_finite_budget_before_transport(self) -> None:
+        with patch("asef.adapters.gateway.urlopen") as transport, self.assertRaisesRegex(
+            GatewayError, "must be finite"
+        ):
+            OpenAIResponsesGateway(api_key="test-key", api_budget_brl=float("nan"))
+        transport.assert_not_called()
+
     def test_live_gateway_parses_structured_output_and_usage(self) -> None:
         usage = BudgetUsage()
         gateway = OpenAIResponsesGateway(
@@ -67,6 +79,7 @@ class RecordedGatewayTests(unittest.TestCase):
         payload = {
             "id": "response-1",
             "model": "test-model",
+            "status": "completed",
             "usage": {"input_tokens": 9, "output_tokens": 4},
             "output": [
                 {"type": "message", "content": [{"type": "output_text", "text": '{"ok": true}'}]}
@@ -94,19 +107,20 @@ class RecordedGatewayTests(unittest.TestCase):
             io.BytesIO(b'{"error":"limited"}'),
         )
         with patch("asef.adapters.gateway.urlopen", side_effect=http_error), self.assertRaisesRegex(
-            GatewayError, "HTTP 429"
+            ProviderTransientError, "HTTP 429"
         ):
             gateway().generate(prompt="x", schema={}, schema_name="result")
         with patch(
             "asef.adapters.gateway.urlopen", side_effect=URLError("offline")
-        ), self.assertRaisesRegex(GatewayError, "connection failed"):
+        ), self.assertRaisesRegex(ProviderTransientError, "connection failed"):
             gateway().generate(prompt="x", schema={}, schema_name="result")
         with patch(
             "asef.adapters.gateway.urlopen",
-            return_value=_Response({"output": []}),
-        ), self.assertRaisesRegex(GatewayError, "output_text"):
+            return_value=_Response({"output": [], "usage": {"input_tokens": 1, "output_tokens": 1}}),
+        ), self.assertRaisesRegex(ProviderPermanentError, "output_text"):
             gateway().generate(prompt="x", schema={}, schema_name="result")
         invalid = {
+            "usage": {"input_tokens": 1, "output_tokens": 1},
             "output": [
                 {"type": "message", "content": [{"type": "output_text", "text": "not-json"}]}
             ]
@@ -114,6 +128,23 @@ class RecordedGatewayTests(unittest.TestCase):
         with patch(
             "asef.adapters.gateway.urlopen", return_value=_Response(invalid)
         ), self.assertRaises(InvalidStructuredOutput):
+            gateway().generate(prompt="x", schema={}, schema_name="result")
+        with patch(
+            "asef.adapters.gateway.urlopen",
+            return_value=_Response(
+                {"status": "incomplete", "usage": {"input_tokens": 1, "output_tokens": 1}}
+            ),
+        ), self.assertRaisesRegex(InvalidStructuredOutput, "incomplete"):
+            gateway().generate(prompt="x", schema={}, schema_name="result")
+        refusal = {
+            "usage": {"input_tokens": 1, "output_tokens": 1},
+            "output": [
+                {"type": "message", "content": [{"type": "refusal", "refusal": "declined"}]}
+            ]
+        }
+        with patch(
+            "asef.adapters.gateway.urlopen", return_value=_Response(refusal)
+        ), self.assertRaises(ProviderRefusalError):
             gateway().generate(prompt="x", schema={}, schema_name="result")
 
 

@@ -10,7 +10,7 @@ Este repositório também registra a jornada de desenvolvimento assistido por IA
 
 ## Estado atual
 
-**Experimental — pré-alpha.** Os incrementos 5.1, 5.2 e 5.3 foram concluídos. A versão `0.1.0a2` incorporou o oracle independente e a correção limitada, mas esse fluxo ainda não integra a CLI pública. O projeto não deve ser usado para executar código arbitrariamente hostil ou em produção.
+**Experimental — pré-alpha.** Os incrementos 5.1 a 5.4 foram concluídos localmente. A candidata atual é `0.1.0a3`; a versão publicada continua `0.1.0a2` até a conclusão do commit, CI, tag e release. O fluxo combinado do 5.3 ainda não integra a CLI pública. O projeto não deve ser usado para executar código arbitrariamente hostil ou em produção.
 
 Já demonstrado:
 
@@ -88,7 +88,7 @@ Para observar fronteiras intermediárias sem executar o container:
 .\.venv\Scripts\asef.exe generate
 ```
 
-Limitações atuais: apenas a skill `unit` e o perfil Python do calculator percorrem o fluxo completo; o modo live ainda não é público; o isolamento depende do daemon local do Docker; e a demo gravada prova o workflow, não a qualidade de um modelo em produção.
+Limitações atuais: apenas a skill `unit` e o perfil Python do calculator percorrem o fluxo completo; o modo live exige configuração explícita e permanece experimental; o isolamento depende do daemon local do Docker; e a demo gravada prova o workflow, não a qualidade de um modelo em produção.
 
 Checkpoint e decisão humana usam um extra opcional:
 
@@ -113,6 +113,20 @@ python -m unittest discover -s tests\integration -v
 
 Nunca coloque uma chave real em arquivos do repositório. O modo live exige `OPENAI_API_KEY` no host e budget explícito.
 
+O adapter live experimental exige também contexto próprio e tarifas atuais informadas pelo operador:
+
+```powershell
+$env:OPENAI_API_KEY='<somente-no-host>'
+asef generate --mode live `
+  --context examples/context/walking-skeleton-live-context.example.json `
+  --model gpt-5.4 `
+  --api-budget-brl 1.00 `
+  --input-cost-brl-per-million <TARIFA_ATUAL> `
+  --output-cost-brl-per-million <TARIFA_ATUAL>
+```
+
+As tarifas não são congeladas no repositório. Confirme preço, câmbio, modelo disponível e teto antes do smoke manual. O modo demo continua sem chave e sem rede. Veja [`docs/architecture/live-provider.md`](docs/architecture/live-provider.md).
+
 ## Estrutura
 
 - `src/asef/` — contratos, application services, runtime, adapters e baseline legada temporária;
@@ -129,7 +143,7 @@ Nunca coloque uma chave real em arquivos do repositório. O modo live exige `OPE
 2. Contratos, workflow e avaliação — concluído.
 3. Spikes arquiteturais — revisão técnica concluída.
 4. Walking skeleton e hardening — concluídos; Gate 4 aprovado.
-5. Alpha Python — incrementos 5.1, 5.2 e 5.3 concluídos; integração pública do novo fluxo à CLI permanece futura.
+5. Alpha Python — incrementos 5.1 a 5.4 concluídos localmente; candidata `0.1.0a3` em fechamento.
 6. Perfis TypeScript e Java.
 7. Developer preview e hardening da v0.1.
 

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import math
 import re
 from dataclasses import asdict, dataclass, field
 from datetime import UTC, datetime
@@ -12,7 +13,7 @@ from uuid import uuid4
 from .outcomes import RunClassification, RunStatus
 
 
-STATE_SCHEMA_VERSION = "1.2.0"
+STATE_SCHEMA_VERSION = "1.3.0"
 CONTRACT_SCHEMA_VERSION = "1.0.0"
 EXECUTION_SCHEMA_VERSION = "1.1.0"
 WORKFLOW_ID = "WF-001"
@@ -85,6 +86,8 @@ class SkeletonRunRequest:
             raise ContractValidationError(
                 f"requirement_description exceeds {MAX_REQUIREMENT_CHARS} characters"
             )
+        if not _is_finite_number(self.api_budget_brl):
+            raise ContractValidationError("api_budget_brl must be finite")
         if self.api_budget_brl < 0:
             raise ContractValidationError("api_budget_brl cannot be negative")
         if self.execution_mode == "live" and self.api_budget_brl <= 0:
@@ -281,6 +284,8 @@ class SkeletonBudgetLimits:
         for name in ("max_workflow_seconds", "max_input_tokens", "max_output_tokens"):
             if getattr(self, name) < 1:
                 raise ContractValidationError(f"{name} must be positive")
+        if not _is_finite_number(self.api_budget_brl):
+            raise ContractValidationError("api_budget_brl must be finite")
         if self.api_budget_brl < 0:
             raise ContractValidationError("api_budget_brl cannot be negative")
 
@@ -293,6 +298,7 @@ class SkeletonBudgetUsage:
     input_tokens: int = 0
     output_tokens: int = 0
     elapsed_ms: int = 0
+    estimated_cost_brl: float = 0.0
 
     def validate(self) -> None:
         for name in (
@@ -302,8 +308,12 @@ class SkeletonBudgetUsage:
             "input_tokens",
             "output_tokens",
             "elapsed_ms",
+            "estimated_cost_brl",
         ):
-            if getattr(self, name) < 0:
+            value = getattr(self, name)
+            if not _is_finite_number(value):
+                raise ContractValidationError(f"{name} usage must be finite")
+            if value < 0:
                 raise ContractValidationError(f"{name} usage cannot be negative")
 
 
@@ -390,6 +400,8 @@ class SkeletonRunState:
             raise ContractValidationError("input token usage exceeds state budget")
         if self.usage.output_tokens > self.budgets.max_output_tokens and not budget_exhausted:
             raise ContractValidationError("output token usage exceeds state budget")
+        if self.usage.estimated_cost_brl > self.budgets.api_budget_brl and not budget_exhausted:
+            raise ContractValidationError("estimated provider cost exceeds state budget")
         if any(value < 0 for value in self.attempts.values()):
             raise ContractValidationError("attempt counters cannot be negative")
 
@@ -576,6 +588,14 @@ def _version_major(version: str) -> int:
         return int(version.split(".", 1)[0])
     except (ValueError, AttributeError) as exc:
         raise IncompatibleSchemaError(f"invalid schema version: {version!r}") from exc
+
+
+def _is_finite_number(value: object) -> bool:
+    return (
+        isinstance(value, (int, float))
+        and not isinstance(value, bool)
+        and math.isfinite(value)
+    )
 
 
 def _looks_sensitive(value: str) -> bool:

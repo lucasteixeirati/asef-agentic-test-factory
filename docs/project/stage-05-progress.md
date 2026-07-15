@@ -2,7 +2,7 @@
 
 - **Plano:** `docs/project/stage-05-alpha-python-plan.md`
 - **Gate:** `docs/project/gates/gate-05-acceptance-plan.md`
-- **Estado atual:** incrementos 5.1, 5.2 e 5.3 concluídos; versão pré-alpha `0.1.0a2` publicada
+- **Estado atual:** incrementos 5.1 a 5.4 concluídos localmente; candidata `0.1.0a3` em fechamento
 
 ## 5.1 — Contratos, ADRs e suíte de referência
 
@@ -145,3 +145,31 @@ Evidência local após correções da revisão:
 - instalação limpa do wheel e execução da demo keyless: `SUCCEEDED/ACCEPTED`.
 
 Com a revisão, o empacotamento e os três jobs aprovados, o incremento 5.3 está concluído. A exposição desse fluxo na CLI permanece uma decisão futura e não faz parte desta publicação.
+
+## 5.4 — Adapter live e budgets
+
+O incremento foi autorizado por Lucas em 2026-07-14. O plano executável está em `docs/project/stage-05-increment-54-plan.md`. A implementação promove o gateway live experimental para as portas públicas de análise, geração e correção, sem alterar a autoridade do runtime nem tornar rede ou chave obrigatórias no modo demo.
+
+### Evidência de desenvolvimento
+
+- `AgenticTestPort` e `TestCorrectionPort` implementados pelo adapter live;
+- Responses API com Structured Outputs estrito, `store: false` e transporte substituível;
+- source limitado aos arquivos concretos do `read_scope`, com teto de 64 KiB e bloqueio sensível;
+- chamadas reservadas e persistidas antes do transporte;
+- tokens, latência e custo estimado preservados também para recusa, output inválido e falha de cassette;
+- provider retry separado do contador de correção;
+- CLI `generate`/`run` seleciona live somente por contexto, modelo, budget e tarifas explícitos;
+- cassette opt-in sem prompt integral, headers ou chave;
+- estado persistido evoluído para `1.3.0`, com leitura de `1.2.0` sem custo live;
+- core: 199 descobertos, 183 aprovados e 16 opt-in; branch coverage de 87%;
+- frameworks/workflow opcional: 18/18;
+- Docker: 15 descobertos, 14 aprovados e um skip conhecido de symlink no Windows;
+- secret scan e `git diff --check`: aprovados.
+
+### Aceite local
+
+O smoke live manual foi explicitamente autorizado e aprovado em 2026-07-14 com uma única chamada. O provider retornou `gpt-5.4-2026-03-05`: 194 tokens de entrada, 138 de saída, latência de 4.515 ms e custo estimado de R$ 0,01533, dentro do teto de R$ 0,10. Nenhuma repetição foi necessária.
+
+Na revisão de fechamento, valores monetários não finitos (`NaN`/`Infinity`) foram identificados como bypass possível das comparações de budget. Contratos, gateway e configuração live passaram a rejeitá-los antes do transporte, com regressões dedicadas. Com o finding encerrado, regressão, coverage, integrações, secret scan e integridade do diff aprovados, o incremento compõe a candidata pré-alpha `0.1.0a3`.
+
+Wheel e sdist `0.1.0a3` foram construídos em ambiente isolado e passaram no secret scan. O wheel foi instalado sem dependências em venv novo; a demo keyless fora do checkout terminou `SUCCEEDED`/`ACCEPTED`. Os hashes e o parecer estão em `docs/reviews/2026-07-14-revisao-final-incremento-54.md`.

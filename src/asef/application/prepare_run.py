@@ -6,6 +6,7 @@ from pathlib import Path
 
 from ..contracts import (
     ContextResolution,
+    SkeletonBudgetLimits,
     SkeletonRunRequest,
     SkeletonRunState,
     resolve_new_run_context,
@@ -29,7 +30,10 @@ class PrepareRunService:
         self.run_store = run_store
 
     def execute(self, request: SkeletonRunRequest) -> PrepareRunResult:
-        state = SkeletonRunState(request=request)
+        state = SkeletonRunState(
+            request=request,
+            budgets=SkeletonBudgetLimits(api_budget_brl=request.api_budget_brl),
+        )
         self._move(state, RunStatus.VALIDATING_INPUT, "run_received")
         request.validate()
         self._move(state, RunStatus.VALIDATING_CONTEXT, "request_valid")

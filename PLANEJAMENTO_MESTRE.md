@@ -2,7 +2,7 @@
 
 > Documento vivo para orientar a construção da aplicação, da documentação pública e do futuro livro.
 
-**Status:** vigente — incrementos 5.1, 5.2 e 5.3 concluídos; versão pré-alpha `0.1.0a2` publicada
+**Status:** vigente — incrementos 5.1 a 5.4 concluídos localmente; candidata `0.1.0a3` em fechamento, publicação vigente ainda em `0.1.0a2`
 **Data de início:** 2026-07-11  
 **Responsável:** Lucas  
 **Natureza:** projeto open source, educacional, experimental e de portfólio  
@@ -1078,11 +1078,11 @@ Estas questões serão decididas nas etapas indicadas, não agora:
 
 ## 27. Próxima decisão
 
-Planejar detalhadamente o incremento 5.3 — oracle independente e correção limitada:
+Implementar e revisar o incremento 5.4 — adapter live e budgets:
 
-1. definir como oracle curado, resultado pytest e artefato gerado serão comparados;
-2. separar falha do teste, falha do SUT e insuficiência de evidência;
-3. limitar tentativas, tokens, tempo e tamanho de contexto do loop de correção;
-4. preservar revisão humana antes da exportação;
-5. manter capabilities parciais/planejadas explicitamente declaradas até suas evidências;
+1. promover o transporte OpenAI experimental para as portas públicas de análise, geração e correção;
+2. manter Structured Outputs e validação local sem delegar workflow ou retries ao provider;
+3. persistir reservas e consumo de chamadas, tokens, latência e custo estimado;
+4. separar falha transitória, permanente, recusa e output inválido;
+5. preservar demo keyless/offline e tornar o smoke live manual e explicitamente orçado;
 6. não considerar o Gate 5 aprovado nem iniciar a Etapa 6 automaticamente.

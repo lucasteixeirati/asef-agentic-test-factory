@@ -69,6 +69,16 @@ class QualityContext:
             raise ContextValidationError("walking skeleton requires exactly one repository")
         repository = repositories[repository_ids[0]]
         policy = self.data["llm_policy"]
+        if request.execution_mode == "live":
+            if policy.get("provider") != "openai":
+                raise ContextValidationError("live mode currently requires provider openai")
+            required_tasks = {"analysis", "test-generation", "test-correction"}
+            if not required_tasks.issubset(set(policy.get("allowed_tasks", []))):
+                raise ContextValidationError(
+                    "live policy must authorize analysis, test-generation and test-correction"
+                )
+            if policy.get("live_requires_budget") is not True:
+                raise ContextValidationError("live policy must require an explicit budget")
         try:
             snapshot = ContextSnapshot(
                 source_sha256=self.source_sha256,

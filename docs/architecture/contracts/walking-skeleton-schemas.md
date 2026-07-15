@@ -1,8 +1,8 @@
 # Contratos concretos do Walking Skeleton — Incremento 4.1
 
-- **Estado:** contratos de estado `1.2.0` implementados no 5.3; execução normalizada permanece `1.1.0`
+- **Estado:** contratos de estado `1.3.0` em implementação no 5.4; execução normalizada permanece `1.1.0`
 - **Implementação:** `src/asef/contracts.py` e `src/asef/outcomes.py`
-- **Distribuição:** `asef-agentic-test-factory 0.1.0a2`
+- **Distribuição:** `asef-agentic-test-factory 0.1.0a3`
 
 ## Versões
 
@@ -10,7 +10,7 @@
 |---|---|---|
 | Requests, artifacts, snapshots e results | `1.0.0` | versão exata no skeleton |
 | Resultado de execução estruturado | `1.1.0` | extensão aditiva do 5.2 para tool/outcome/JUnit |
-| Estado persistido | `1.2.0` | budgets de correção e novos estados/classificações; leitura compatível de `1.1.0` |
+| Estado persistido | `1.3.0` | custo live estimado; leitura compatível dos estados `1.1.0` e `1.2.0` sem o novo campo |
 | Workflow | `0.1.0-skeleton` | identifica o fluxo da Etapa 4 |
 
 Estado `1.0.0` pertence aos spikes e não pode ser retomado. Ele pode ser importado sem contexto como evidência; uma execução exige replay com nova identidade e snapshot validado.

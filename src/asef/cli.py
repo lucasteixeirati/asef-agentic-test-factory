@@ -3,12 +3,15 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import os
 import sys
 from pathlib import Path
 
 from .adapters.context_file import FileQualityContextAdapter
 from .adapters.docker_execution import DockerUnitTestAdapter
 from .adapters.recorded_agent import RecordedAgentAdapter, RecordedAgentError
+from .adapters.gateway import GatewayError, OpenAIResponsesGateway
+from .adapters.live_agent import LiveAgentAdapter, LiveAgentConfig
 from .adapters.run_store import JsonRunStore
 from .adapters.workspace import EphemeralWorkspaceAdapter
 from .adapters.langgraph_checkpoint import (
@@ -22,10 +25,21 @@ from .application.human_decision import HumanDecisionService
 from .application.prepare_run import PrepareRunService
 from .context import ContextValidationError
 from .contracts import ContractValidationError, SkeletonRunRequest
+from .application.ports import ProviderError
 from .demo import materialize_demo_assets
 from .outcomes import exit_code_for
 from .observability import close_operational_logging, configure_operational_logging
 from .skills.unit import UnitSkill
+
+
+def _environment_float(name: str) -> float:
+    raw = os.environ.get(name)
+    if raw is None:
+        return 0.0
+    try:
+        return float(raw)
+    except ValueError:
+        return 0.0
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -70,6 +84,20 @@ def _recorded_arguments(
         default=None,
     )
     parser.set_defaults(demo_clarification=clarification_default)
+    parser.add_argument("--model", default=os.environ.get("ASEF_OPENAI_MODEL"))
+    parser.add_argument("--provider-timeout-seconds", type=int, default=60)
+    parser.add_argument("--max-output-tokens", type=int, default=600)
+    parser.add_argument(
+        "--input-cost-brl-per-million",
+        type=float,
+        default=_environment_float("ASEF_OPENAI_INPUT_BRL_PER_MTOK"),
+    )
+    parser.add_argument(
+        "--output-cost-brl-per-million",
+        type=float,
+        default=_environment_float("ASEF_OPENAI_OUTPUT_BRL_PER_MTOK"),
+    )
+    parser.add_argument("--record-live-cassettes", action="store_true")
 
 
 def _decision_arguments(parser: argparse.ArgumentParser) -> None:
@@ -116,6 +144,9 @@ def main(argv: list[str] | None = None) -> int:
         extra={"operation": args.command, "component": "cli"},
     )
     try:
+        context_was_explicit = not hasattr(args, "context") or args.context is not None
+        if getattr(args, "mode", "demo") == "live" and not context_was_explicit:
+            raise ContractValidationError("live mode requires an explicit --context")
         allowed_output_root = (Path.cwd() / ".asef").resolve()
         resolved_output = args.output.resolve()
         if not resolved_output.is_relative_to(allowed_output_root):
@@ -202,11 +233,36 @@ def main(argv: list[str] | None = None) -> int:
             }
             code = 0
         else:
-            if args.mode != "demo":
-                raise ContractValidationError("generate and run support recorded demo mode only")
+            if args.mode == "demo":
+                agent = RecordedAgentAdapter(args.analysis_cassette, args.artifact_cassette)
+            else:
+                if not args.model:
+                    raise ContractValidationError(
+                        "live mode requires --model or ASEF_OPENAI_MODEL"
+                    )
+                if args.input_cost_brl_per_million <= 0 or args.output_cost_brl_per_million <= 0:
+                    raise ContractValidationError(
+                        "live mode requires positive input/output BRL token rates"
+                    )
+                cassette_dir = (
+                    args.output / "live-cassettes" if args.record_live_cassettes else None
+                )
+                agent = LiveAgentAdapter(
+                    OpenAIResponsesGateway(
+                        model=args.model,
+                        timeout_seconds=args.provider_timeout_seconds,
+                        api_budget_brl=args.api_budget_brl,
+                        max_output_tokens=args.max_output_tokens,
+                    ),
+                    LiveAgentConfig(
+                        input_cost_brl_per_million=args.input_cost_brl_per_million,
+                        output_cost_brl_per_million=args.output_cost_brl_per_million,
+                        cassette_dir=cassette_dir,
+                    ),
+                )
             generation_service = GenerateUnitTestService(
                 prepare_service,
-                RecordedAgentAdapter(args.analysis_cassette, args.artifact_cassette),
+                agent,
                 UnitSkill(),
                 EphemeralWorkspaceAdapter(),
                 store,
@@ -257,7 +313,15 @@ def main(argv: list[str] | None = None) -> int:
         print(f"asef: {exc}", file=sys.stderr)
         close_operational_logging(logger)
         return 7
-    except (ContractValidationError, ContextValidationError, RecordedAgentError, OSError, ValueError) as exc:
+    except (
+        ContractValidationError,
+        ContextValidationError,
+        RecordedAgentError,
+        GatewayError,
+        ProviderError,
+        OSError,
+        ValueError,
+    ) as exc:
         logger.warning(
             "command_rejected: %s",
             exc,

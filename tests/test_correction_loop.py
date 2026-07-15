@@ -3,8 +3,15 @@ from __future__ import annotations
 import unittest
 
 from asef.application.correct_test import CorrectionLoopController
-from asef.application.ports import GeneratedArtifactResult
-from asef.contracts import SkeletonRunRequest, SkeletonRunState, TestExecutionOutcome, UnitTestArtifact
+from asef.application.ports import GeneratedArtifactResult, ProviderTransientError
+from asef.contracts import (
+    SkeletonBudgetLimits,
+    SkeletonBudgetUsage,
+    SkeletonRunRequest,
+    SkeletonRunState,
+    TestExecutionOutcome,
+    UnitTestArtifact,
+)
 from asef.evaluation_contracts import build_correction_feedback
 from asef.outcomes import RunClassification, RunStatus
 from asef.skills.unit import UnitSkill, UnitSkillPolicyError
@@ -57,6 +64,74 @@ class CorrectionFeedbackTests(unittest.TestCase):
 
 
 class CorrectionLoopControllerTests(unittest.TestCase):
+    def test_live_cost_exhaustion_blocks_correction_before_provider(self) -> None:
+        live_request = SkeletonRunRequest(
+            **{**request().to_dict(), "execution_mode": "live", "api_budget_brl": 1.0}
+        )
+        corrector = Corrector()
+        state = SkeletonRunState(
+            live_request,
+            budgets=SkeletonBudgetLimits(api_budget_brl=1.0),
+            usage=SkeletonBudgetUsage(estimated_cost_brl=1.0),
+        )
+        result = CorrectionLoopController(corrector, UnitSkill()).correct_once(
+            state,
+            artifact(1),
+            build_correction_feedback(TestExecutionOutcome.TEST_ERROR, "", "failure"),
+        )
+        self.assertEqual(result.stop_reason, "budget_exhausted")
+        self.assertEqual(state.status, RunStatus.BUDGET_EXHAUSTED)
+        self.assertEqual(corrector.calls, 0)
+
+    def test_transient_correction_retry_does_not_consume_another_correction(self) -> None:
+        class TransientCorrector(Corrector):
+            def correct(self, request, previous, feedback):
+                if self.calls == 0:
+                    self.calls += 1
+                    raise ProviderTransientError("temporary")
+                return super().correct(request, previous, feedback)
+
+        state = SkeletonRunState(request())
+        corrector = TransientCorrector()
+        result = CorrectionLoopController(corrector, UnitSkill()).correct_once(
+            state,
+            artifact(1),
+            build_correction_feedback(TestExecutionOutcome.TEST_ERROR, "", "failure"),
+        )
+        self.assertIsNotNone(result.artifact)
+        self.assertEqual(state.usage.test_corrections, 1)
+        self.assertEqual(state.usage.provider_retries, 1)
+        self.assertEqual(state.usage.model_calls, 2)
+        self.assertEqual(corrector.calls, 2)
+
+    def test_observed_correction_cost_is_preserved_when_it_exceeds_budget(self) -> None:
+        class CostlyCorrector(Corrector):
+            def correct(self, request, previous, feedback):
+                result = super().correct(request, previous, feedback)
+                return GeneratedArtifactResult(
+                    result.artifact,
+                    result.model,
+                    result.response_id,
+                    result.input_tokens,
+                    result.output_tokens,
+                    provider="openai",
+                    latency_ms=20,
+                    estimated_cost_brl=2.0,
+                )
+
+        live_request = SkeletonRunRequest(
+            **{**request().to_dict(), "execution_mode": "live", "api_budget_brl": 1.0}
+        )
+        state = SkeletonRunState(live_request, budgets=SkeletonBudgetLimits(api_budget_brl=1.0))
+        result = CorrectionLoopController(CostlyCorrector(), UnitSkill()).correct_once(
+            state,
+            artifact(1),
+            build_correction_feedback(TestExecutionOutcome.TEST_ERROR, "", "failure"),
+        )
+        self.assertEqual(result.stop_reason, "budget_exhausted")
+        self.assertEqual(state.usage.estimated_cost_brl, 2.0)
+        self.assertEqual(state.usage.elapsed_ms, 20)
+
     def test_two_corrections_are_allowed_and_third_exhausts_budget(self) -> None:
         state = SkeletonRunState(request())
         corrector = Corrector()

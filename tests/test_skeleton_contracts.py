@@ -58,6 +58,13 @@ class SkeletonRequestContractTests(unittest.TestCase):
         with self.assertRaisesRegex(ContractValidationError, "positive api_budget"):
             request(execution_mode="live").validate()
 
+    def test_live_rejects_non_finite_budget(self) -> None:
+        for value in (float("nan"), float("inf"), float("-inf")):
+            with self.subTest(value=value), self.assertRaisesRegex(
+                ContractValidationError, "must be finite"
+            ):
+                request(execution_mode="live", api_budget_brl=value).validate()
+
     def test_requirement_size_is_bounded(self) -> None:
         with self.assertRaisesRegex(ContractValidationError, "exceeds"):
             request(requirement_description="x" * 20_001).validate()
@@ -211,7 +218,7 @@ class SkeletonStateAndOutcomeTests(unittest.TestCase):
     def test_state_is_json_serializable_with_primitive_enums(self) -> None:
         state = SkeletonRunState(request())
         value = state.to_dict()
-        self.assertEqual(value["schema_version"], "1.2.0")
+        self.assertEqual(value["schema_version"], "1.3.0")
         self.assertEqual(value["origin"], "NEW")
         self.assertEqual(value["context_resolution"], "CONTEXT_UNRESOLVED")
         self.assertEqual(value["status"], "RECEIVED")
@@ -228,6 +235,14 @@ class SkeletonStateAndOutcomeTests(unittest.TestCase):
         self.assertEqual(restored.budgets.max_test_corrections, 2)
         self.assertEqual(restored.usage.test_corrections, 0)
 
+    def test_state_1_2_without_live_cost_remains_readable(self) -> None:
+        value = SkeletonRunState(request()).to_dict()
+        value["schema_version"] = "1.2.0"
+        value["usage"].pop("estimated_cost_brl")
+        restored = state_from_dict(value)
+        self.assertEqual(restored.schema_version, "1.2.0")
+        self.assertEqual(restored.usage.estimated_cost_brl, 0.0)
+
     def test_state_rejects_budget_usage_above_limit(self) -> None:
         state = SkeletonRunState(
             request(),
@@ -235,6 +250,14 @@ class SkeletonStateAndOutcomeTests(unittest.TestCase):
             usage=SkeletonBudgetUsage(model_calls=2),
         )
         with self.assertRaisesRegex(ContractValidationError, "exceeds"):
+            state.validate()
+
+    def test_state_rejects_non_finite_cost_usage(self) -> None:
+        state = SkeletonRunState(
+            request(),
+            usage=SkeletonBudgetUsage(estimated_cost_brl=float("nan")),
+        )
+        with self.assertRaisesRegex(ContractValidationError, "must be finite"):
             state.validate()
 
     def test_spike_state_is_importable_but_not_resumed(self) -> None:
