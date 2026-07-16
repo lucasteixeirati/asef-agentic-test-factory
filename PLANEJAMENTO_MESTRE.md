@@ -2,7 +2,7 @@
 
 > Documento vivo para orientar a construção da aplicação, da documentação pública e do futuro livro.
 
-**Status:** vigente — incrementos 5.1 a 5.7 tecnicamente concluídos; pré-alpha `v0.1.0a4` publicada; candidata `0.1.0a5` aguarda decisão explícita de publicação
+**Status:** vigente — incrementos 5.1 a 5.7 concluídos e publicados até a pré-alpha `v0.1.0a5`
 **Data de início:** 2026-07-11  
 **Responsável:** Lucas  
 **Natureza:** projeto open source, educacional, experimental e de portfólio  
@@ -746,7 +746,7 @@ As datas serão estimadas após a baseline das primeiras sessões. Os gates são
 **Plano executável:** `docs/project/stage-05-alpha-python-plan.md`
 
 **Plano de aceite:** `docs/project/gates/gate-05-acceptance-plan.md`
-**Status:** 5.1 a 5.7 tecnicamente concluídos. As pré-alphas estão publicadas até `v0.1.0a4`; a candidata `0.1.0a5` passou nos seis jobs da CI pública, mas ainda depende de decisão humana para tag/release. O Gate 5 permanece em execução por causa dos incrementos seguintes.
+**Status:** 5.1 a 5.7 concluídos e publicados até `v0.1.0a5`. A candidata passou nos seis jobs da CI pública antes da tag e seus artefatos foram auditados. O Gate 5 permanece em execução por causa dos incrementos 5.8 e 5.9.
 
 **Aplicação**
 
@@ -1078,4 +1078,4 @@ Estas questões serão decididas nas etapas indicadas, não agora:
 
 ## 27. Próxima decisão
 
-Lucas deve revisar o fechamento técnico do incremento 5.7 e decidir explicitamente se autoriza a tag/pré-release `v0.1.0a5`. A CI verde não aprova automaticamente o Gate 5 nem o início da Etapa 6.
+Planejar detalhadamente o incremento 5.8 — relatórios e experiência pública — e submetê-lo à aprovação explícita antes da implementação. A publicação de `v0.1.0a5` não aprova automaticamente o Gate 5 nem o início da Etapa 6.

@@ -2,7 +2,7 @@
 
 - **Plano:** `docs/project/stage-05-alpha-python-plan.md`
 - **Gate:** `docs/project/gates/gate-05-acceptance-plan.md`
-- **Estado atual:** incrementos 5.1 a 5.7 tecnicamente concluídos; `v0.1.0a4` publicada; candidata `0.1.0a5` aguarda decisão de publicação
+- **Estado atual:** incrementos 5.1 a 5.7 concluídos e publicados até `v0.1.0a5`; 5.8 aguarda planejamento e aprovação
 
 ## 5.1 — Contratos, ADRs e suíte de referência
 
@@ -313,8 +313,8 @@ Lucas autorizou explicitamente a fatia final. O workflow recebeu o sexto job ind
 
 O comando Linux foi antecipado localmente dentro da imagem Python fixada por digest, com repo read-only, rede bloqueada e hard budgets. Os dois testes passaram: apply recursivo removeu somente a suite controlada e symlink foi `SKIPPED`, preservando o target externo.
 
-O package audit instalou o wheel sem dependências em venv/diretório fora do checkout. O doctor terminou `DEGRADED/READY`; a demo terminou `SUCCEEDED/ACCEPTED`; cleanup instalado comprovou dry-run e apply de log controlado; toda a `.asef` gerada passou no scanner. A candidata foi promovida para `0.1.0a5`, preservando a release `v0.1.0a4`. Uma segunda instalação confirmou metadata `0.1.0a5`; wheel e sdist finais possuem SHA-256 `882b1133c19953c7ef7dda7e3a4ad9065b21e408efceb1029ea3a5e5246e85c4` e `082423ef54c8af83c8d8080b72db8c3b83761295a4d83cd598ca1a80215146e3`.
+O package audit instalou o wheel sem dependências em venv/diretório fora do checkout. O doctor terminou `DEGRADED/READY`; a demo terminou `SUCCEEDED/ACCEPTED`; cleanup instalado comprovou dry-run e apply de log controlado; toda a `.asef` gerada passou no scanner. A candidata foi promovida para `0.1.0a5`, preservando a release `v0.1.0a4`. Uma segunda instalação confirmou metadata `0.1.0a5`. Após o fechamento documental, os artefatos foram reconstruídos no commit marcado; wheel e sdist publicados possuem SHA-256 `6b4d191705a9ddf4a513b3e33f4df021bae477e4a77b5149e713a42b055e937c` e `783c1c8a2beb6285f3cbef5a127a8c59cd778e3ae23c682c795e6a0bb76080fc`.
 
 A matriz Docker/quality local descobriu 20 integrações: 17 passaram e três foram ignoradas pelo host Windows; as duas provas Linux ignoradas localmente passaram no container separado. A regressão final descobriu 318 testes, executou 285 e ignorou 33 opcionais, com branch coverage de 85,16%.
 
-A implementação das seis fatias está concluída. O checkpoint `2de3c44` acionou a CI pública `29528937211`, que aprovou `core`, `framework-spikes`, `docker-security`, `alpha-smoke`, `quality-capabilities` e `alpha-security`. O novo job confirmou Security 12/12, doctor instalado, cleanup/symlink Linux, ausência de órfãos e secret scan. O incremento 5.7 está tecnicamente aprovado; tag/pré-release `v0.1.0a5`, Gate 5 e Etapa 6 permanecem dependentes de decisão explícita.
+A implementação das seis fatias está concluída. O checkpoint `2de3c44` acionou a CI pública `29528937211`, que aprovou `core`, `framework-spikes`, `docker-security`, `alpha-smoke`, `quality-capabilities` e `alpha-security`. O commit documental `4c8073c` passou novamente nos seis jobs na CI `29530753021`. Após aprovação explícita de Lucas, a tag anotada e a [pré-release `v0.1.0a5`](https://github.com/lucasteixeirati/asef-agentic-test-factory/releases/tag/v0.1.0a5) foram publicadas com wheel e sdist auditados. O incremento 5.7 está encerrado; Gate 5, 5.8 e Etapa 6 permanecem decisões separadas.

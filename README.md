@@ -10,7 +10,7 @@ Este repositório também registra a jornada de desenvolvimento assistido por IA
 
 ## Estado atual
 
-**Experimental — pré-alpha.** Os incrementos 5.1 a 5.6 estão publicados até [`v0.1.0a4`](https://github.com/lucasteixeirati/asef-agentic-test-factory/releases/tag/v0.1.0a4). O incremento 5.7 está tecnicamente aprovado como candidata `0.1.0a5`: Security 12/12, hardening Docker, `asef doctor`, retention/cleanup e os seis jobs da [CI pública `29528937211`](https://github.com/lucasteixeirati/asef-agentic-test-factory/actions/runs/29528937211) verdes, incluindo `alpha-security`. A decisão de publicação continua pendente. O fluxo combinado do 5.3 ainda não integra a CLI pública. O projeto não deve ser usado para executar código arbitrariamente hostil ou em produção.
+**Experimental — pré-alpha.** Os incrementos 5.1 a 5.7 estão publicados até [`v0.1.0a5`](https://github.com/lucasteixeirati/asef-agentic-test-factory/releases/tag/v0.1.0a5). O 5.7 entrega Security 12/12, hardening Docker, `asef doctor`, retention/cleanup e os seis jobs da [CI pública `29528937211`](https://github.com/lucasteixeirati/asef-agentic-test-factory/actions/runs/29528937211) verdes, incluindo `alpha-security`. O fluxo combinado do 5.3 ainda não integra a CLI pública. O projeto não deve ser usado para executar código arbitrariamente hostil ou em produção.
 
 Já demonstrado:
 
@@ -144,7 +144,7 @@ As tarifas não são congeladas no repositório. Confirme preço, câmbio, model
 2. Contratos, workflow e avaliação — concluído.
 3. Spikes arquiteturais — revisão técnica concluída.
 4. Walking skeleton e hardening — concluídos; Gate 4 aprovado.
-5. Alpha Python — incrementos 5.1 a 5.6 publicados até `v0.1.0a4`; candidata `0.1.0a5` do 5.7 aprovada tecnicamente e aguardando decisão de publicação.
+5. Alpha Python — incrementos 5.1 a 5.7 publicados até `v0.1.0a5`; o próximo incremento planejado é o 5.8.
 
 O Smoke Dataset Alpha pode ser executado de forma determinística e sem chave de provider:
 
