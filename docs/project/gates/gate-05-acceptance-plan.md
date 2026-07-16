@@ -1,6 +1,6 @@
 # Gate 5 — Plano de aceite do Alpha Python
 
-- **Estado:** execução em andamento; evidências do 5.6 sincronizadas localmente e na CI pública
+- **Estado:** execução em andamento; evidências sincronizadas até a publicação `v0.1.0a4` do 5.6
 - **Responsável pela decisão final:** Lucas
 - **Ambiente de referência:** Windows, Docker Desktop com backend WSL2 e Python 3.13 suportado pelo package
 
@@ -27,7 +27,7 @@
 | G5-17 | Core não importa Python tooling, Docker, OpenAI ou LangGraph | import boundaries + job core mínimo | Atendido até `v0.1.0a3`: fronteiras AST e job core aprovados |
 | G5-18 | README, quickstart, tutorial, arquitetura, segurança e limitações refletem o Alpha real | auditoria documental | Parcial: README/arquitetura live atualizados; consolidação 5.8 pendente |
 | G5-19 | Métricas, falhas, decisões humanas e contribuição da IA estão registradas | journal + baseline + retrospectiva | Parcial forte: sincronizado até o início do Dia 6; retrospectiva final 5.9 pendente |
-| G5-20 | CI pública e regressões do Gate 4 permanecem verdes | execução GitHub Actions | Atendido até o 5.6: run `29461154744` com cinco jobs verdes, incluindo `quality-capabilities` |
+| G5-20 | CI pública e regressões do Gate 4 permanecem verdes | execução GitHub Actions | Atendido até o 5.6: runs `29461154744` e `29461247717` com cinco jobs verdes, incluindo `quality-capabilities` |
 
 ## Casos de aceite obrigatórios
 

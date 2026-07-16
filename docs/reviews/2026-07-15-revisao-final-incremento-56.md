@@ -3,7 +3,7 @@
 - **Data:** 2026-07-15
 - **Candidata:** `0.1.0a4`
 - **Escopo:** coverage e mutation do SUT Python, evidências, reports e CI dedicada
-- **Estado:** aprovada localmente e na CI `29461154744`; tag e release pendentes
+- **Estado:** concluída; tag anotada e pré-release `v0.1.0a4` publicadas
 
 ## Parecer
 
@@ -47,4 +47,4 @@ G5-12 e G5-13 estão atendidos. O novo job público `quality-capabilities` e os 
 
 ## Próxima decisão
 
-Publicar o commit documental de fechamento, confirmar sua CI e então criar a tag anotada e a pré-release `v0.1.0a4`.
+O commit documental `f55be73` passou na CI `29461247717`. A tag anotada, wheel, sdist e pré-release `v0.1.0a4` foram publicados em 2026-07-15. O incremento está encerrado; o planejamento do 5.7 exige nova aprovação.

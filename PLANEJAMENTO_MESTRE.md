@@ -2,7 +2,7 @@
 
 > Documento vivo para orientar a construção da aplicação, da documentação pública e do futuro livro.
 
-**Status:** vigente — incrementos 5.1 a 5.5 concluídos; candidata `0.1.0a4` do 5.6 aprovada localmente e nos cinco jobs da CI
+**Status:** vigente — incrementos 5.1 a 5.6 concluídos; pré-alpha `v0.1.0a4` publicada
 **Data de início:** 2026-07-11  
 **Responsável:** Lucas  
 **Natureza:** projeto open source, educacional, experimental e de portfólio  
@@ -1078,4 +1078,4 @@ Estas questões serão decididas nas etapas indicadas, não agora:
 
 ## 27. Próxima decisão
 
-Publicar a tag anotada e a pré-release `v0.1.0a4` depois da CI do commit documental de fechamento. Em seguida, encerrar formalmente o 5.6 e iniciar o planejamento detalhado do 5.7 somente com nova aprovação. O Gate 5 não está aprovado e a Etapa 6 não começa automaticamente.
+Planejar detalhadamente o incremento 5.7 — segurança, diagnóstico e retenção — somente após nova aprovação explícita. O Gate 5 continua aberto e a Etapa 6 não começa automaticamente.

@@ -2,7 +2,7 @@
 
 - **Plano:** `docs/project/stage-05-alpha-python-plan.md`
 - **Gate:** `docs/project/gates/gate-05-acceptance-plan.md`
-- **Estado atual:** incrementos 5.1 a 5.5 concluídos; candidata `0.1.0a4` do 5.6 aprovada na CI e pronta para publicação
+- **Estado atual:** incrementos 5.1 a 5.6 concluídos; pré-alpha `v0.1.0a4` publicada
 
 ## 5.1 — Contratos, ADRs e suíte de referência
 
@@ -232,3 +232,5 @@ Durante a revisão foram corrigidos cinco findings: serialização aninhada perd
 Wheel e sdist `0.1.0a4` foram construídos em ambiente isolado, inspecionados e aprovados pelo secret scan. O wheel foi instalado sem dependências em venv novo, identificado como `0.1.0a4`, e a demo keyless fora do checkout terminou `SUCCEEDED`/`ACCEPTED`. Hashes, findings e parecer estão em `docs/reviews/2026-07-15-revisao-final-incremento-56.md`.
 
 O commit funcional `654cd6d` (`feat: add bounded Python quality capabilities`) foi publicado em `main`. A CI `29461154744` aprovou os cinco jobs: `core`, `framework-spikes`, `docker-security`, `alpha-smoke` e o novo `quality-capabilities`. Este último construiu a imagem pinada, aprovou conformance e baseline, executou os cenários de falha/timeout, passou no secret scan e publicou evidências sanitizadas. A candidata está aprovada tecnicamente; resta o commit documental de fechamento e sua CI antes da tag/pré-release.
+
+O commit documental `f55be73` (`docs: approve stage 5.6 candidate after ci`) também foi publicado e a CI de fechamento `29461247717` aprovou novamente os cinco jobs. A tag anotada e a pré-release [`v0.1.0a4`](https://github.com/lucasteixeirati/asef-agentic-test-factory/releases/tag/v0.1.0a4), com wheel e sdist auditados, foram publicadas em 2026-07-15. O incremento 5.6 está concluído; o 5.7 depende de novo planejamento e aprovação explícita.
