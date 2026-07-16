@@ -2,7 +2,7 @@
 
 > Documento vivo para orientar a construção da aplicação, da documentação pública e do futuro livro.
 
-**Status:** vigente — incrementos 5.1 a 5.6 concluídos; pré-alpha `v0.1.0a4` publicada; candidata local `0.1.0a5` do 5.7 aguarda CI pública
+**Status:** vigente — incrementos 5.1 a 5.7 tecnicamente concluídos; pré-alpha `v0.1.0a4` publicada; candidata `0.1.0a5` aguarda decisão explícita de publicação
 **Data de início:** 2026-07-11  
 **Responsável:** Lucas  
 **Natureza:** projeto open source, educacional, experimental e de portfólio  
@@ -746,7 +746,7 @@ As datas serão estimadas após a baseline das primeiras sessões. Os gates são
 **Plano executável:** `docs/project/stage-05-alpha-python-plan.md`
 
 **Plano de aceite:** `docs/project/gates/gate-05-acceptance-plan.md`
-**Status:** 5.1 a 5.4 concluídos. A ADR-009 foi aceita. O 5.4 incorporou o adapter live e budgets, passou pelo smoke OpenAI autorizado, revisão final, empacotamento e três jobs da CI pública; a pré-alpha `v0.1.0a3` foi publicada em 2026-07-15.
+**Status:** 5.1 a 5.7 tecnicamente concluídos. As pré-alphas estão publicadas até `v0.1.0a4`; a candidata `0.1.0a5` passou nos seis jobs da CI pública, mas ainda depende de decisão humana para tag/release. O Gate 5 permanece em execução por causa dos incrementos seguintes.
 
 **Aplicação**
 
@@ -1078,4 +1078,4 @@ Estas questões serão decididas nas etapas indicadas, não agora:
 
 ## 27. Próxima decisão
 
-Criar o checkpoint funcional da candidata `0.1.0a5`, executar os seis jobs públicos e revisar os resultados do `alpha-security`. O incremento 5.7, o Gate 5 e a Etapa 6 não são aprovados automaticamente.
+Lucas deve revisar o fechamento técnico do incremento 5.7 e decidir explicitamente se autoriza a tag/pré-release `v0.1.0a5`. A CI verde não aprova automaticamente o Gate 5 nem o início da Etapa 6.

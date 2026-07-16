@@ -11,7 +11,7 @@ Este mapa evita reconstrução retrospectiva e não transforma o índice provis�
 | 5. Conceber com IA sem terceirizar decisões | revisão externa; rejeição da ADR-007; decisões humanas | forte |
 | 6. O primeiro workflow e suas restrições | plano da Etapa 4; WF-001; WS-001 a WS-007 | forte |
 | 7. Contratos, estado e evidências | contratos 1.1; ADRs; evidence model; observabilidade | forte |
-| 8. Segurança para executar código gerado | EXP-002; Docker tests; sandbox policy; Security 12/12; doctor; retention/cleanup; provas Windows/Linux do 5.7 | forte para baseline; CI pública da candidata pendente |
+| 8. Segurança para executar código gerado | EXP-002; Docker tests; sandbox policy; Security 12/12; doctor; retention/cleanup; provas Windows/Linux do 5.7; CI `29528937211` | forte para baseline; validação pública concluída, publicação da candidata pendente |
 | 9. Como testar componentes não determinísticos | cassettes; structured output; retries; mutation pilot; adapter live e budget real do 5.4; coverage/mutation do SUT implementadas no 5.6 | forte para o primeiro provider e para a baseline Python limitada |
 | 10. Experimentos com modelos, prompts e frameworks | EXP-001 a EXP-006; Lesson 001 | forte |
 | 11. A primeira execução por outra pessoa | instalação limpa automatizada; usuário externo real ainda ausente | incompleta |

@@ -2,7 +2,7 @@
 
 - **Plano:** `docs/project/stage-05-alpha-python-plan.md`
 - **Gate:** `docs/project/gates/gate-05-acceptance-plan.md`
-- **Estado atual:** incrementos 5.1 a 5.6 concluídos; `v0.1.0a4` publicada; candidata local `0.1.0a5` do 5.7 aguarda CI
+- **Estado atual:** incrementos 5.1 a 5.7 tecnicamente concluídos; `v0.1.0a4` publicada; candidata `0.1.0a5` aguarda decisão de publicação
 
 ## 5.1 — Contratos, ADRs e suíte de referência
 
@@ -237,7 +237,7 @@ O commit documental `f55be73` (`docs: approve stage 5.6 candidate after ci`) tam
 
 ## 5.7 — Segurança, diagnóstico e retenção
 
-O planejamento detalhado foi produzido em 2026-07-15 e está em `docs/project/stage-05-increment-57-plan.md`. Lucas aprovou explicitamente o plano em 2026-07-16 e autorizou em sequência as fatias 5.7.1, 5.7.2 e 5.7.3. As fatias posteriores permanecem dependentes de nova decisão.
+O planejamento detalhado foi produzido em 2026-07-15 e está em `docs/project/stage-05-increment-57-plan.md`. Lucas aprovou explicitamente o plano em 2026-07-16 e autorizou em sequência todas as seis fatias, mantendo publicação, Gate 5 e Etapa 6 como decisões separadas.
 
 A auditoria de abertura encontrou nove vetores Docker já cobertos, três controles preventivos na skill/contratos, rotação local de logs e retenção de sete dias para evidências públicas da CI. Permanecem sem prova integrada os doze casos `SEC-001` a `SEC-012`, o diagnóstico público do ambiente, a limpeza observável após interrupções e uma política explícita para retenção, debug e descarte local.
 
@@ -317,4 +317,4 @@ O package audit instalou o wheel sem dependências em venv/diretório fora do ch
 
 A matriz Docker/quality local descobriu 20 integrações: 17 passaram e três foram ignoradas pelo host Windows; as duas provas Linux ignoradas localmente passaram no container separado. A regressão final descobriu 318 testes, executou 285 e ignorou 33 opcionais, com branch coverage de 85,16%.
 
-A implementação local das seis fatias está concluída e o parecer técnico recomenda a candidata. O incremento 5.7 permanece aberto até checkpoint, execução pública dos seis jobs e decisão explícita de publicação.
+A implementação das seis fatias está concluída. O checkpoint `2de3c44` acionou a CI pública `29528937211`, que aprovou `core`, `framework-spikes`, `docker-security`, `alpha-smoke`, `quality-capabilities` e `alpha-security`. O novo job confirmou Security 12/12, doctor instalado, cleanup/symlink Linux, ausência de órfãos e secret scan. O incremento 5.7 está tecnicamente aprovado; tag/pré-release `v0.1.0a5`, Gate 5 e Etapa 6 permanecem dependentes de decisão explícita.

@@ -1,10 +1,10 @@
 # Incremento 5.7 — Segurança, diagnóstico e retenção
 
 - **Data:** 2026-07-15
-- **Estado:** implementação local das seis fatias concluída; candidata `0.1.0a5` aguarda checkpoint e CI pública
-- **Dependências:** incrementos 5.1 a 5.6 concluídos; pré-alpha `v0.1.0a4` publicada; o sexto job de CI ainda não existe
+- **Estado:** seis fatias e validação pública concluídas; candidata `0.1.0a5` aguarda decisão de publicação
+- **Dependências:** incrementos 5.1 a 5.6 concluídos; pré-alpha `v0.1.0a4` publicada; seis jobs da CI aprovados na execução `29528937211`
 - **Gate relacionado:** G5-11, G5-15 e G5-16, com evidência complementar para G5-02, G5-04, G5-09, G5-17, G5-18 e G5-20
-- **Decisão para implementar:** Lucas autorizou explicitamente as seis fatias; publicação continua condicionada à revisão e CI
+- **Decisão para implementar:** Lucas autorizou explicitamente as seis fatias; publicação continua condicionada a decisão humana após revisão e CI
 
 ## 1. Objetivo
 
@@ -368,6 +368,10 @@ O incremento somente pode ser aprovado quando:
 23. G5-11, G5-15 e G5-16 recebem links de evidência reproduzível;
 24. README, arquitetura, progresso, journal e livro refletem limitações reais;
 25. Lucas revisa o parecer e aprova a conclusão/publicação.
+
+### Resultado da validação pública
+
+O checkpoint `2de3c44` acionou a [CI `29528937211`](https://github.com/lucasteixeirati/asef-agentic-test-factory/actions/runs/29528937211). Os jobs `core`, `framework-spikes`, `docker-security`, `alpha-smoke`, `quality-capabilities` e `alpha-security` passaram. O novo job comprovou em Linux Security 12/12, doctor instalado, rejeição segura de symlink, cleanup recursivo autorizado, dry-run/apply controlado, ausência de containers gerenciados e secret scan verde. Os critérios técnicos 1 a 24 estão atendidos; o item 25 permanece como decisão explícita de publicação.
 
 ## 14. Critérios de parada
 

@@ -1,6 +1,6 @@
 # Etapa 5 — Plano detalhado do Alpha Python de referência
 
-- **Estado:** vigente; incrementos 5.1 a 5.6 publicados; incremento 5.7 implementado localmente como candidata `0.1.0a5`, com CI pública pendente
+- **Estado:** vigente; incrementos 5.1 a 5.6 publicados; incremento 5.7 tecnicamente aprovado como candidata `0.1.0a5`, com decisão de publicação pendente
 - **Planejado em:** 2026-07-13
 - **Pré-condição:** Gate 4 aprovado
 - **Decisão registrada:** plano e quatro escolhas centrais aprovados; execução incremental, começando por 5.1
