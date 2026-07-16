@@ -1,0 +1,7 @@
+{
+  "schema_version": "1.0.0",
+  "dataset_id": "asef-security",
+  "version": "1.0.0",
+  "case_ids": ["SEC-001", "SEC-002", "SEC-003", "SEC-004", "SEC-005", "SEC-006", "SEC-007", "SEC-008", "SEC-009", "SEC-010", "SEC-011", "SEC-012"],
+  "limitations": ["Reference Python profile only", "Not a certification or pentest"]
+}

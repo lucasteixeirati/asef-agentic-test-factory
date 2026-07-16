@@ -1,0 +1,1 @@
+{"schema_version":"1.0.0","case_id":"SEC-005","version":"1.0.0","control":"Process fanout is bounded by the PID limit","executor":"DOCKER_PIDS","fixture_refs":["datasets/security/SEC-005/fixtures/fixture.txt"],"preconditions":["Docker image is locally available"],"expected_outcome":"PID_LIMIT_ENFORCED","limitations":["Uses short-lived controlled child processes"]}

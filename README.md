@@ -10,7 +10,7 @@ Este repositório também registra a jornada de desenvolvimento assistido por IA
 
 ## Estado atual
 
-**Experimental — pré-alpha.** Os incrementos 5.1 a 5.6 estão publicados até [`v0.1.0a4`](https://github.com/lucasteixeirati/asef-agentic-test-factory/releases/tag/v0.1.0a4). O 5.5 entrega o Smoke Dataset 20/20 e o 5.6 adiciona coverage e mutation do SUT com imagem pinada, budgets e evidências, aprovados nos cinco jobs da CI. O fluxo combinado do 5.3 ainda não integra a CLI pública. O projeto não deve ser usado para executar código arbitrariamente hostil ou em produção.
+**Experimental — pré-alpha.** Os incrementos 5.1 a 5.6 estão publicados até [`v0.1.0a4`](https://github.com/lucasteixeirati/asef-agentic-test-factory/releases/tag/v0.1.0a4). O incremento 5.7 foi implementado localmente como candidata `0.1.0a5`: Security 12/12, hardening Docker, `asef doctor`, retention/cleanup e o sexto job `alpha-security`. A CI pública e a decisão de publicação continuam pendentes. O fluxo combinado do 5.3 ainda não integra a CLI pública. O projeto não deve ser usado para executar código arbitrariamente hostil ou em produção.
 
 Já demonstrado:
 
@@ -144,7 +144,7 @@ As tarifas não são congeladas no repositório. Confirme preço, câmbio, model
 2. Contratos, workflow e avaliação — concluído.
 3. Spikes arquiteturais — revisão técnica concluída.
 4. Walking skeleton e hardening — concluídos; Gate 4 aprovado.
-5. Alpha Python — incrementos 5.1 a 5.6 publicados até a pré-alpha `v0.1.0a4`; próximo incremento planejado: 5.7.
+5. Alpha Python — incrementos 5.1 a 5.6 publicados até `v0.1.0a4`; candidata local `0.1.0a5` do 5.7 aguardando CI.
 
 O Smoke Dataset Alpha pode ser executado de forma determinística e sem chave de provider:
 
@@ -157,6 +157,36 @@ asef smoke `
 ```
 
 Os dez resultados incluem caminhos felizes e encerramentos negativos esperados. O exit code da suíte é `0` quando todos correspondem às expectativas, `4` em caso de mismatch e `7` quando há erro do runner; classificações negativas esperadas de um caso não tornam a suíte falha.
+
+O Security Dataset também é offline e keyless:
+
+```powershell
+asef security --dataset-root datasets/security --output .asef/security
+```
+
+O comando exige 12 `PASSED`; control failure retorna `4` e erro/unsupported retorna `7`.
+
+O diagnóstico do ambiente não instala, corrige, faz pull/build ou executa provider:
+
+```powershell
+asef doctor --mode demo --output .asef/doctor
+```
+
+`HEALTHY` e `DEGRADED` retornam exit `0`; requisito obrigatório ausente produz `BLOCKED` e exit `7`. Contexto explícito inválido também bloqueia. Facts e recomendações são allowlisted, e a presença de chave live é publicada somente como booleano.
+
+Cleanup é sempre dry-run sem `--apply`:
+
+```powershell
+asef cleanup --kind all --older-than-days 7
+```
+
+Para aplicar um plano elegível:
+
+```powershell
+asef cleanup --kind logs --older-than-days 7 --apply
+```
+
+A raiz é fixa em `.asef`; idade vem de manifest/timestamp validado; tombstones ficam em `.asef/maintenance/cleanup`. No Windows atualmente caracterizado, diretórios permanecem dry-run/falha segura porque apply recursivo resistente a links não foi comprovado. Arquivos regulares e containers gerenciados usam revalidação e identidade exata. O comando não promete secure erase.
 6. Perfis TypeScript e Java.
 7. Developer preview e hardening da v0.1.
 

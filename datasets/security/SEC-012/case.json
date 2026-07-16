@@ -1,0 +1,1 @@
+{"schema_version":"1.0.0","case_id":"SEC-012","version":"1.0.0","control":"Oversized generated artifacts are rejected","executor":"ARTIFACT_CONTRACT","fixture_refs":["datasets/security/SEC-012/fixtures/fixture.txt"],"preconditions":["Artifact contract is available"],"expected_outcome":"ARTIFACT_SIZE_BLOCKED","limitations":["Uses the current bounded unit artifact limit"]}

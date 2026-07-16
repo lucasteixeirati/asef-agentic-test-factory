@@ -2,10 +2,10 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-import shutil
 
 from ..contracts import EvidenceRef, SkeletonRunState, UnitTestArtifact
 from ..evaluation_contracts import EvaluationAction, build_correction_feedback, evaluate_generated_and_oracle
+from ..ephemeral_cleanup import cleanup_ephemeral_directory
 from ..outcomes import RunClassification, RunStatus
 from .correct_test import CorrectionLoopController
 from .execute_generated import ExecuteGeneratedAttemptService
@@ -141,8 +141,21 @@ class AlphaEvaluationCoordinator:
             self.run_store.save_state(state)
             return AlphaEvaluationResult(state, current, executed)
         finally:
-            shutil.rmtree(run_dir / "oracle-workspace", ignore_errors=True)
-            shutil.rmtree(run_dir / "attempt-workspaces", ignore_errors=True)
+            observations = (
+                cleanup_ephemeral_directory(
+                    run_dir, run_dir / "oracle-workspace", "oracle-workspace"
+                ),
+                cleanup_ephemeral_directory(
+                    run_dir, run_dir / "attempt-workspaces", "attempt-workspaces"
+                ),
+            )
+            cleanup_facts = state.facts.setdefault("ephemeral_cleanup", {})
+            cleanup_facts.update(
+                {observation.role: observation.to_dict() for observation in observations}
+            )
+            self.run_store.save_state(state)
+            if any(not observation.removed for observation in observations):
+                raise OSError("alpha workspace cleanup failed")
 
     @staticmethod
     def _add_execution_refs(state: SkeletonRunState, execution) -> None:

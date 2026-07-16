@@ -111,3 +111,47 @@ jobs:
           if-no-files-found: error
           include-hidden-files: true
           retention-days: 7
+
+  alpha-security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Install the public package
+        run: python -m pip install .
+      - name: Build pinned pytest and quality images
+        run: |
+          docker build --tag asef/python-pytest:8.3.3 tooling/python-pytest
+          docker build --tag asef/python-quality:coverage-7.10.7-mutmut-3.6.0 tooling/python-quality
+      - name: Run keyless Security Dataset
+        run: env -u OPENAI_API_KEY asef security --dataset-root datasets/security --output .asef/security
+      - name: Validate Security report
+        run: python -c "import glob,json,pathlib; p=glob.glob('.asef/security/*/suite.json'); assert len(p)==1,p; d=json.loads(pathlib.Path(p[0]).read_text()); assert (d['passed'],d['failed'],d['errors'],d['unsupported'])==(12,0,0,0),d"
+      - name: Run installed environment doctor
+        run: env -u OPENAI_API_KEY asef doctor --mode demo --output .asef/doctor
+      - name: Validate doctor report
+        run: python -c "import glob,json,pathlib; p=glob.glob('.asef/doctor/*/report.json'); assert len(p)==1,p; d=json.loads(pathlib.Path(p[0]).read_text()); s={x['check_id']:x['status'] for x in d['checks']}; assert d['healthy'] and d['status']=='DEGRADED',d; assert s['context']=='SKIP' and s['live-key-presence']=='SKIP',s; assert all(v=='PASS' for k,v in s.items() if k not in {'context','live-key-presence'}),s"
+      - name: Prove Linux symlink and recursive cleanup
+        run: ASEF_RUN_SECURITY_CLEANUP_TESTS=1 python -m unittest discover -s tests/integration -p 'test_cleanup_linux.py' -v
+      - name: Validate installed cleanup dry-run and apply
+        run: python tools/ci_cleanup_validation.py --artifact-output .asef/maintenance/cleanup
+      - name: Verify no managed containers remain
+        run: test -z "$(docker ps --no-trunc -aq --filter label=com.asef.managed=true)"
+      - name: Scan security maintenance evidence
+        run: python tools/secret_scan.py .asef/security .asef/doctor .asef/maintenance/cleanup .asef/logs
+      - name: Publish sanitized security maintenance reports
+        uses: actions/upload-artifact@v7
+        with:
+          name: alpha-security-reports
+          path: |
+            .asef/security/*/suite.json
+            .asef/security/*/suite.md
+            .asef/doctor/*/report.json
+            .asef/doctor/*/report.md
+            .asef/maintenance/cleanup/*.json
+            .asef/maintenance/cleanup/*.md
+          if-no-files-found: error
+          include-hidden-files: true
+          retention-days: 7

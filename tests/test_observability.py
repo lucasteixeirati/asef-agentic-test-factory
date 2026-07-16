@@ -42,8 +42,13 @@ class OperationalLoggingTests(unittest.TestCase):
 
     def test_sensitive_values_are_redacted(self) -> None:
         raw_key = "sk-" + "A" * 24
+        assignment = (
+            "provider failed api_" + "key=value123 "
+            + '"pass' + 'word": "hidden456" token='
+            + raw_key
+        )
         sanitized = sanitize_text(
-            f'provider failed api_key=value123 "password": "hidden456" token={raw_key}'
+            assignment
         )
         self.assertNotIn(raw_key, sanitized)
         self.assertNotIn("value123", sanitized)
@@ -57,6 +62,27 @@ class OperationalLoggingTests(unittest.TestCase):
             self.assertIs(first, second)
             self.assertEqual(len(second.handlers), 1)
             self.assertEqual(second.level, logging.WARNING)
+            self._close_logger()
+
+    def test_debug_does_not_add_prompt_environment_or_raw_response_fields(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            logger = configure_operational_logging(Path(directory), "DEBUG")
+            logger.debug(
+                "debug event",
+                extra={
+                    "operation": "run",
+                    "prompt": "should-not-be-collected",
+                    "environment": {"OPENAI_API_KEY": "should-not-be-collected"},
+                    "raw_response": "should-not-be-collected",
+                },
+            )
+            payload = json.loads(
+                (Path(directory) / "asef.jsonl").read_text(encoding="utf-8")
+            )
+            self.assertNotIn("prompt", payload)
+            self.assertNotIn("environment", payload)
+            self.assertNotIn("raw_response", payload)
+            self.assertEqual(payload["message"], "debug event")
             self._close_logger()
 
     @staticmethod

@@ -1,0 +1,1 @@
+{"schema_version":"1.0.0","case_id":"SEC-001","version":"1.0.0","control":"Host-only sentinel is absent from the container","executor":"HOST_ENVIRONMENT","fixture_refs":["datasets/security/SEC-001/fixtures/fixture.txt"],"preconditions":["Docker image is locally available"],"expected_outcome":"SECRET_ABSENT","limitations":["Uses a runtime sentinel, not a real credential"]}

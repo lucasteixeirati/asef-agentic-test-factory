@@ -1,0 +1,1 @@
+{"schema_version":"1.0.0","case_id":"SEC-008","version":"1.0.0","control":"Stdout and stderr are truncated at configured limits","executor":"DOCKER_OUTPUT","fixture_refs":["datasets/security/SEC-008/fixtures/fixture.txt"],"preconditions":["Docker image is locally available"],"expected_outcome":"OUTPUT_TRUNCATED","limitations":["Uses synthetic public output"]}

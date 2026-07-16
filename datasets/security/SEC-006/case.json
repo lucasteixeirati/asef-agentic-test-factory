@@ -1,0 +1,1 @@
+{"schema_version":"1.0.0","case_id":"SEC-006","version":"1.0.0","control":"Excessive memory allocation is terminated","executor":"DOCKER_MEMORY","fixture_refs":["datasets/security/SEC-006/fixtures/fixture.txt"],"preconditions":["Docker image is locally available"],"expected_outcome":"MEMORY_LIMIT_ENFORCED","limitations":["Uses a small fixed container memory limit"]}

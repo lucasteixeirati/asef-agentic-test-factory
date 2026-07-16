@@ -3,7 +3,6 @@ from __future__ import annotations
 import json
 import hashlib
 import re
-import shutil
 from pathlib import Path
 from typing import Any
 from uuid import uuid4
@@ -17,6 +16,7 @@ from ..contracts import (
     context_snapshot_from_dict,
     state_from_dict,
 )
+from ..ephemeral_cleanup import cleanup_ephemeral_directory
 
 
 class JsonRunStore:
@@ -186,7 +186,11 @@ class JsonRunStore:
             return normalized
         finally:
             if temporary.exists():
-                shutil.rmtree(temporary, ignore_errors=True)
+                cleanup = cleanup_ephemeral_directory(
+                    attempt_dir, temporary, "attempt-evidence-temporary"
+                )
+                if not cleanup.removed:
+                    raise OSError("attempt evidence temporary cleanup failed")
 
     def save_attempt_evaluation(
         self,
@@ -242,7 +246,11 @@ class JsonRunStore:
         root.mkdir(parents=True)
         source_path.write_bytes(content)
         if self._sha256(source_path) != sha256:
-            shutil.rmtree(root, ignore_errors=True)
+            cleanup = cleanup_ephemeral_directory(
+                root.parent, root, "oracle-evidence-invalid"
+            )
+            if not cleanup.removed:
+                raise OSError("invalid oracle evidence cleanup failed")
             raise ValueError("persisted oracle hash differs from staged oracle")
         self._write_json(
             identity_path,

@@ -1,0 +1,1 @@
+{"schema_version":"1.0.0","case_id":"SEC-011","version":"1.0.0","control":"Docker socket is absent from the container","executor":"DOCKER_SOCKET","fixture_refs":["datasets/security/SEC-011/fixtures/fixture.txt"],"preconditions":["Docker image is locally available"],"expected_outcome":"DOCKER_SOCKET_ABSENT","limitations":["Checks the conventional Linux socket path"]}

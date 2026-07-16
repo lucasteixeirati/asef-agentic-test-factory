@@ -1,0 +1,1 @@
+{"schema_version":"1.0.0","case_id":"SEC-004","version":"1.0.0","control":"Symlink or junction targets are rejected","executor":"FILESYSTEM_LINK","fixture_refs":["datasets/security/SEC-004/fixtures/fixture.txt"],"preconditions":["Host supports a link primitive"],"expected_outcome":"LINK_REJECTED","limitations":["Unsupported remains explicit when the primitive cannot be created"]}

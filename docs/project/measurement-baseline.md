@@ -108,5 +108,8 @@ Na percepção de Lucas, as interações recentes exigiram mais aprimoramentos d
 | Etapa 5.2 — adapter pytest em Docker | Implementação/integração | 2026-07-13 | 2026-07-13 | 1 | Concluído e publicado |
 | Etapa 5.3 — oracle e correção limitada | Implementação/revisão | 2026-07-14 | 2026-07-14 | 1 | Concluído com retrabalho de sete findings; publicado em `v0.1.0a2` |
 | Etapa 5.4 — adapter live e budgets | Implementação/revisão | 2026-07-14 | 2026-07-15 | 2 | Concluído com hardening de contexto e budget; publicado em `v0.1.0a3` |
+| Etapa 5.5 — Smoke Dataset | Implementação/CI | 2026-07-15 | 2026-07-15 | 1 | Concluído e publicado; Smoke 20/20 no job `alpha-smoke` |
+| Etapa 5.6 — coverage e mutation do SUT | Implementação/CI | 2026-07-15 | 2026-07-15 | 1 | Concluído e publicado em `v0.1.0a4`; cinco jobs verdes |
+| Etapa 5.7 — segurança, doctor e retenção | Implementação/revisão | 2026-07-15 | — | 2+ | Candidata local `0.1.0a5`; seis fatias implementadas, CI pública pendente |
 
 Esta baseline é retrospectiva e cobre apenas os registros disponíveis. A medição prospectiva começa após sua criação.

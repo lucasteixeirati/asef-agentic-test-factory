@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Protocol
 from uuid import uuid4
+import re
 
 
 class CommandExecutor(Protocol):
@@ -21,6 +22,8 @@ class DockerPolicy:
     timeout_seconds: int = 120
     stdout_limit_bytes: int = 1_048_576
     stderr_limit_bytes: int = 1_048_576
+    capability_id: str = "generic"
+    verify_cleanup: bool = True
 
 
 @dataclass(slots=True, frozen=True)
@@ -32,12 +35,23 @@ class ContainerResult:
     stderr_truncated: bool
     timed_out: bool = False
     container_name: str = ""
+    cleanup_succeeded: bool = True
+    cleanup_diagnostic: str | None = None
+
+
+@dataclass(slots=True, frozen=True)
+class ContainerCleanupObservation:
+    container_name: str
+    removal_requested: bool
+    absent: bool
+    diagnostic_code: str | None = None
 
 
 class DockerRunner:
     def __init__(self, policy: DockerPolicy, executor: CommandExecutor = subprocess.run) -> None:
         self.policy = policy
         self.executor = executor
+        self.last_cleanup: ContainerCleanupObservation | None = None
 
     def build_command(
         self,
@@ -60,6 +74,9 @@ class DockerRunner:
                 raise ValueError("workspace escapes allowed root") from exc
         if not command or any("\x00" in item for item in command):
             raise ValueError("command must contain safe argument values")
+        if not re.fullmatch(r"[a-z0-9][a-z0-9._-]{1,63}", self.policy.capability_id):
+            raise ValueError("Docker capability_id is invalid")
+        identity = container_name or f"asef-{uuid4().hex}"
 
         mount = f"type=bind,src={resolved},dst=/workspace,readonly"
         mounts = ["--mount", mount]
@@ -83,7 +100,13 @@ class DockerRunner:
             "run",
             "--rm",
             "--name",
-            container_name or f"asef-{uuid4().hex}",
+            identity,
+            "--label",
+            "com.asef.managed=true",
+            "--label",
+            f"com.asef.capability={self.policy.capability_id}",
+            "--label",
+            f"com.asef.execution={identity}",
             "--network",
             "none",
             "--read-only",
@@ -134,15 +157,7 @@ class DockerRunner:
                 check=False,
             )
         except subprocess.TimeoutExpired as exc:
-            self.executor(
-                ["docker", "rm", "-f", container_name],
-                capture_output=True,
-                text=True,
-                encoding="utf-8",
-                errors="replace",
-                timeout=15,
-                check=False,
-            )
+            cleanup = self._cleanup(container_name, force=True)
             stdout, stdout_truncated = _truncate(
                 _timeout_text(exc.stdout), self.policy.stdout_limit_bytes
             )
@@ -157,7 +172,13 @@ class DockerRunner:
                 stderr_truncated=stderr_truncated,
                 timed_out=True,
                 container_name=container_name,
+                cleanup_succeeded=cleanup.absent,
+                cleanup_diagnostic=cleanup.diagnostic_code,
             )
+        except BaseException:
+            self._cleanup(container_name, force=True)
+            raise
+        cleanup = self._cleanup(container_name, force=False)
         stdout, stdout_truncated = _truncate(completed.stdout, self.policy.stdout_limit_bytes)
         stderr, stderr_truncated = _truncate(completed.stderr, self.policy.stderr_limit_bytes)
         return ContainerResult(
@@ -167,7 +188,89 @@ class DockerRunner:
             stdout_truncated=stdout_truncated,
             stderr_truncated=stderr_truncated,
             container_name=container_name,
+            cleanup_succeeded=cleanup.absent,
+            cleanup_diagnostic=cleanup.diagnostic_code,
         )
+
+    def managed_container_ids(self, capability_id: str | None = None) -> tuple[str, ...]:
+        capability = capability_id or self.policy.capability_id
+        if not re.fullmatch(r"[a-z0-9][a-z0-9._-]{1,63}", capability):
+            raise ValueError("Docker capability_id is invalid")
+        inspection = self._docker(
+            [
+                "docker",
+                "ps",
+                "-aq",
+                "--filter",
+                "label=com.asef.managed=true",
+                "--filter",
+                f"label=com.asef.capability={capability}",
+            ],
+            timeout=10,
+        )
+        if inspection.returncode != 0:
+            raise OSError("managed container inspection failed")
+        return tuple(
+            container_id.strip()
+            for container_id in inspection.stdout.splitlines()
+            if container_id.strip()
+        )
+
+    def _cleanup(self, container_name: str, *, force: bool) -> ContainerCleanupObservation:
+        if not self.policy.verify_cleanup:
+            observation = ContainerCleanupObservation(container_name, force, True)
+            self.last_cleanup = observation
+            return observation
+        removal_requested = force
+        if force:
+            self._docker(["docker", "rm", "-f", container_name], timeout=15)
+        inspection = self._docker(
+            ["docker", "ps", "-aq", "--filter", f"name=^{container_name}$"],
+            timeout=10,
+        )
+        if inspection.returncode != 0:
+            observation = ContainerCleanupObservation(
+                container_name, removal_requested, False, "CONTAINER_INSPECTION_FAILED"
+            )
+        elif inspection.stdout.strip():
+            if not force:
+                removal_requested = True
+                self._docker(["docker", "rm", "-f", container_name], timeout=15)
+                second = self._docker(
+                    ["docker", "ps", "-aq", "--filter", f"name=^{container_name}$"],
+                    timeout=10,
+                )
+                absent = second.returncode == 0 and not second.stdout.strip()
+            else:
+                absent = False
+            observation = ContainerCleanupObservation(
+                container_name,
+                removal_requested,
+                absent,
+                None if absent else "CONTAINER_RESIDUAL",
+            )
+        else:
+            observation = ContainerCleanupObservation(
+                container_name, removal_requested, True
+            )
+        self.last_cleanup = observation
+        return observation
+
+    def _docker(
+        self, command: list[str], *, timeout: int
+    ) -> subprocess.CompletedProcess[str]:
+        try:
+            return self.executor(
+                command,
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+                timeout=timeout,
+                check=False,
+            )
+        except (OSError, subprocess.TimeoutExpired):
+            return subprocess.CompletedProcess(command, 125, "", "")
 
 
 def _truncate(value: str, byte_limit: int) -> tuple[str, bool]:

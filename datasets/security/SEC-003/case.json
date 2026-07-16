@@ -1,0 +1,1 @@
+{"schema_version":"1.0.0","case_id":"SEC-003","version":"1.0.0","control":"Paths outside the allowed workspace are rejected","executor":"PATH_CONTAINMENT","fixture_refs":["datasets/security/SEC-003/fixtures/fixture.txt"],"preconditions":["Controlled workspace exists"],"expected_outcome":"PATH_REJECTED","limitations":["Preflight control; Docker is not invoked"]}

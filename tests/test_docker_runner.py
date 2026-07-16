@@ -21,6 +21,9 @@ class DockerRunnerTests(unittest.TestCase):
         self.assertIn("no-new-privileges:true", command)
         self.assertIn("65534:65534", command)
         self.assertIn("--memory-swap", command)
+        self.assertIn("com.asef.managed=true", command)
+        self.assertIn("com.asef.capability=generic", command)
+        self.assertTrue(any(item.startswith("com.asef.execution=asef-") for item in command))
         self.assertEqual(command[-3:], ["python", "-c", "print('ok')"])
 
     def test_executor_receives_argument_list(self) -> None:
@@ -28,6 +31,8 @@ class DockerRunnerTests(unittest.TestCase):
 
         def fake(command: list[str], **_: object) -> subprocess.CompletedProcess[str]:
             captured.append(command)
+            if command[:2] == ["docker", "ps"]:
+                return subprocess.CompletedProcess(command, 0, "", "")
             return subprocess.CompletedProcess(command, 0, "ok", "")
 
         with tempfile.TemporaryDirectory() as directory:
@@ -36,6 +41,7 @@ class DockerRunnerTests(unittest.TestCase):
             )
         self.assertEqual(result.exit_code, 0)
         self.assertEqual(result.stdout, "ok")
+        self.assertTrue(result.cleanup_succeeded)
         self.assertEqual(captured[0][0], "docker")
 
     def test_output_is_truncated_by_bytes(self) -> None:
@@ -86,6 +92,8 @@ class DockerRunnerTests(unittest.TestCase):
             captured.append(command)
             if command[:3] == ["docker", "rm", "-f"]:
                 return subprocess.CompletedProcess(command, 0, "", "")
+            if command[:2] == ["docker", "ps"]:
+                return subprocess.CompletedProcess(command, 0, "", "")
             raise subprocess.TimeoutExpired(command, 1, output="partial")
 
         with tempfile.TemporaryDirectory() as directory:
@@ -97,6 +105,68 @@ class DockerRunnerTests(unittest.TestCase):
         self.assertEqual(result.exit_code, 124)
         self.assertEqual(result.stdout, "partial")
         self.assertEqual(captured[1], ["docker", "rm", "-f", result.container_name])
+        self.assertTrue(result.cleanup_succeeded)
+
+    def test_interrupt_and_executor_error_force_cleanup_and_repropagate(self) -> None:
+        for raised in (KeyboardInterrupt(), RuntimeError("executor failed")):
+            captured: list[list[str]] = []
+
+            def fake(command: list[str], **_: object) -> subprocess.CompletedProcess[str]:
+                captured.append(command)
+                if command[:3] == ["docker", "rm", "-f"]:
+                    return subprocess.CompletedProcess(command, 0, "", "")
+                if command[:2] == ["docker", "ps"]:
+                    return subprocess.CompletedProcess(command, 0, "", "")
+                raise raised
+
+            with tempfile.TemporaryDirectory() as directory:
+                runner = DockerRunner(DockerPolicy("image@digest"), fake)
+                with self.subTest(error=type(raised).__name__), self.assertRaises(type(raised)):
+                    runner.run(Path(directory), ["python", "-V"])
+                self.assertIsNotNone(runner.last_cleanup)
+                self.assertTrue(runner.last_cleanup.absent)
+                self.assertEqual(captured[1][:3], ["docker", "rm", "-f"])
+
+    def test_cleanup_failure_is_separate_from_container_exit(self) -> None:
+        def fake(command: list[str], **_: object) -> subprocess.CompletedProcess[str]:
+            if command[:2] == ["docker", "run"]:
+                return subprocess.CompletedProcess(command, 0, "ok", "")
+            if command[:2] == ["docker", "ps"]:
+                return subprocess.CompletedProcess(command, 0, "residual-id", "")
+            return subprocess.CompletedProcess(command, 0, "", "")
+
+        with tempfile.TemporaryDirectory() as directory:
+            result = DockerRunner(DockerPolicy("image@digest"), fake).run(
+                Path(directory), ["python", "-V"]
+            )
+        self.assertEqual(result.exit_code, 0)
+        self.assertFalse(result.cleanup_succeeded)
+        self.assertEqual(result.cleanup_diagnostic, "CONTAINER_RESIDUAL")
+
+    def test_managed_orphan_detection_uses_exact_ownership_labels(self) -> None:
+        captured: list[list[str]] = []
+
+        def fake(command: list[str], **_: object) -> subprocess.CompletedProcess[str]:
+            captured.append(command)
+            return subprocess.CompletedProcess(command, 0, "first\nsecond\n", "")
+
+        runner = DockerRunner(
+            DockerPolicy("image@digest", capability_id="security"),
+            fake,
+        )
+        self.assertEqual(runner.managed_container_ids(), ("first", "second"))
+        self.assertEqual(
+            captured[0],
+            [
+                "docker",
+                "ps",
+                "-aq",
+                "--filter",
+                "label=com.asef.managed=true",
+                "--filter",
+                "label=com.asef.capability=security",
+            ],
+        )
 
 
 if __name__ == "__main__":

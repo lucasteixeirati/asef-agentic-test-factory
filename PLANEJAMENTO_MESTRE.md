@@ -2,7 +2,7 @@
 
 > Documento vivo para orientar a construção da aplicação, da documentação pública e do futuro livro.
 
-**Status:** vigente — incrementos 5.1 a 5.6 concluídos; pré-alpha `v0.1.0a4` publicada
+**Status:** vigente — incrementos 5.1 a 5.6 concluídos; pré-alpha `v0.1.0a4` publicada; candidata local `0.1.0a5` do 5.7 aguarda CI pública
 **Data de início:** 2026-07-11  
 **Responsável:** Lucas  
 **Natureza:** projeto open source, educacional, experimental e de portfólio  
@@ -1078,4 +1078,4 @@ Estas questões serão decididas nas etapas indicadas, não agora:
 
 ## 27. Próxima decisão
 
-Planejar detalhadamente o incremento 5.7 — segurança, diagnóstico e retenção — somente após nova aprovação explícita. O Gate 5 continua aberto e a Etapa 6 não começa automaticamente.
+Criar o checkpoint funcional da candidata `0.1.0a5`, executar os seis jobs públicos e revisar os resultados do `alpha-security`. O incremento 5.7, o Gate 5 e a Etapa 6 não são aprovados automaticamente.

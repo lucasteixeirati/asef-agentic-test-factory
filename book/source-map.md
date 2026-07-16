@@ -11,12 +11,12 @@ Este mapa evita reconstrução retrospectiva e não transforma o índice provis�
 | 5. Conceber com IA sem terceirizar decisões | revisão externa; rejeição da ADR-007; decisões humanas | forte |
 | 6. O primeiro workflow e suas restrições | plano da Etapa 4; WF-001; WS-001 a WS-007 | forte |
 | 7. Contratos, estado e evidências | contratos 1.1; ADRs; evidence model; observabilidade | forte |
-| 8. Segurança para executar código gerado | EXP-002; Docker tests; sandbox policy | forte para baseline |
+| 8. Segurança para executar código gerado | EXP-002; Docker tests; sandbox policy; Security 12/12; doctor; retention/cleanup; provas Windows/Linux do 5.7 | forte para baseline; CI pública da candidata pendente |
 | 9. Como testar componentes não determinísticos | cassettes; structured output; retries; mutation pilot; adapter live e budget real do 5.4; coverage/mutation do SUT implementadas no 5.6 | forte para o primeiro provider e para a baseline Python limitada |
 | 10. Experimentos com modelos, prompts e frameworks | EXP-001 a EXP-006; Lesson 001 | forte |
 | 11. A primeira execução por outra pessoa | instalação limpa automatizada; usuário externo real ainda ausente | incompleta |
 | 12. Falhas, retrabalho e decisões revertidas | journals das Etapas 3 e 4; ADR-007; auditoria do wheel; sete findings do 5.3; hardening de contexto e budget do 5.4 | forte |
-| 13. Evolução baseada em evidências | ADR-004, ADR-007, ADR-008, ADR-009; checkpoints; revisões 5.3/5.4; Smoke 20/20 e baseline local de quality capabilities do 5.6 | forte até o Alpha parcial |
+| 13. Evolução baseada em evidências | ADR-004, ADR-007, ADR-008, ADR-009; checkpoints; revisões 5.3/5.4; Smoke 20/20; quality capabilities e `v0.1.0a4`; candidata local `0.1.0a5` | forte até o Alpha Python pré-Gate 5 |
 | 14. Open source e comunidade | publicação GitHub; feedback comunitário ainda ausente | inicial |
 | 15. Impacto da IA na velocidade e qualidade | baseline do Dia 2; atualização do Dia 3; nota do Dia 6 com aproximadamente 30 horas e 500 interações até o fim do Dia 5 | evidência contemporânea em evolução |
 | 16. O que eu faria diferente | lessons e retrospectivas; exige distância temporal | aberta |

@@ -1,0 +1,1 @@
+{"schema_version":"1.0.0","case_id":"SEC-009","version":"1.0.0","control":"Imports outside the unit skill allowlist are blocked","executor":"STATIC_POLICY","fixture_refs":["datasets/security/SEC-009/fixtures/fixture.txt"],"preconditions":["Unit skill policy is available"],"expected_outcome":"POLICY_BLOCKED","limitations":["Static policy is not a sandbox"]}

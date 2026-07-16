@@ -108,4 +108,4 @@ datasets/<tipo>/<case-id>/
 └── README.md
 ```
 
-`case.json` segue `DatasetCase` em `src/asef/evaluation_contracts.py`. JSON foi escolhido para evitar uma dependência YAML no core. Os dez casos Smoke são materializados pelo 5.5 com `demo.json` separado; os casos Security permanecem planejados para o 5.7.
+`case.json` segue contratos neutros em JSON, evitando dependência YAML. Os dez casos Smoke foram materializados no 5.5. `SEC-001` a `SEC-012` foram materializados na 5.7.2 com executores internos fechados, loader estrito, hash efetivo e runner público `asef security`.

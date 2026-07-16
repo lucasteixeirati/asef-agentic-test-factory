@@ -10,6 +10,10 @@ from importlib import metadata
 from pathlib import Path
 
 from .adapters.context_file import FileQualityContextAdapter
+from .adapters.cleanup_executor import CleanupExecutor
+from .adapters.cleanup_report_store import CleanupReportStore
+from .adapters.doctor_check_executor import DoctorCheckExecutor
+from .adapters.doctor_report_store import DoctorReportStore
 from .adapters.docker_execution import DockerUnitTestAdapter
 from .adapters.recorded_agent import RecordedAgentAdapter, RecordedAgentError
 from .adapters.gateway import GatewayError, OpenAIResponsesGateway
@@ -18,6 +22,9 @@ from .adapters.run_store import JsonRunStore
 from .adapters.smoke_case_executor import SmokeCaseExecutorAdapter
 from .adapters.smoke_dataset import SmokeDatasetLoader
 from .adapters.smoke_report_store import SmokeReportStore
+from .adapters.security_case_executor import SecurityCaseExecutor
+from .adapters.security_dataset import SecurityDatasetLoader
+from .adapters.security_report_store import SecurityReportStore
 from .adapters.workspace import EphemeralWorkspaceAdapter
 from .adapters.langgraph_checkpoint import (
     HumanCheckpointError,
@@ -26,11 +33,22 @@ from .adapters.langgraph_checkpoint import (
 )
 from .application.generate_unit import GenerateUnitTestService
 from .application.complete_workflow import CompleteWorkflowService
+from .application.cleanup_runner import CleanupInfrastructureError, CleanupRunner
+from .application.doctor_runner import (
+    DoctorInfrastructureError,
+    DoctorRequest,
+    DoctorRunner,
+)
 from .application.human_decision import HumanDecisionService
 from .application.prepare_run import PrepareRunService
 from .application.smoke_runner import SmokeSuiteInfrastructureError, SmokeSuiteRunner
+from .application.security_runner import (
+    SecuritySuiteInfrastructureError,
+    SecuritySuiteRunner,
+)
 from .context import ContextValidationError
 from .contracts import ContractValidationError, SkeletonRunRequest
+from .security_contracts import CleanupKind, CleanupMode, CleanupRequest
 from .application.ports import ProviderError
 from .demo import materialize_demo_assets
 from .outcomes import exit_code_for
@@ -53,7 +71,7 @@ def _package_version() -> str:
         return metadata.version("asef-agentic-test-factory")
     except metadata.PackageNotFoundError:
         # Source-tree execution used by contributors before an editable install.
-        return "0.1.0a4"
+        return "0.1.0a5"
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -91,6 +109,35 @@ def build_parser() -> argparse.ArgumentParser:
     smoke.add_argument("--repeat", type=int, default=1)
     smoke.add_argument("--timeout-seconds", type=int, default=60)
     _logging_argument(smoke)
+    security = subparsers.add_parser(
+        "security", help="execute the deterministic ASEF Security Dataset"
+    )
+    security.add_argument(
+        "--dataset-root", type=Path, default=Path("datasets/security")
+    )
+    security.add_argument("--output", type=Path, default=Path(".asef/security"))
+    security.add_argument("--timeout-seconds", type=int, default=20)
+    _logging_argument(security)
+    doctor = subparsers.add_parser(
+        "doctor", help="diagnose ASEF runtime requirements without changing the host"
+    )
+    doctor.add_argument("--context", type=Path, default=None)
+    doctor.add_argument("--mode", choices=("demo", "live"), default="demo")
+    doctor.add_argument("--output", type=Path, default=Path(".asef/doctor"))
+    doctor.add_argument("--timeout-seconds", type=int, default=5)
+    _logging_argument(doctor)
+    cleanup = subparsers.add_parser(
+        "cleanup", help="plan or apply conservative cleanup below .asef"
+    )
+    cleanup.add_argument(
+        "--kind",
+        choices=tuple(item.value for item in CleanupKind),
+        required=True,
+    )
+    cleanup.add_argument("--older-than-days", type=int, required=True)
+    cleanup.add_argument("--apply", action="store_true")
+    cleanup.set_defaults(output=Path(".asef/maintenance/cleanup"))
+    _logging_argument(cleanup)
     return parser
 
 
@@ -171,7 +218,11 @@ def main(argv: list[str] | None = None) -> int:
     )
     try:
         context_was_explicit = not hasattr(args, "context") or args.context is not None
-        if getattr(args, "mode", "demo") == "live" and not context_was_explicit:
+        if (
+            args.command != "doctor"
+            and getattr(args, "mode", "demo") == "live"
+            and not context_was_explicit
+        ):
             raise ContractValidationError("live mode requires an explicit --context")
         allowed_output_root = (Path.cwd() / ".asef").resolve()
         resolved_output = args.output.resolve()
@@ -222,6 +273,123 @@ def main(argv: list[str] | None = None) -> int:
                 "suite_markdown": smoke_result.suite_markdown.relative_to(Path.cwd()).as_posix(),
             }
             _log_completion(logger, args.command, report.suite_id, payload, code)
+            print(json.dumps(payload))
+            close_operational_logging(logger)
+            return code
+        if args.command == "security":
+            if args.timeout_seconds < 1 or args.timeout_seconds > 120:
+                raise ContractValidationError(
+                    "security timeout must be between 1 and 120 seconds"
+                )
+            security_output = SecuritySuiteRunner(
+                SecurityDatasetLoader(),
+                SecurityCaseExecutor(timeout_seconds=args.timeout_seconds),
+                SecurityReportStore(),
+                asef_version=_package_version(),
+                environment=(
+                    f"{platform.system().lower()}-{platform.machine().lower()}-"
+                    f"python-{platform.python_version()}"
+                ),
+            ).run(args.dataset_root, args.output)
+            report = security_output.report
+            if report.errors or report.unsupported:
+                code, status, classification = 7, "FAILED", "INFRASTRUCTURE_ERROR"
+            elif report.failed:
+                code, status, classification = 4, "FAILED", "SECURITY_CONTROL_FAILURE"
+            else:
+                code, status, classification = 0, "SUCCEEDED", "ACCEPTED"
+            payload = {
+                "suite_id": report.suite_id,
+                "status": status,
+                "classification": classification,
+                "total": len(report.results),
+                "passed": report.passed,
+                "failed": report.failed,
+                "errors": report.errors,
+                "unsupported": report.unsupported,
+                "dataset_hash": report.dataset_hash,
+                "suite_json": security_output.suite_json.relative_to(Path.cwd()).as_posix(),
+                "suite_markdown": security_output.suite_markdown.relative_to(Path.cwd()).as_posix(),
+            }
+            _log_completion(logger, args.command, report.suite_id, payload, code)
+            print(json.dumps(payload))
+            close_operational_logging(logger)
+            return code
+        if args.command == "doctor":
+            doctor_output = DoctorRunner(
+                DoctorCheckExecutor(timeout_seconds=args.timeout_seconds),
+                DoctorReportStore(),
+                asef_version=_package_version(),
+                python_version=platform.python_version(),
+                environment=(
+                    f"{platform.system().lower()}-{platform.machine().lower()}"
+                ),
+            ).run(
+                DoctorRequest(
+                    mode=args.mode,
+                    output_root=args.output,
+                    context_ref=args.context,
+                )
+            )
+            report = doctor_output.report
+            code = 0 if report.healthy else 7
+            payload = {
+                "report_id": report.report_id,
+                "status": report.status.value,
+                "classification": (
+                    "READY" if report.healthy else "REQUIREMENTS_BLOCKED"
+                ),
+                "healthy": report.healthy,
+                "checks": len(report.checks),
+                "report_json": doctor_output.report_json.relative_to(
+                    Path.cwd()
+                ).as_posix(),
+                "report_markdown": doctor_output.report_markdown.relative_to(
+                    Path.cwd()
+                ).as_posix(),
+            }
+            _log_completion(logger, args.command, report.report_id, payload, code)
+            print(json.dumps(payload))
+            close_operational_logging(logger)
+            return code
+        if args.command == "cleanup":
+            cleanup_output = CleanupRunner(
+                CleanupExecutor(),
+                CleanupReportStore(),
+            ).run(
+                CleanupRequest(
+                    kind=CleanupKind(args.kind),
+                    older_than_days=args.older_than_days,
+                    mode=CleanupMode.APPLY if args.apply else CleanupMode.DRY_RUN,
+                )
+            )
+            report = cleanup_output.report
+            code = 7 if report.failed else 0
+            payload = {
+                "cleanup_id": report.cleanup_id,
+                "status": "FAILED" if report.failed else "SUCCEEDED",
+                "classification": (
+                    "CLEANUP_PARTIAL"
+                    if report.failed
+                    else (
+                        "DRY_RUN_COMPLETE"
+                        if report.request.mode is CleanupMode.DRY_RUN
+                        else "CLEANUP_COMPLETE"
+                    )
+                ),
+                "mode": report.request.mode.value,
+                "planned": report.planned,
+                "deleted": report.deleted,
+                "failed": report.failed,
+                "skipped": report.skipped,
+                "report_json": cleanup_output.report_json.relative_to(
+                    Path.cwd()
+                ).as_posix(),
+                "report_markdown": cleanup_output.report_markdown.relative_to(
+                    Path.cwd()
+                ).as_posix(),
+            }
+            _log_completion(logger, args.command, report.cleanup_id, payload, code)
             print(json.dumps(payload))
             close_operational_logging(logger)
             return code
@@ -377,7 +545,14 @@ def main(argv: list[str] | None = None) -> int:
                     ),
                 }
                 code = int(exit_code_for(completed.state.status, completed.state.classification))
-    except (OptionalWorkflowDependencyError, HumanCheckpointError, SmokeSuiteInfrastructureError) as exc:
+    except (
+        OptionalWorkflowDependencyError,
+        HumanCheckpointError,
+        SmokeSuiteInfrastructureError,
+        SecuritySuiteInfrastructureError,
+        DoctorInfrastructureError,
+        CleanupInfrastructureError,
+    ) as exc:
         logger.error(
             "command_failed",
             extra={"operation": args.command, "component": "cli", "classification": "INFRASTRUCTURE_ERROR"},

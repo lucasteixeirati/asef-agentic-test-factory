@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import shutil
 from dataclasses import dataclass
 from pathlib import Path
 from time import perf_counter
@@ -12,6 +11,7 @@ from ..evaluation_contracts import (
     QualityCapabilityStatus,
     QualityEvaluationReport,
 )
+from ..ephemeral_cleanup import cleanup_ephemeral_directory
 from ..outcomes import RunClassification, RunStatus
 from .ports import (
     QualityEvidenceStorePort,
@@ -83,13 +83,20 @@ class QualityEvaluationService:
             report_ref = self.evidence_store.save_evaluation(state, report)
             state.evidence_refs.append(report_ref)
             state.facts["quality"] = report.to_dict()
-            self.run_store.save_state(state)
             functional_evaluation = state.facts.get("latest_evaluation")
             if isinstance(functional_evaluation, dict):
                 self.run_store.save_report(state, None, functional_evaluation)
             return QualityEvaluationOutput(report, tuple(observations))
         finally:
-            shutil.rmtree(staged.workspace, ignore_errors=True)
+            cleanup = cleanup_ephemeral_directory(
+                run_dir, staged.workspace, "quality-workspace"
+            )
+            state.facts.setdefault("ephemeral_cleanup", {})[
+                cleanup.role
+            ] = cleanup.to_dict()
+            self.run_store.save_state(state)
+            if not cleanup.removed:
+                raise OSError("quality workspace cleanup failed")
 
     @staticmethod
     def _unavailable(request: QualityCapabilityRequest) -> QualityExecutionOutput:

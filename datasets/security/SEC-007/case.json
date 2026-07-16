@@ -1,0 +1,1 @@
+{"schema_version":"1.0.0","case_id":"SEC-007","version":"1.0.0","control":"Execution exceeding wall time is terminated","executor":"DOCKER_TIMEOUT","fixture_refs":["datasets/security/SEC-007/fixtures/fixture.txt"],"preconditions":["Docker image is locally available"],"expected_outcome":"TIMEOUT_ENFORCED","limitations":["Uses a one-second host timeout"]}

@@ -59,6 +59,45 @@ Antes da v0.1, cada ambiente anunciado deverá possuir evidência de instalaçã
 
 O Adversarial/Security Dataset deverá provar falha segura para leitura indevida, rede, fork/processos, consumo excessivo, arquivos grandes, timeout, dependências proibidas e tentativa de acesso a credenciais.
 
+## Threat model congelado na fatia 5.7.1
+
+### Ativos protegidos
+
+- credenciais e configuração do host;
+- SUT original e paths externos ao workspace;
+- socket e autoridade do daemon Docker;
+- budgets, políticas e transições do runtime;
+- integridade de state, reports e evidências;
+- disponibilidade limitada do host durante resource attacks.
+
+### Entradas não confiáveis
+
+- requisito, source e comentários do SUT;
+- resposta de provider e artifact gerado;
+- manifests e fixtures de dataset;
+- stdout, stderr e resultados nativos de tooling;
+- nomes, links, junctions e metadata de targets candidatos a cleanup.
+
+### Autoridades exclusivas do host
+
+Somente código revisado do package seleciona executor, imagem, argv, mounts, labels, budgets, paths e transições. Dataset e provider nunca recebem essas autoridades. SEC-010 prova essa separação arquitetural; não prova resistência universal de modelos a prompt injection.
+
+### Alegações permitidas
+
+- um controle específico foi observado no perfil, host e versão registrados;
+- uma entrada foi rejeitada antes de Docker/provider;
+- uma execução foi limitada e classificada;
+- uma primitive ausente foi declarada `UNSUPPORTED`;
+- um target de filesystem foi considerado inelegível antes de qualquer remoção.
+
+### Alegações proibidas
+
+- certificação, pentest ou ausência universal de vulnerabilidades;
+- segurança para código arbitrariamente hostil ou produção;
+- secure erase;
+- cleanup seguro baseado somente em prefixo textual;
+- aprovação de caso quando houve skip, erro ou primitive indisponível.
+
 ## Aplicação no adapter pytest — 5.2
 
 - imagem base fixada por digest;

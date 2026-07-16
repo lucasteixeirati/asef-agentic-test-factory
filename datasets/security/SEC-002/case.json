@@ -1,0 +1,1 @@
+{"schema_version":"1.0.0","case_id":"SEC-002","version":"1.0.0","control":"Container network access is blocked","executor":"DOCKER_NETWORK","fixture_refs":["datasets/security/SEC-002/fixtures/fixture.txt"],"preconditions":["Docker image is locally available"],"expected_outcome":"NETWORK_BLOCKED","limitations":["Tests one bounded outbound connection attempt"]}

@@ -2,7 +2,7 @@
 
 - **Plano:** `docs/project/stage-05-alpha-python-plan.md`
 - **Gate:** `docs/project/gates/gate-05-acceptance-plan.md`
-- **Estado atual:** incrementos 5.1 a 5.6 concluídos; pré-alpha `v0.1.0a4` publicada
+- **Estado atual:** incrementos 5.1 a 5.6 concluídos; `v0.1.0a4` publicada; candidata local `0.1.0a5` do 5.7 aguarda CI
 
 ## 5.1 — Contratos, ADRs e suíte de referência
 
@@ -233,4 +233,88 @@ Wheel e sdist `0.1.0a4` foram construídos em ambiente isolado, inspecionados e 
 
 O commit funcional `654cd6d` (`feat: add bounded Python quality capabilities`) foi publicado em `main`. A CI `29461154744` aprovou os cinco jobs: `core`, `framework-spikes`, `docker-security`, `alpha-smoke` e o novo `quality-capabilities`. Este último construiu a imagem pinada, aprovou conformance e baseline, executou os cenários de falha/timeout, passou no secret scan e publicou evidências sanitizadas. A candidata está aprovada tecnicamente; resta o commit documental de fechamento e sua CI antes da tag/pré-release.
 
-O commit documental `f55be73` (`docs: approve stage 5.6 candidate after ci`) também foi publicado e a CI de fechamento `29461247717` aprovou novamente os cinco jobs. A tag anotada e a pré-release [`v0.1.0a4`](https://github.com/lucasteixeirati/asef-agentic-test-factory/releases/tag/v0.1.0a4), com wheel e sdist auditados, foram publicadas em 2026-07-15. O incremento 5.6 está concluído; o 5.7 depende de novo planejamento e aprovação explícita.
+O commit documental `f55be73` (`docs: approve stage 5.6 candidate after ci`) também foi publicado e a CI de fechamento `29461247717` aprovou novamente os cinco jobs. A tag anotada e a pré-release [`v0.1.0a4`](https://github.com/lucasteixeirati/asef-agentic-test-factory/releases/tag/v0.1.0a4), com wheel e sdist auditados, foram publicadas em 2026-07-15. O incremento 5.6 está concluído; naquele fechamento, o 5.7 ainda dependia de novo planejamento e aprovação explícita.
+
+## 5.7 — Segurança, diagnóstico e retenção
+
+O planejamento detalhado foi produzido em 2026-07-15 e está em `docs/project/stage-05-increment-57-plan.md`. Lucas aprovou explicitamente o plano em 2026-07-16 e autorizou em sequência as fatias 5.7.1, 5.7.2 e 5.7.3. As fatias posteriores permanecem dependentes de nova decisão.
+
+A auditoria de abertura encontrou nove vetores Docker já cobertos, três controles preventivos na skill/contratos, rotação local de logs e retenção de sete dias para evidências públicas da CI. Permanecem sem prova integrada os doze casos `SEC-001` a `SEC-012`, o diagnóstico público do ambiente, a limpeza observável após interrupções e uma política explícita para retenção, debug e descarte local.
+
+O desenho propõe contratos neutros, casos versionados com executores internos, comando offline `asef security`, hardening do ciclo de vida dos containers, `asef doctor` estritamente diagnóstico e `asef cleanup` em dry-run por padrão. Evidências finais locais não serão apagadas automaticamente; limpeza mutável exigirá `--apply`, contenção por path, identidade verificável e tombstone. O caso `SEC-004` não poderá contar como aprovado quando a primitiva real de symlink/junction não for demonstrável no ambiente.
+
+A entrega foi dividida em seis fatias: contratos e threat model; dataset e runner; hardening Docker; doctor; retenção/cleanup/debug; e CI/revisão. O novo job `alpha-security` deverá provar 12/12, diagnóstico sanitizado, ausência de órfãos e secret scan. G5-11, G5-15 e G5-16 permanecem abertos até as evidências executáveis; o Gate 5 e a Etapa 6 não avançam automaticamente.
+
+### Fatia 5.7.1 — threat model, contratos e política
+
+A primeira fatia introduziu contratos públicos e neutros para `SecurityCaseSpec`, `SecurityCaseResult`, `SecuritySuiteReport`, checks/reports do doctor, política de retenção, requests/tombstones de cleanup e caracterização de segurança do filesystem. A matriz `SEC-001` a `SEC-012` associa cada ID a um executor interno e outcome fechado; manifests não podem definir shell, argv, imagem ou mount.
+
+`UNSUPPORTED` é distinto de pass e impede aceite 12/12. Checks do doctor usam códigos estáveis, facts limitados e recomendações pertencentes a uma enumeração revisada. A política default mantém efêmeros com remoção imediata, evidência final e tombstones sob cleanup explícito, logs com rotação de 1 MiB e dois backups, reports de CI por sete dias e debug somente sanitizado. Cleanup nasce em `DRY_RUN`, com raiz fixa `.asef`; nenhum executor de deleção foi implementado nesta fatia.
+
+A caracterização local em Windows 11, Python 3.13.5, confirmou `Path.is_junction()`, mas `shutil.rmtree.avoids_symlink_attacks` é falso e remoção por `dir_fd` não está disponível. O contrato, portanto, publica `RECURSIVE_APPLY_DRY_RUN_ONLY` e proíbe alegar suporte a apply recursivo seguro nesse perfil. A inspeção pura rejeita root, target externo, arquivo, symlink e junction antes de qualquer remoção.
+
+A fatia adicionou 25 testes direcionados. A regressão final descobriu 278 testes, executou 249 e ignorou 29 integrações opcionais; todos os executados passaram. Branch coverage geral ficou em 86,90% e `security_contracts.py` em 94,78%. Os dois skips novos são fixtures de symlink sem privilégio no Windows e permanecem evidência ausente, não pass. `git diff --check`, compilação dos módulos e secret scan foram aprovados. Nenhuma entrega da 5.7.2 foi iniciada.
+
+Na revisão técnica foram encontrados quatro findings: status agregado/duração/timeout ausentes no doctor; fingerprints e plan hash não reconciliados; arrays JSON que podiam ser interpretados a partir de strings; e raiz de cleanup em link/junction sem rejeição explícita. Todos foram corrigidos. Facts do doctor passaram a ser allowlisted por check e retenção passou a congelar exatamente logs, cassettes, reports CI e debug. Uma prova real de junction no Windows retornou `JUNCTION` e preservou o target controlado.
+
+Com os findings encerrados e a validação final verde, a 5.7.1 está aprovada localmente. O próximo passo depende de decisão explícita sobre a 5.7.2.
+
+### Fatia 5.7.2 — Security Dataset e runner
+
+Lucas autorizou explicitamente a segunda fatia. Foram materializados `SEC-001` a `SEC-012`, cada um com manifest, README e fixture pública. O loader exige exatamente os doze IDs, fileset conhecido, JSON sem chaves duplicadas, UTF-8, limites de bytes, referências canônicas e ausência de symlink/junction.
+
+Os manifests selecionam somente executores enumerados. Comandos Docker, imagem, mounts e budgets permanecem compilados no package. O runner continua após control failure, distingue `FAILED`, `ERROR` e `UNSUPPORTED`, persiste facts/resultados JSON e report Markdown e expõe `asef security` com exits 0/2/4/7.
+
+A primeira execução real terminou 11/12 porque o argv interno de criação da junction estava incorreto; o caso ficou `UNSUPPORTED` e não foi convertido em pass. Após correção e prova isolada, a execução `security-20260716T115701Z-322d5aef` terminou 12/12, zero failure/error/unsupported, hash `e386538869acc970a86d935b7068c794e5522b884caf327a953b3b4434b1818b`. Nenhum container `asef-*` permaneceu.
+
+A regressão final descobriu 287 testes, executou 258 e ignorou 29 opcionais; todos os executados passaram. Branch coverage geral ficou em 85,78%. Source e evidência 12/12 passaram no secret scan e `git diff --check` permaneceu verde. Labels, interrupção e orphan detection continuam reservados à 5.7.3.
+
+A revisão técnica corrigiu o argv de junction, uma dependência indevida application→adapter, validação UTF-8 do dataset, a exigência factual de preservação do target e a continuidade após control failure. A 5.7.2 está aprovada localmente; o início da 5.7.3 depende de nova decisão.
+
+### Fatia 5.7.3 — hardening do lifecycle Docker
+
+Lucas autorizou explicitamente a terceira fatia. O `DockerRunner` passou a rotular cada execução com ownership, capability e identidade (`com.asef.managed`, `com.asef.capability` e `com.asef.execution`). O socket Docker continua ausente dos mounts e SEC-011 agora concilia essa ausência com os labels compilados no package.
+
+Timeout, `KeyboardInterrupt` e falhas inesperadas do executor solicitam remoção forçada pelo nome aleatório da execução e verificam a ausência do container. Em encerramento normal, a ausência também é inspecionada e eventual residual recebe uma segunda tentativa de remoção. O resultado funcional e a observação de cleanup permanecem separados: exit zero não oculta `CONTAINER_RESIDUAL` ou `CONTAINER_INSPECTION_FAILED`.
+
+A orphan detection usa exclusivamente os dois labels de ownership/capability, sem prefix matching amplo. Cada caso Docker do Security Dataset exige cleanup bem-sucedido e confirma zero IDs gerenciados restantes antes de ser aceito. A execução real `security-20260716T132831Z-b165d7fe` terminou 12/12, sem failure/error/unsupported, com o hash estável `e386538869acc970a86d935b7068c794e5522b884caf327a953b3b4434b1818b`; a inspeção final por labels retornou vazia.
+
+A regressão final descobriu 290 testes, executou 261 e ignorou 29 integrações opcionais; todos os executados passaram. Branch coverage ficou em 85,64%. Compilação, `git diff --check` e secret scan do source e da evidência 12/12 passaram. A 5.7.3 está aprovada localmente; a 5.7.4 (`asef doctor`) depende de nova decisão explícita.
+
+### Fatia 5.7.4 — diagnóstico do ambiente
+
+Lucas autorizou explicitamente a quarta fatia. Foram implementados `DoctorRequest`, runner neutro, executor substituível, store atômico JSON/Markdown e a CLI `asef doctor`. Os doze checks cobrem Python, distribuição instalada, host, output root, CLI/daemon/engine Docker, imagens pytest/quality, contexto opcional, presença booleana da chave live e containers gerenciados.
+
+O doctor não lê Docker config, não persiste stdout/stderr bruto, não publica paths de home ou valor/comprimento da chave e não instala, inicia, corrige, faz pull/build/prune ou chama provider. Campos retornados pelo daemon passam por formatos fechados antes de virar facts. Contexto informado é obrigatório e bloqueante quando inválido; contexto ausente e chave live no modo demo são skips opcionais e produzem `DEGRADED` com exit zero.
+
+A primeira execução real via `PYTHONPATH=src` produziu `BLOCKED` somente em `asef-package`, demonstrando que checkout não é confundido com distribuição instalada. O wheel foi então construído, instalado sem dependências em venv e diretório temporários fora do checkout e executou `asef doctor`: 10 passes, dois skips opcionais, `DEGRADED/READY` e exit zero. CLI, daemon, engine Linux, imagens, output e ausência de órfãos foram comprovados sem mutação do host.
+
+Security permaneceu 12/12 na execução `security-20260716T145041Z-c826cba6`; Smoke permaneceu 20/20 na execução `smoke-20260716T145440Z-25eec06c`. A regressão final descobriu 300 testes, executou 271 e ignorou 29 opcionais, com branch coverage de 85,54%. Source, wheel, sdist e report instalado passaram no secret scan. A 5.7.4 está aprovada localmente; a 5.7.5 depende de nova decisão explícita.
+
+### Fatia 5.7.5 — retention, cleanup e debug
+
+Lucas autorizou explicitamente a quinta fatia. A policy `asef-local-retention@1.0.0` foi publicada e passou a integrar os tombstones. A CLI `asef cleanup` seleciona `runs|smoke|security|quality|doctor|logs|containers|all`, exige idade positiva, mantém root fixa `.asef`, opera em dry-run sem `--apply` e nunca usa prune ou prefix matching amplo.
+
+Suites e doctor usam IDs temporais conciliados com JSON; runs usam `state.json`; logs usam timestamps JSONL; containers usam label, Created e ID completo. Quality sob run herda a idade da run. Targets legados/malformed são `SKIPPED`, sem fallback para `mtime`. Tree identities incluem paths, metadata, conteúdo, inode/device e bloqueiam links, junctions, mudança de filesystem, excesso de entradas e alteração entre plano/apply.
+
+No Windows caracterizado, apply recursivo real continua recusado com `RECURSIVE_APPLY_UNSUPPORTED`. Arquivos regulares e containers possuem apply após revalidação; a remoção recursiva foi exercitada somente em fixtures temporárias com capability injetada e precisa de prova Linux na 5.7.6. Nenhum log/evidência real elegível foi apagado durante a revisão.
+
+O dry-run real `cleanup-20260716T181517Z-1796bf2b` combinou todas as classes: um backup de log elegível, 13 targets ignorados, zero deleções/falhas e policy/hash reconciliados. O report doctor legado sem timestamp e a quality evidence sem manifest foram explicitamente `MANIFEST_INVALID`.
+
+`ignore_errors=True` foi removido de `src`. Workspaces de geração, oracle, attempts e quality agora produzem observações comuns e falham como infraestrutura se deixarem resíduo. DEBUG continua com os mesmos campos allowlisted e não coleta prompt, environment ou resposta bruta.
+
+O scanner passou a rejeitar links/junctions, tornar unreadable/oversize/archive inválido visíveis, limitar members/bytes, inspecionar wheel e tar.gz e detectar atribuições sensíveis em formatos de dados sem imprimir valores. Security permaneceu 12/12 em `security-20260716T181419Z-5fd57b4b`; Smoke permaneceu 20/20 em `smoke-20260716T181431Z-c1e2a470`.
+
+A regressão final descobriu 316 testes, executou 285 e ignorou 31 opcionais, com branch coverage de 85,16%. Source, wheel, sdist, Security, Smoke, doctor e cleanup reports passaram no scanner; nenhum container ASEF permaneceu. A 5.7.5 está aprovada localmente com apply recursivo Windows deliberadamente bloqueado. A 5.7.6 depende de nova decisão explícita.
+
+### Fatia 5.7.6 — CI, package audit e candidata
+
+Lucas autorizou explicitamente a fatia final. O workflow recebeu o sexto job independente, `alpha-security`. Ele instala o package, constrói as imagens pytest/quality, remove `OPENAI_API_KEY`, exige Security 12/12, valida doctor instalado, prova symlink e cleanup recursivo Linux, executa cleanup dry-run/apply em raiz temporária, verifica ausência de órfãos, escaneia reports/logs e publica somente JSON/Markdown sanitizados por sete dias.
+
+O comando Linux foi antecipado localmente dentro da imagem Python fixada por digest, com repo read-only, rede bloqueada e hard budgets. Os dois testes passaram: apply recursivo removeu somente a suite controlada e symlink foi `SKIPPED`, preservando o target externo.
+
+O package audit instalou o wheel sem dependências em venv/diretório fora do checkout. O doctor terminou `DEGRADED/READY`; a demo terminou `SUCCEEDED/ACCEPTED`; cleanup instalado comprovou dry-run e apply de log controlado; toda a `.asef` gerada passou no scanner. A candidata foi promovida para `0.1.0a5`, preservando a release `v0.1.0a4`. Uma segunda instalação confirmou metadata `0.1.0a5`; wheel e sdist finais possuem SHA-256 `882b1133c19953c7ef7dda7e3a4ad9065b21e408efceb1029ea3a5e5246e85c4` e `082423ef54c8af83c8d8080b72db8c3b83761295a4d83cd598ca1a80215146e3`.
+
+A matriz Docker/quality local descobriu 20 integrações: 17 passaram e três foram ignoradas pelo host Windows; as duas provas Linux ignoradas localmente passaram no container separado. A regressão final descobriu 318 testes, executou 285 e ignorou 33 opcionais, com branch coverage de 85,16%.
+
+A implementação local das seis fatias está concluída e o parecer técnico recomenda a candidata. O incremento 5.7 permanece aberto até checkpoint, execução pública dos seis jobs e decisão explícita de publicação.

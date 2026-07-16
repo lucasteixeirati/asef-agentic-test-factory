@@ -1,6 +1,6 @@
 # Gate 5 — Plano de aceite do Alpha Python
 
-- **Estado:** execução em andamento; evidências sincronizadas até a publicação `v0.1.0a4` do 5.6
+- **Estado:** execução em andamento; candidata local `0.1.0a5` implementada, sexto job definido e CI pública pendente
 - **Responsável pela decisão final:** Lucas
 - **Ambiente de referência:** Windows, Docker Desktop com backend WSL2 e Python 3.13 suportado pelo package
 
@@ -8,7 +8,7 @@
 
 | ID | Critério | Evidência esperada | Estado |
 |---|---|---|---|
-| G5-01 | Wheel instala e executa fora do checkout | sessão limpa + CI de package audit | Atendido em `v0.1.0a3`; candidata `0.1.0a4` aprovada localmente e na CI `29461154744` |
+| G5-01 | Wheel instala e executa fora do checkout | sessão limpa + CI de package audit | Atendido: wheel e sdist `0.1.0a4` auditados, instalação limpa aprovada e pré-release `v0.1.0a4` publicada |
 | G5-02 | Demo completa funciona sem chave e sem rede de provider | Smoke Dataset + secret ausente | Atendido no 5.5: 20/20 keyless local e na CI, com secret scan verde |
 | G5-03 | WF-001 live usa a mesma porta, policies e budgets do demo | contract tests + live smoke manual | Atendido no 5.4: contratos falsos + smoke real autorizado |
 | G5-04 | Perfil Python executa `pytest` somente em Docker | manifest + integração | Atendido: fluxo combinado público executa pytest/oracle no Docker local e na CI |
@@ -18,16 +18,16 @@
 | G5-08 | `SUT_DEFECT_SUSPECTED` exige evidência independente e revisão humana | SUT defeituoso + oracle + checkpoint | Atendido localmente e exposto no SMK-007 público, sem correção do SUT |
 | G5-09 | Policy, budget, infraestrutura e resultado funcional são distintos | matriz de outcomes/exit codes | Atendido: contratos, exits públicos e SMK-008/009/010 preservam as distinções |
 | G5-10 | `SMK-001` a `SMK-010` são executáveis e reproduzíveis em demo | relatório agregado 10/10 | Atendido: 20/20 em duas repetições e fingerprints estáveis localmente e na CI |
-| G5-11 | `SEC-001` a `SEC-012` passam no ambiente de referência | job Docker/security 12/12 | Parcial: baseline Docker verde; catálogo formal 5.7 pendente |
+| G5-11 | `SEC-001` a `SEC-012` passam no ambiente de referência | job Docker/security 12/12 | Parcial forte: Windows 12/12, Linux SEC-004/symlink e cleanup recursivo aprovados em container; job `alpha-security` implementado, execução pública pendente |
 | G5-12 | Coverage Python é normalizada com escopo e limitações | fixture de conformance + report | Atendido no 5.6: JSON nativo, linhas/branches exatos, report e SUT de referência aprovados localmente e na CI |
 | G5-13 | Mutation Python é normalizada e limitada por budget | fixture conhecida + timeout test | Atendido no 5.6: admissão antes da execução, hard timeout, estados reconciliados e baseline aprovados localmente e na CI |
 | G5-14 | Reports JSON e Markdown separam fatos, inferências e recomendações | schema + revisão de conteúdo | Parcial: reports atuais existem; consolidação 5.8 pendente |
-| G5-15 | Logs/evidências são correlacionados, limitados e sem secrets | test logs + secret scan | Parcial forte: reports agregados, limites e scans do source/wheel/evidências aprovados; retenção 5.7 pendente |
-| G5-16 | `asef doctor` diagnostica requisitos sem expor credenciais | CLI end-to-end | Não iniciado |
-| G5-17 | Core não importa Python tooling, Docker, OpenAI ou LangGraph | import boundaries + job core mínimo | Atendido até `v0.1.0a3`: fronteiras AST e job core aprovados |
+| G5-15 | Logs/evidências são correlacionados, limitados e sem secrets | test logs + secret scan | Parcial forte: policy 1.0.0, cleanup, tombstones, debug e scanner aprovados em Windows/Linux e package isolado; artifact público do novo job pendente |
+| G5-16 | `asef doctor` diagnostica requisitos sem expor credenciais | CLI end-to-end | Parcial forte: 12 checks e wheel isolado aprovados; validação foi incorporada ao `alpha-security`, execução pública pendente |
+| G5-17 | Core não importa Python tooling, Docker, OpenAI ou LangGraph | import boundaries + job core mínimo | Atendido até `v0.1.0a4`: fronteiras AST e job core aprovados |
 | G5-18 | README, quickstart, tutorial, arquitetura, segurança e limitações refletem o Alpha real | auditoria documental | Parcial: README/arquitetura live atualizados; consolidação 5.8 pendente |
 | G5-19 | Métricas, falhas, decisões humanas e contribuição da IA estão registradas | journal + baseline + retrospectiva | Parcial forte: sincronizado até o início do Dia 6; retrospectiva final 5.9 pendente |
-| G5-20 | CI pública e regressões do Gate 4 permanecem verdes | execução GitHub Actions | Atendido até o 5.6: runs `29461154744` e `29461247717` com cinco jobs verdes, incluindo `quality-capabilities` |
+| G5-20 | CI pública e regressões do Gate 4 permanecem verdes | execução GitHub Actions | Atendido até o 5.6 com cinco jobs; composição de seis jobs da candidata 5.7 implementada, execução pública pendente |
 
 ## Casos de aceite obrigatórios
 

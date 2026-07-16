@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import shutil
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -10,6 +9,7 @@ from ..evaluation_contracts import (
     QualityCapabilityRequest,
     QualityEvaluationReport,
 )
+from ..ephemeral_cleanup import cleanup_ephemeral_directory
 from ..outcomes import RunClassification, RunStatus
 from .alpha_evaluation import AlphaEvaluationCoordinator
 from .generate_unit import GenerateUnitTestService
@@ -63,11 +63,16 @@ class RunAlphaCaseService:
         run_dir = generated.run_dir.resolve()
         if not workspace.is_relative_to(run_dir):
             raise ValueError("initial Alpha workspace escapes its run directory")
-        shutil.rmtree(workspace, ignore_errors=True)
+        cleanup = cleanup_ephemeral_directory(
+            run_dir, workspace, "initial-generation-workspace"
+        )
         generated.state.facts["workspace"] = {
             **generated.state.facts.get("workspace", {}),
-            "ephemeral_removed_before_evaluation": True,
+            "ephemeral_removed_before_evaluation": cleanup.removed,
+            "cleanup_diagnostic_code": cleanup.diagnostic_code,
         }
+        if not cleanup.removed:
+            raise OSError("initial generation workspace cleanup failed")
 
         evaluated = self.evaluation.execute(
             generated.state,
