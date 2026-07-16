@@ -28,6 +28,14 @@ class EphemeralWorkspaceAdapter:
             raise ValueError("attempt must be between 0 and 999")
         return self._stage(run_dir / "attempt-workspaces" / f"{attempt:03d}" / "generated", context, artifact)
 
+    def stage_quality(
+        self,
+        run_dir: Path,
+        context: ResolvedQualityContext,
+        artifact: UnitTestArtifact,
+    ) -> WorkspaceResult:
+        return self._stage(run_dir / "quality-workspace", context, artifact)
+
     def _stage(
         self,
         workspace: Path,

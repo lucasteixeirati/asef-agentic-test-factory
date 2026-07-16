@@ -65,15 +65,16 @@ LANGUAGE_PROFILES = {
         capabilities=(
             CapabilityDeclaration("unit", "partial", "pytest-docker-junit", "NormalizedExecutionResult", True),
             CapabilityDeclaration("project-detection", "partial", "quality-context", None, True),
-            CapabilityDeclaration("coverage", "planned", None, "CoverageResult", True),
-            CapabilityDeclaration("mutation", "planned", None, "MutationResult", True),
+            CapabilityDeclaration("coverage", "available", "python-quality-docker", "CoverageResult", True),
+            CapabilityDeclaration("mutation", "available", "python-quality-docker", "MutationResult", True),
             CapabilityDeclaration("backend-api", "planned", None, None),
             CapabilityDeclaration("performance", "planned", None, None),
         ),
         limitations=(
             "pytest adapter implemented but not yet the public CLI default",
             "pytest tool image must be built locally until registry distribution is decided",
-            "coverage and mutation adapters pending",
+            "quality tool image must be built locally until registry distribution is decided",
+            "coverage and mutation are validated for the bounded reference profile; external projects require explicit scope and budgets",
         ),
     ),
     "node-typescript": LanguageProfile(

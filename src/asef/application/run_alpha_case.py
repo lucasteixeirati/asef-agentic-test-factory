@@ -5,10 +5,16 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from ..contracts import SkeletonRunRequest, SkeletonRunState, UnitTestArtifact
-from ..evaluation_contracts import EvaluationAction
+from ..evaluation_contracts import (
+    EvaluationAction,
+    QualityCapabilityRequest,
+    QualityEvaluationReport,
+)
+from ..outcomes import RunClassification, RunStatus
 from .alpha_evaluation import AlphaEvaluationCoordinator
 from .generate_unit import GenerateUnitTestService
 from .ports import ResolvedQualityContext
+from .quality_evaluation import QualityEvaluationService
 
 
 @dataclass(slots=True, frozen=True)
@@ -19,6 +25,7 @@ class AlphaCaseRunResult:
     artifact: UnitTestArtifact | None
     attempts_executed: int
     terminal_action: EvaluationAction | None
+    quality_report: QualityEvaluationReport | None = None
 
 
 class RunAlphaCaseService:
@@ -28,14 +35,17 @@ class RunAlphaCaseService:
         self,
         generation: GenerateUnitTestService,
         evaluation: AlphaEvaluationCoordinator,
+        quality: QualityEvaluationService | None = None,
     ) -> None:
         self.generation = generation
         self.evaluation = evaluation
+        self.quality = quality
 
     def execute(
         self,
         request: SkeletonRunRequest,
         oracle_ref: str | None,
+        quality_requests: tuple[QualityCapabilityRequest, ...] = (),
     ) -> AlphaCaseRunResult:
         generated = self.generation.execute(request)
         if generated.artifact is None or generated.workspace is None:
@@ -45,6 +55,7 @@ class RunAlphaCaseService:
                 generated.context,
                 generated.artifact,
                 0,
+                None,
                 None,
             )
 
@@ -69,6 +80,21 @@ class RunAlphaCaseService:
         action = None
         if isinstance(latest, dict) and isinstance(latest.get("action"), str):
             action = EvaluationAction(latest["action"])
+        quality_report = None
+        if (
+            quality_requests
+            and evaluated.state.status is RunStatus.SUCCEEDED
+            and evaluated.state.classification is RunClassification.ACCEPTED
+        ):
+            if self.quality is None:
+                raise ValueError("quality capabilities were requested but no quality service is configured")
+            quality_report = self.quality.execute(
+                evaluated.state,
+                generated.run_dir,
+                generated.context,
+                evaluated.artifact,
+                quality_requests,
+            ).report
         return AlphaCaseRunResult(
             evaluated.state,
             generated.run_dir,
@@ -76,4 +102,5 @@ class RunAlphaCaseService:
             evaluated.artifact,
             evaluated.attempts_executed,
             action,
+            quality_report,
         )

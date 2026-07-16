@@ -2,7 +2,7 @@
 
 > Documento vivo para orientar a construção da aplicação, da documentação pública e do futuro livro.
 
-**Status:** vigente — incrementos 5.1 a 5.4 publicados como pré-alpha `0.1.0a3`; incremento 5.5 concluído e aprovado na CI
+**Status:** vigente — incrementos 5.1 a 5.5 concluídos; 5.6 preparado como candidata `0.1.0a4`, aguardando CI pública
 **Data de início:** 2026-07-11  
 **Responsável:** Lucas  
 **Natureza:** projeto open source, educacional, experimental e de portfólio  
@@ -1078,4 +1078,4 @@ Estas questões serão decididas nas etapas indicadas, não agora:
 
 ## 27. Próxima decisão
 
-Planejar detalhadamente o incremento 5.6 — coverage e mutation do SUT — somente após aprovação explícita de Lucas. O Gate 5 não está aprovado e a Etapa 6 não começa automaticamente.
+Revisar a implementação e as evidências locais do incremento 5.6, publicar o commit e confirmar o novo job `quality-capabilities` na CI. Somente depois dessa validação o 5.6 pode ser encerrado e o planejamento do 5.7 iniciado. O Gate 5 não está aprovado e a Etapa 6 não começa automaticamente.

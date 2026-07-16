@@ -10,7 +10,7 @@ Este repositório também registra a jornada de desenvolvimento assistido por IA
 
 ## Estado atual
 
-**Experimental — pré-alpha.** Os incrementos 5.1 a 5.4 foram concluídos e publicados como [`v0.1.0a3`](https://github.com/lucasteixeirati/asef-agentic-test-factory/releases/tag/v0.1.0a3). O fluxo combinado do 5.3 ainda não integra a CLI pública. O projeto não deve ser usado para executar código arbitrariamente hostil ou em produção.
+**Experimental — pré-alpha.** Os incrementos 5.1 a 5.4 foram publicados como [`v0.1.0a3`](https://github.com/lucasteixeirati/asef-agentic-test-factory/releases/tag/v0.1.0a3), e o 5.5 foi concluído com Smoke Dataset 20/20 local e na CI. O 5.6 implementa coverage e mutation do SUT com imagem pinada, budgets e evidências e compõe a candidata `0.1.0a4`; a CI pública dessa candidata ainda está pendente. O fluxo combinado do 5.3 ainda não integra a CLI pública. O projeto não deve ser usado para executar código arbitrariamente hostil ou em produção.
 
 Já demonstrado:
 
@@ -20,6 +20,7 @@ Já demonstrado:
 - LangGraph com checkpoint, interrupção e retomada SQLite;
 - comparação separada com PydanticAI;
 - Docker Desktop com rede, filesystem, memória, PIDs, timeout e paths controlados;
+- coverage e mutation Python em container dedicado, com resultados nativos e normalizados;
 - baselines em Python, Node/TypeScript e Java por imagens fixadas em digest;
 - contexto validável de QA, equipes, sistemas, repositórios, skills, MCPs e LLMs;
 - journals, experimentos, ADRs e lições aprendidas.
@@ -143,7 +144,7 @@ As tarifas não são congeladas no repositório. Confirme preço, câmbio, model
 2. Contratos, workflow e avaliação — concluído.
 3. Spikes arquiteturais — revisão técnica concluída.
 4. Walking skeleton e hardening — concluídos; Gate 4 aprovado.
-5. Alpha Python — incrementos 5.1 a 5.4 publicados como pré-alpha `0.1.0a3`; incremento 5.5 concluído com Smoke Dataset 20/20 local e na CI.
+5. Alpha Python — incrementos 5.1 a 5.4 publicados como pré-alpha `0.1.0a3`; 5.5 concluído com Smoke Dataset 20/20; 5.6 preparado como candidata `0.1.0a4`, aguardando CI pública.
 
 O Smoke Dataset Alpha pode ser executado de forma determinística e sem chave de provider:
 

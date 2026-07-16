@@ -2,7 +2,7 @@
 
 - **Estado:** contratos de estado `1.3.0` em implementação no 5.4; execução normalizada permanece `1.1.0`
 - **Implementação:** `src/asef/contracts.py` e `src/asef/outcomes.py`
-- **Distribuição:** `asef-agentic-test-factory 0.1.0a3`
+- **Distribuição:** `asef-agentic-test-factory 0.1.0a4`
 
 ## Versões
 

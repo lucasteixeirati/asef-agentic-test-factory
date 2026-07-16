@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0.0",
+  "fixture_id": "python-quality-conformance",
+  "files": {
+    "pyproject.toml": "997b480e347a4a31a6b93ef607c2c4b3721b9d217ff69dfe0dd5469d120098da",
+    "src/quality_fixture/__init__.py": "f05db99930b7d099f3e6692b3f92f29b8053505cb572dd2365f30db604df749e",
+    "src/quality_fixture/calculator.py": "31adb23cede5036987884cbab9cd1b37b1815c84c889078dbd6dc641a3370214",
+    "tests/test_calculator.py": "4e647b49fa8271429ddd62bf85e720d02ef38296349ca5bb2207976a5a17aa17"
+  },
+  "coverage": {
+    "tool_version": "7.10.7",
+    "lines_covered": 7,
+    "lines_total": 8,
+    "branches_covered": 1,
+    "branches_total": 2,
+    "excluded_lines": 0
+  },
+  "mutation": {
+    "tool_version": "3.6.0",
+    "max_mutants": 3,
+    "mutants_total": 5,
+    "admitted": 3,
+    "deferred": 2,
+    "killed": 1,
+    "survived": 2,
+    "invalid": 0,
+    "timed_out": 0,
+    "not_run": 2
+  }
+}

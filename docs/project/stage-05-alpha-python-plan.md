@@ -1,6 +1,6 @@
 # Etapa 5 — Plano detalhado do Alpha Python de referência
 
-- **Estado:** aprovado por Lucas em 2026-07-13; incremento 5.1 autorizado
+- **Estado:** vigente; incrementos 5.1 a 5.5 concluídos e implementação local do 5.6 aguardando CI/revisão
 - **Planejado em:** 2026-07-13
 - **Pré-condição:** Gate 4 aprovado
 - **Decisão registrada:** plano e quatro escolhas centrais aprovados; execução incremental, começando por 5.1

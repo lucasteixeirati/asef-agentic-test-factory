@@ -15,7 +15,7 @@
 - adapter e contrato de resultado, quando existirem;
 - limitações publicadas.
 
-O perfil `python-pytest` é `experimental` com alvo `reference`. Unit é parcial porque o walking skeleton executa um runner limitado; coverage e mutation são `planned` até 5.6. Node e Java continuam planejados apesar do container smoke aprovado na Etapa 3.
+O perfil `python-pytest` é `experimental` com alvo `reference`. Unit é parcial porque o walking skeleton executa um runner limitado. Coverage e mutation estão disponíveis no adapter `python-quality-docker` para o perfil de referência limitado, com imagem local pinada, escopo explícito e budgets obrigatórios. Node e Java continuam planejados apesar do container smoke aprovado na Etapa 3.
 
 ## `DatasetCase`
 
@@ -55,7 +55,15 @@ Foi adotado `case.json`, não `case.yaml`, para manter o core sem dependência d
 - referência ao resultado bruto e limitações;
 - score calculado apenas sobre mortos + sobreviventes.
 
-As categorias precisam reconciliar com o total e o resultado não pode exceder o budget declarado.
+As categorias precisam reconciliar com o total. Desde a fatia 5.6.1, `mutants_total` representa todos os mutantes descobertos, inclusive os não admitidos; `killed + survived + invalid + timed_out` representa os processados e não pode exceder `max_mutants`. O restante é `not_run`. Essa correção permite aplicar admission control sem esconder o universo descoberto.
+
+## Evolução 5.6.1 — requests, observations e admission control
+
+`QualityCapabilityRequest` declara capability, ferramenta/versão, escopo, testes, ambiente e budgets sem importar tooling. Mutation exige `max_mutants`; coverage o rejeita.
+
+`QualityCapabilityObservation` distingue `COMPLETED`, `PARTIAL`, `UNAVAILABLE`, `FAILED` e `BUDGET_EXHAUSTED`. Estado incompleto exige diagnóstico; `UNAVAILABLE`/`FAILED` não podem carregar métricas fabricadas. `QualityEvaluationReport` agrega no máximo uma observation por capability e só é completo quando todas terminam `COMPLETED`.
+
+`admit_mutants` ordena nomes descobertos de forma canônica e separa admitidos/deferidos antes da execução. A caracterização específica do mutmut `3.6.0` está em `docs/quality/mutmut-3.6.0-characterization.md`.
 
 ## Neutralidade do core
 

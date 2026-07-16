@@ -1,0 +1,15 @@
+[project]
+name = "asef-quality-conformance"
+version = "0.1.0"
+requires-python = ">=3.13"
+dependencies = []
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.mutmut]
+source_paths = ["src/quality_fixture/"]
+also_copy = ["tests/", "pyproject.toml"]
+pytest_add_cli_args_test_selection = ["tests/"]
+mutate_only_covered_lines = true
+use_git_change_detection = false

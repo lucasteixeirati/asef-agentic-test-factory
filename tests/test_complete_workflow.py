@@ -87,6 +87,30 @@ class CompleteWorkflowServiceTests(unittest.TestCase):
             self.assertTrue((result.run_dir / "results/execution.json").is_file())
             self.assertTrue((result.run_dir / "report.md").is_file())
 
+    def test_report_serializes_quality_as_evidence_without_changing_acceptance(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            result = self.service(root, output()).execute(request())
+            result.state.facts["quality"] = {
+                "schema_version": "1.0.0",
+                "complete": True,
+                "duration_ms": 50,
+                "observations": [{"capability": "coverage", "status": "COMPLETED"}],
+                "limitations": ["evidence only"],
+            }
+            JsonRunStore(root).save_report(
+                result.state, None, result.state.facts["evaluation"]
+            )
+            report = json.loads((result.run_dir / "report.json").read_text(encoding="utf-8"))
+            markdown = (result.run_dir / "report.md").read_text(encoding="utf-8")
+            self.assertTrue(report["quality"]["complete"])
+            self.assertIn("## Quality capabilities", markdown)
+            self.assertIn("evidence only; no universal threshold", markdown)
+            self.assertEqual(
+                (report["status"], report["classification"]),
+                ("SUCCEEDED", "ACCEPTED"),
+            )
+
     def test_failed_tests_are_a_functional_failure(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             result = self.service(

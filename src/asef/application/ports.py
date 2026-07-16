@@ -6,13 +6,21 @@ from typing import Protocol
 
 from ..contracts import (
     ContextSnapshot,
+    EvidenceRef,
     NormalizedExecutionResult,
     SkeletonRunRequest,
     SkeletonRunState,
     TestExecutionOutcome,
     UnitTestArtifact,
 )
-from ..evaluation_contracts import CorrectionFeedback
+from ..evaluation_contracts import (
+    CorrectionFeedback,
+    QualityCapability,
+    QualityCapabilityObservation,
+    QualityCapabilityRequest,
+    QualityCapabilityStatus,
+    QualityEvaluationReport,
+)
 
 
 class InvalidAgentOutputError(ValueError):
@@ -146,6 +154,29 @@ class ExecutionOutput:
     stderr_truncated: bool = False
 
 
+@dataclass(slots=True, frozen=True)
+class QualityExecutionOutput:
+    request: QualityCapabilityRequest
+    capability: QualityCapability
+    status: QualityCapabilityStatus
+    image: str
+    command: tuple[str, ...]
+    tool_id: str
+    tool_version: str
+    duration_ms: int
+    exit_code: int
+    native_result_content: str | None
+    driver_result_content: str | None
+    normalized: dict[str, object] | None
+    stdout: str
+    stderr: str
+    diagnostic_code: str | None = None
+    diagnostic: str | None = None
+    timed_out: bool = False
+    stdout_truncated: bool = False
+    stderr_truncated: bool = False
+
+
 class QualityContextPort(Protocol):
     def resolve(self, request: SkeletonRunRequest) -> ResolvedQualityContext: ...
 
@@ -185,6 +216,13 @@ class WorkspacePort(Protocol):
         attempt: int,
     ) -> WorkspaceResult: ...
 
+    def stage_quality(
+        self,
+        run_dir: Path,
+        context: ResolvedQualityContext,
+        artifact: UnitTestArtifact,
+    ) -> WorkspaceResult: ...
+
 
 class OracleWorkspacePort(Protocol):
     def stage_oracle(
@@ -197,6 +235,28 @@ class OracleWorkspacePort(Protocol):
 
 class TestExecutionPort(Protocol):
     def execute(self, workspace: Path, snapshot: ContextSnapshot) -> ExecutionOutput: ...
+
+
+class QualityExecutionPort(Protocol):
+    def execute(
+        self,
+        workspace: Path,
+        request: QualityCapabilityRequest,
+    ) -> QualityExecutionOutput: ...
+
+
+class QualityEvidenceStorePort(Protocol):
+    def save_execution(
+        self,
+        state: SkeletonRunState,
+        output: QualityExecutionOutput,
+    ) -> tuple[QualityCapabilityObservation, tuple[EvidenceRef, ...]]: ...
+
+    def save_evaluation(
+        self,
+        state: SkeletonRunState,
+        report: QualityEvaluationReport,
+    ) -> EvidenceRef: ...
 
 
 class HumanCheckpointPort(Protocol):

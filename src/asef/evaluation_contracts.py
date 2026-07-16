@@ -63,6 +63,19 @@ class EvaluationAction(StrEnum):
     STOP = "STOP"
 
 
+class QualityCapability(StrEnum):
+    COVERAGE = "coverage"
+    MUTATION = "mutation"
+
+
+class QualityCapabilityStatus(StrEnum):
+    COMPLETED = "COMPLETED"
+    PARTIAL = "PARTIAL"
+    UNAVAILABLE = "UNAVAILABLE"
+    FAILED = "FAILED"
+    BUDGET_EXHAUSTED = "BUDGET_EXHAUSTED"
+
+
 @dataclass(slots=True, frozen=True)
 class CorrectionFeedback:
     outcome: TestExecutionOutcome
@@ -366,8 +379,9 @@ class MutationResult:
             raise ContractValidationError("mutation outcome counts must equal mutants_total")
         if self.max_mutants < 1 or self.timeout_seconds < 1:
             raise ContractValidationError("mutation budgets must be positive")
-        if self.mutants_total > self.max_mutants:
-            raise ContractValidationError("mutants_total exceeds max_mutants budget")
+        processed = self.killed + self.survived + self.invalid + self.timed_out
+        if processed > self.max_mutants:
+            raise ContractValidationError("processed mutants exceed max_mutants budget")
 
     @property
     def mutation_score(self) -> float | None:
@@ -378,6 +392,221 @@ class MutationResult:
         self.validate()
         value = _primitive(asdict(self))
         value["mutation_score"] = self.mutation_score
+        return value
+
+
+@dataclass(slots=True, frozen=True)
+class QualityCapabilityRequest:
+    capability: QualityCapability
+    tool_id: str
+    tool_version: str
+    scope: tuple[str, ...]
+    test_paths: tuple[str, ...]
+    timeout_seconds: int
+    execution_environment_ref: str
+    max_mutants: int | None = None
+    schema_version: str = CONTRACT_SCHEMA_VERSION
+
+    def validate(self) -> None:
+        if self.schema_version != CONTRACT_SCHEMA_VERSION:
+            raise ContractValidationError(
+                f"quality request schema {self.schema_version!r} must be {CONTRACT_SCHEMA_VERSION!r}"
+            )
+        if not isinstance(self.capability, QualityCapability):
+            raise ContractValidationError("quality request capability is invalid")
+        if not self.tool_id.strip() or not self.tool_version.strip():
+            raise ContractValidationError("quality request tool and version are required")
+        _validate_quality_paths(self.scope, "scope")
+        _validate_quality_paths(self.test_paths, "test_paths")
+        if self.timeout_seconds < 1:
+            raise ContractValidationError("quality request timeout_seconds must be positive")
+        _validate_public_text(
+            self.execution_environment_ref,
+            "quality request execution_environment_ref",
+            max_chars=300,
+        )
+        if self.capability is QualityCapability.COVERAGE and self.max_mutants is not None:
+            raise ContractValidationError("coverage request cannot declare max_mutants")
+        if self.capability is QualityCapability.MUTATION and (
+            self.max_mutants is None or self.max_mutants < 1
+        ):
+            raise ContractValidationError("mutation request requires positive max_mutants")
+
+    def to_dict(self) -> dict[str, Any]:
+        self.validate()
+        return _primitive(asdict(self))
+
+
+@dataclass(slots=True, frozen=True)
+class MutationAdmission:
+    discovered: tuple[str, ...]
+    admitted: tuple[str, ...]
+    deferred: tuple[str, ...]
+    max_mutants: int
+
+    def validate(self) -> None:
+        if self.max_mutants < 1:
+            raise ContractValidationError("mutation admission max_mutants must be positive")
+        if not self.discovered:
+            raise ContractValidationError("mutation admission requires discovered mutants")
+        for name, values in (
+            ("discovered", self.discovered),
+            ("admitted", self.admitted),
+            ("deferred", self.deferred),
+        ):
+            if len(values) != len(set(values)):
+                raise ContractValidationError(f"mutation admission {name} contains duplicates")
+            if any(not item.strip() or any(ord(char) < 32 for char in item) for item in values):
+                raise ContractValidationError(
+                    f"mutation admission {name} contains an invalid mutant name"
+                )
+        if self.discovered != tuple(sorted(self.discovered)):
+            raise ContractValidationError("mutation admission discovery order must be canonical")
+        if len(self.admitted) > self.max_mutants:
+            raise ContractValidationError("mutation admission exceeds max_mutants")
+        if self.admitted + self.deferred != self.discovered:
+            raise ContractValidationError("mutation admission must partition discovered mutants")
+
+    def to_dict(self) -> dict[str, Any]:
+        self.validate()
+        return _primitive(asdict(self))
+
+
+def admit_mutants(mutant_names: tuple[str, ...], max_mutants: int) -> MutationAdmission:
+    if max_mutants < 1:
+        raise ContractValidationError("mutation admission max_mutants must be positive")
+    if not mutant_names:
+        raise ContractValidationError("mutation admission requires discovered mutants")
+    if len(mutant_names) != len(set(mutant_names)):
+        raise ContractValidationError("mutation admission discovered contains duplicates")
+    canonical = tuple(sorted(mutant_names))
+    admission = MutationAdmission(
+        discovered=canonical,
+        admitted=canonical[:max_mutants],
+        deferred=canonical[max_mutants:],
+        max_mutants=max_mutants,
+    )
+    admission.validate()
+    return admission
+
+
+@dataclass(slots=True, frozen=True)
+class QualityCapabilityObservation:
+    capability: QualityCapability
+    status: QualityCapabilityStatus
+    tool_id: str
+    tool_version: str
+    scope: tuple[str, ...]
+    duration_ms: int
+    result: CoverageResult | MutationResult | None = None
+    raw_result_ref: EvidenceRef | None = None
+    stdout_ref: EvidenceRef | None = None
+    stderr_ref: EvidenceRef | None = None
+    diagnostic_code: str | None = None
+    diagnostic: str | None = None
+    limitations: tuple[str, ...] = ()
+    schema_version: str = CONTRACT_SCHEMA_VERSION
+
+    def validate(self) -> None:
+        if self.schema_version != CONTRACT_SCHEMA_VERSION:
+            raise ContractValidationError(
+                f"quality observation schema {self.schema_version!r} must be {CONTRACT_SCHEMA_VERSION!r}"
+            )
+        if not isinstance(self.capability, QualityCapability):
+            raise ContractValidationError("quality observation capability is invalid")
+        if not isinstance(self.status, QualityCapabilityStatus):
+            raise ContractValidationError("quality observation status is invalid")
+        if not self.tool_id.strip() or not self.tool_version.strip():
+            raise ContractValidationError("quality observation tool and version are required")
+        _validate_quality_paths(self.scope, "scope")
+        if self.duration_ms < 0:
+            raise ContractValidationError("quality observation duration_ms cannot be negative")
+
+        if self.status is QualityCapabilityStatus.COMPLETED and self.result is None:
+            raise ContractValidationError("completed quality observation requires a result")
+        if self.status in {
+            QualityCapabilityStatus.UNAVAILABLE,
+            QualityCapabilityStatus.FAILED,
+        } and self.result is not None:
+            raise ContractValidationError(f"{self.status.value} quality observation cannot contain metrics")
+        if self.status is not QualityCapabilityStatus.COMPLETED:
+            if self.diagnostic_code is None or self.diagnostic is None:
+                raise ContractValidationError(
+                    "incomplete quality observation requires diagnostic code and message"
+                )
+        if self.diagnostic_code is not None and not re.fullmatch(
+            r"[A-Z][A-Z0-9_]{2,63}", self.diagnostic_code
+        ):
+            raise ContractValidationError("quality observation diagnostic_code is invalid")
+        if self.diagnostic is not None:
+            _validate_public_text(self.diagnostic, "quality observation diagnostic", max_chars=500)
+
+        if self.result is not None:
+            expected_type = (
+                CoverageResult
+                if self.capability is QualityCapability.COVERAGE
+                else MutationResult
+            )
+            if not isinstance(self.result, expected_type):
+                raise ContractValidationError("quality observation result does not match capability")
+            self.result.validate()
+            if (
+                self.result.tool_id != self.tool_id
+                or self.result.tool_version != self.tool_version
+                or self.result.scope != self.scope
+                or self.result.duration_ms != self.duration_ms
+            ):
+                raise ContractValidationError("quality observation header differs from result")
+            if self.raw_result_ref != self.result.raw_result_ref:
+                raise ContractValidationError("quality observation raw evidence differs from result")
+
+        for ref in (self.raw_result_ref, self.stdout_ref, self.stderr_ref):
+            if ref is not None:
+                ref.validate()
+        _validate_unique_text(self.limitations, "quality observation limitations")
+
+    def to_dict(self) -> dict[str, Any]:
+        self.validate()
+        value = _primitive(asdict(self))
+        if self.result is not None:
+            value["result"] = self.result.to_dict()
+        return value
+
+
+@dataclass(slots=True, frozen=True)
+class QualityEvaluationReport:
+    observations: tuple[QualityCapabilityObservation, ...]
+    duration_ms: int
+    limitations: tuple[str, ...] = ()
+    schema_version: str = CONTRACT_SCHEMA_VERSION
+
+    def validate(self) -> None:
+        if self.schema_version != CONTRACT_SCHEMA_VERSION:
+            raise ContractValidationError(
+                f"quality report schema {self.schema_version!r} must be {CONTRACT_SCHEMA_VERSION!r}"
+            )
+        if not self.observations:
+            raise ContractValidationError("quality report requires observations")
+        capabilities = [item.capability for item in self.observations]
+        if len(capabilities) != len(set(capabilities)):
+            raise ContractValidationError("quality report capabilities must be unique")
+        if self.duration_ms < 0:
+            raise ContractValidationError("quality report duration_ms cannot be negative")
+        for observation in self.observations:
+            observation.validate()
+        _validate_unique_text(self.limitations, "quality report limitations")
+
+    @property
+    def complete(self) -> bool:
+        return bool(self.observations) and all(
+            item.status is QualityCapabilityStatus.COMPLETED for item in self.observations
+        )
+
+    def to_dict(self) -> dict[str, Any]:
+        self.validate()
+        value = _primitive(asdict(self))
+        value["observations"] = [item.to_dict() for item in self.observations]
+        value["complete"] = self.complete
         return value
 
 
@@ -431,6 +660,41 @@ def _validate_semver(value: str, label: str) -> None:
     parts = value.split(".")
     if len(parts) != 3 or any(not part.isdigit() for part in parts):
         raise ContractValidationError(f"{label} must use numeric major.minor.patch")
+
+
+def _validate_quality_paths(values: tuple[str, ...], label: str) -> None:
+    if not values:
+        raise ContractValidationError(f"quality request {label} cannot be empty")
+    if len(values) != len(set(values)):
+        raise ContractValidationError(f"quality request {label} must be unique")
+    for value in values:
+        _validate_public_text(value, f"quality request {label}", max_chars=300)
+        if "sk-" in value.lower():
+            raise ContractValidationError(f"quality request {label} contains a sensitive value")
+        if not value or "\\" in value:
+            raise ContractValidationError(f"quality request {label} must use POSIX relative paths")
+        path = PurePosixPath(value)
+        if path.is_absolute() or ".." in path.parts or path == PurePosixPath("."):
+            raise ContractValidationError(f"quality request {label} must remain inside the workspace")
+        if path.as_posix() != value:
+            raise ContractValidationError(f"quality request {label} must use canonical paths")
+
+
+def _validate_public_text(value: str, label: str, *, max_chars: int) -> None:
+    if not value.strip() or len(value) > max_chars:
+        raise ContractValidationError(f"{label} must contain between 1 and {max_chars} characters")
+    if any(ord(char) < 32 and char not in "\n\t" for char in value):
+        raise ContractValidationError(f"{label} contains control characters")
+    lowered = value.lower()
+    if any(marker in lowered for marker in ("api_key=", "password=", "token=", "secret=")):
+        raise ContractValidationError(f"{label} contains a sensitive value")
+
+
+def _validate_unique_text(values: tuple[str, ...], label: str) -> None:
+    if len(values) != len(set(values)):
+        raise ContractValidationError(f"{label} must be unique")
+    for value in values:
+        _validate_public_text(value, label, max_chars=500)
 
 
 def _validate_metric_header(

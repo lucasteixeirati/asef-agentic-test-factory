@@ -271,6 +271,7 @@ class JsonRunStore:
                 "description": state.request.requirement_description,
             },
             "evaluation": evaluation,
+            "quality": state.facts.get("quality"),
             "execution": execution.to_dict() if execution else None,
             "usage": {
                 "model_calls": state.usage.model_calls,
@@ -298,6 +299,14 @@ class JsonRunStore:
             f"- Failed: `{evaluation.get('failed', 'unknown')}`\n"
             f"- Conclusion: {self._markdown_text(str(evaluation.get('conclusion', '')))}\n"
         )
+        quality = state.facts.get("quality")
+        if isinstance(quality, dict):
+            markdown += (
+                "\n## Quality capabilities\n\n"
+                f"- Complete: `{quality.get('complete', False)}`\n"
+                f"- Observations: `{len(quality.get('observations', [])) if isinstance(quality.get('observations'), list) else 0}`\n"
+                "- Interpretation: evidence only; no universal threshold applied.\n"
+            )
         (run_dir / "report.md").write_text(markdown, encoding="utf-8")
         self._write_state_files(run_dir, state)
         return "report.md"

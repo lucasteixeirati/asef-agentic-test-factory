@@ -136,8 +136,11 @@ class PythonReferenceProfileTests(unittest.TestCase):
         self.assertEqual(profile.target_support_level, "reference")
         statuses = {item.capability_id: item.implementation_status for item in profile.capabilities}
         self.assertEqual(statuses["unit"], "partial")
-        self.assertEqual(statuses["coverage"], "planned")
-        self.assertEqual(statuses["mutation"], "planned")
+        self.assertEqual(statuses["coverage"], "available")
+        self.assertEqual(statuses["mutation"], "available")
+        adapters = {item.capability_id: item.adapter_id for item in profile.capabilities}
+        self.assertEqual(adapters["coverage"], "python-quality-docker")
+        self.assertEqual(adapters["mutation"], "python-quality-docker")
 
     def test_reference_and_defective_suts_are_distinct_and_immutable_fixtures(self) -> None:
         correct = _load_module(

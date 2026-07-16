@@ -2,7 +2,7 @@
 
 - **Plano:** `docs/project/stage-05-alpha-python-plan.md`
 - **Gate:** `docs/project/gates/gate-05-acceptance-plan.md`
-- **Estado atual:** incrementos 5.1 a 5.4 concluídos e publicados como pré-alpha `v0.1.0a3`
+- **Estado atual:** incrementos 5.1 a 5.5 concluídos; candidata `0.1.0a4` do 5.6 pronta para commit e CI pública
 
 ## 5.1 — Contratos, ADRs e suíte de referência
 
@@ -198,3 +198,35 @@ Na revisão local, uma primeira execução encontrou excesso de comprimento nos 
 O commit funcional `06cc892` foi publicado em `main`. A CI `29442732993` aprovou os quatro jobs: `core`, `framework-spikes`, `docker-security` e o novo `alpha-smoke`. Este último confirmou 20/20 em duas repetições keyless, validou o report, passou no secret scan e publicou os reports sanitizados. O incremento 5.5 está concluído; o próximo passo depende de aprovação explícita para planejar o 5.6.
 
 A revisão da baseline corrigiu o desenho do SMK-006: sintaxe inválida continua bloqueada antes do Docker; o caso usa erro de coleta sintaticamente válido, alcança `TEST_ERROR`, consome exatamente uma correção e termina aceito.
+
+## 5.6 — Coverage e mutation do SUT
+
+O planejamento detalhado foi produzido e aprovado em 2026-07-15 e está em `docs/project/stage-05-increment-56-plan.md`. A implementação local das seis fatias foi concluída; publicação e confirmação da CI permanecem pendentes.
+
+O plano separa qualidade da aceitação funcional, propõe uma imagem Docker própria para coverage/mutation e mantém o SUT original read-only. Coverage usará JSON nativo com linhas e branches separados. A primeira fatia deverá caracterizar mutmut `3.6.0`, seus estados e uma forma honesta de limitar mutantes antes de consolidar o adapter.
+
+G5-12 e G5-13 estão atendidos localmente e aguardam a prova do novo job público. As capabilities `coverage` e `mutation` foram promovidas para `available` somente depois das provas de conformance e integração no SUT de referência.
+
+### Fatia 5.6.1 — caracterização e contratos
+
+Lucas aprovou o plano em 2026-07-15. A versão pinada do mutmut foi caracterizada a partir do wheel oficial: a ferramenta possui metadata JSON interna e seleção por nomes, mas não oferece `--max-mutants`. O desenho passou a usar descoberta, admissão canônica e execução somente do subconjunto admitido, sempre sob hard timeout do host.
+
+Foram implementados `QualityCapabilityRequest`, `QualityCapabilityObservation`, `QualityEvaluationReport`, estados explícitos de disponibilidade/parcialidade e `MutationAdmission`. `MutationResult` agora diferencia total descoberto de total processado: o budget limita os processados e `not_run` preserva os deferidos.
+
+A caracterização está em `docs/quality/mutmut-3.6.0-characterization.md`. A imagem pinada e os adapters confirmaram no container Linux que a descoberta pode ser separada da execução e que somente os mutantes admitidos pelo budget são enviados ao comando público.
+
+### Fatias 5.6.2 a 5.6.6 — imagem, adapters, orquestração e CI
+
+Foi criada a imagem separada `asef/python-quality:coverage-7.10.7-mutmut-3.6.0`, baseada no mesmo digest Python do perfil e com dependências transitivas fixadas por hashes. O driver executa coverage com branch mode e JSON nativo. Para mutation, copia o workspace read-only para `/tmp`, substitui a configuração do SUT por uma configuração controlada, descobre metadata da versão pinada, admite nomes canônicos e chama `mutmut run` apenas para o subconjunto admitido.
+
+A fixture de conformance congelou coverage em 7/8 linhas e 1/2 branches. Mutation descobriu cinco mutantes, admitiu três e deferiu dois; entre os admitidos houve um morto e dois sobreviventes. O adapter resolve a tag para image ID, mantém rede bloqueada, root filesystem e fonte read-only, output gravável separado, limites de CPU/memória/PIDs e hard timeout com remoção do container.
+
+O serviço `QualityEvaluationService` só enriquece runs funcionalmente `SUCCEEDED/ACCEPTED`. Outputs nativos, driver, stdout/stderr, resultados normalizados e observations são persistidos atomicamente por `EvidenceRef`; indisponibilidade, falha, output inválido e budget esgotado não fabricam métricas nem alteram a classificação funcional. Reports JSON/Markdown receberam uma seção irmã `quality` sem threshold universal.
+
+Na baseline real do SUT de referência, coverage observou 11/11 linhas e 2/2 branches. Mutation descobriu nove mutantes, admitiu oito, matou cinco, deixou três sobreviventes e registrou um deferido, com score informativo de 62,5%. A duração local observada foi cerca de 6,4 segundos, variável por ambiente. Os hashes dos fontes permaneceram idênticos.
+
+A regressão local descobriu 253 testes, executou 226 e ignorou 27 integrações opcionais, alcançando branch coverage de 86%. A matriz Docker aprovou 17 de 18 testes; o único skip é a limitação já conhecida de privilégio para criar symlink no Windows. O Smoke Dataset permaneceu 20/20 com o hash estável `c37834768ad1d2e457e30197a86766f631a49a5441e1ca1a02c7171c1e38019d`. O workflow ganhou o job `quality-capabilities`, que constrói a imagem, executa conformance/baseline, testa falha/timeout, faz secret scan e publica evidências sanitizadas por sete dias.
+
+Durante a revisão foram corrigidos cinco findings: serialização aninhada perdia percentuais derivados; o store misturava paths absolutos e relativos no Windows; uma falha de normalização poderia descartar o output nativo; stdout/stderr precisavam de sanitização explícita; e o report Alpha precisava ser reemitido após o enriquecimento. A composição da CI também recebeu opt-in separado para a imagem de quality, preservando o job Docker histórico. O incremento compõe a candidata `0.1.0a4`, pronta para commit e validação pública; ainda não está publicado.
+
+Wheel e sdist `0.1.0a4` foram construídos em ambiente isolado, inspecionados e aprovados pelo secret scan. O wheel foi instalado sem dependências em venv novo, identificado como `0.1.0a4`, e a demo keyless fora do checkout terminou `SUCCEEDED`/`ACCEPTED`. Hashes, findings e parecer estão em `docs/reviews/2026-07-15-revisao-final-incremento-56.md`.

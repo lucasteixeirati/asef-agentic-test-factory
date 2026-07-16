@@ -94,6 +94,49 @@ class RunAlphaCaseServiceTests(unittest.TestCase):
             self.assertEqual(result.attempts_executed, 1)
             self.assertTrue(state.facts["workspace"]["ephemeral_removed_before_evaluation"])
 
+    def test_accepted_case_runs_requested_quality_after_functional_evaluation(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            run_dir = Path(directory) / "run"
+            workspace = run_dir / "workspace"
+            workspace.mkdir(parents=True)
+            state = SkeletonRunState(request())
+            initial = artifact()
+            context = SimpleNamespace()
+            generated = GenerateUnitResult(
+                state, run_dir, context, initial, SimpleNamespace(workspace=workspace)
+            )
+
+            class Generation:
+                def execute(self, value):
+                    return generated
+
+            class Evaluation:
+                def execute(self, state, run_dir, context, artifact, oracle_ref):
+                    state.status = RunStatus.SUCCEEDED
+                    state.classification = RunClassification.ACCEPTED
+                    return AlphaEvaluationResult(state, artifact, 1)
+
+            quality_report = object()
+
+            class Quality:
+                def execute(self, state, actual_run_dir, actual_context, artifact, requests):
+                    self.arguments = (state, actual_run_dir, actual_context, artifact, requests)
+                    return SimpleNamespace(report=quality_report)
+
+            quality = Quality()
+            requests = (object(),)
+            result = RunAlphaCaseService(Generation(), Evaluation(), quality).execute(
+                request(), None, requests  # type: ignore[arg-type]
+            )
+            self.assertIs(result.quality_report, quality_report)
+            self.assertEqual(quality.arguments[1:], (run_dir, context, initial, requests))
+
+            workspace.mkdir()
+            with self.assertRaisesRegex(ValueError, "no quality service"):
+                RunAlphaCaseService(Generation(), Evaluation()).execute(
+                    request(), None, requests  # type: ignore[arg-type]
+                )
+
 
 class RecordedCorrectionSequenceTests(unittest.TestCase):
     def test_recorded_agent_delivers_correction_only_when_requested(self) -> None:

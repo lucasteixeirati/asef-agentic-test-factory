@@ -85,3 +85,29 @@ jobs:
           if-no-files-found: error
           include-hidden-files: true
           retention-days: 7
+
+  quality-capabilities:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Install the public package
+        run: python -m pip install .
+      - name: Build pinned quality tool image
+        run: docker build --tag asef/python-quality:coverage-7.10.7-mutmut-3.6.0 tooling/python-quality
+      - name: Run bounded quality conformance and reference integration
+        run: env -u OPENAI_API_KEY PYTHONPATH=src ASEF_RUN_DOCKER_TESTS=1 ASEF_RUN_QUALITY_DOCKER_TESTS=1 ASEF_KEEP_QUALITY_EVIDENCE=1 python -m unittest discover -s tests/integration -p 'test_quality*.py' -v
+      - name: Run quality contracts, failure and timeout tests
+        run: PYTHONPATH=src python -m unittest discover -s tests -p 'test_quality*.py' -v
+      - name: Scan retained quality evidence for secret signatures
+        run: python tools/secret_scan.py .asef
+      - name: Publish sanitized quality evidence
+        uses: actions/upload-artifact@v7
+        with:
+          name: python-quality-evidence
+          path: .asef/quality-evaluation-*/**/quality/**
+          if-no-files-found: error
+          include-hidden-files: true
+          retention-days: 7
