@@ -2,7 +2,7 @@
 
 - **Plano:** `docs/project/stage-05-alpha-python-plan.md`
 - **Gate:** `docs/project/gates/gate-05-acceptance-plan.md`
-- **Estado atual:** incrementos 5.1 a 5.5 concluídos; candidata `0.1.0a4` do 5.6 pronta para commit e CI pública
+- **Estado atual:** incrementos 5.1 a 5.5 concluídos; candidata `0.1.0a4` do 5.6 aprovada na CI e pronta para publicação
 
 ## 5.1 — Contratos, ADRs e suíte de referência
 
@@ -230,3 +230,5 @@ A regressão local descobriu 253 testes, executou 226 e ignorou 27 integrações
 Durante a revisão foram corrigidos cinco findings: serialização aninhada perdia percentuais derivados; o store misturava paths absolutos e relativos no Windows; uma falha de normalização poderia descartar o output nativo; stdout/stderr precisavam de sanitização explícita; e o report Alpha precisava ser reemitido após o enriquecimento. A composição da CI também recebeu opt-in separado para a imagem de quality, preservando o job Docker histórico. O incremento compõe a candidata `0.1.0a4`, pronta para commit e validação pública; ainda não está publicado.
 
 Wheel e sdist `0.1.0a4` foram construídos em ambiente isolado, inspecionados e aprovados pelo secret scan. O wheel foi instalado sem dependências em venv novo, identificado como `0.1.0a4`, e a demo keyless fora do checkout terminou `SUCCEEDED`/`ACCEPTED`. Hashes, findings e parecer estão em `docs/reviews/2026-07-15-revisao-final-incremento-56.md`.
+
+O commit funcional `654cd6d` (`feat: add bounded Python quality capabilities`) foi publicado em `main`. A CI `29461154744` aprovou os cinco jobs: `core`, `framework-spikes`, `docker-security`, `alpha-smoke` e o novo `quality-capabilities`. Este último construiu a imagem pinada, aprovou conformance e baseline, executou os cenários de falha/timeout, passou no secret scan e publicou evidências sanitizadas. A candidata está aprovada tecnicamente; resta o commit documental de fechamento e sua CI antes da tag/pré-release.

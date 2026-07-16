@@ -1,7 +1,7 @@
 # Incremento 5.6 — Coverage e mutation do SUT
 
 - **Data:** 2026-07-15
-- **Estado:** implementação e revisão local concluídas; candidata `0.1.0a4` preparada; CI pública pendente
+- **Estado:** implementação e revisão concluídas; candidata `0.1.0a4` aprovada nos cinco jobs da CI; publicação pendente
 - **Dependências:** incrementos 5.1 a 5.5 concluídos; Smoke Dataset 20/20 aprovado na CI
 - **Gate relacionado:** G5-12 e G5-13, com evidência complementar para G5-05, G5-09, G5-15, G5-17 e G5-20
 - **Decisão para implementar:** aprovada explicitamente em 2026-07-15

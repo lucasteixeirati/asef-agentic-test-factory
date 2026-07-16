@@ -3,13 +3,13 @@
 - **Data:** 2026-07-15
 - **Candidata:** `0.1.0a4`
 - **Escopo:** coverage e mutation do SUT Python, evidências, reports e CI dedicada
-- **Estado:** aprovada localmente; commit, CI pública, tag e release pendentes
+- **Estado:** aprovada localmente e na CI `29461154744`; tag e release pendentes
 
 ## Parecer
 
 O incremento 5.6 atende localmente aos critérios técnicos do plano. Coverage e mutation são executados por adapter Docker separado, com imagem e ferramentas pinadas, fonte original read-only, rede bloqueada, outputs nativos preservados, normalização tipada e budgets de tempo/quantidade. As métricas enriquecem apenas runs funcionalmente aceitas e não alteram sua classificação.
 
-G5-12 e G5-13 podem ser considerados atendidos localmente. O encerramento formal depende do novo job público `quality-capabilities` e da preservação dos jobs anteriores.
+G5-12 e G5-13 estão atendidos. O novo job público `quality-capabilities` e os quatro jobs anteriores foram aprovados na run `29461154744`.
 
 ## Findings fechados
 
@@ -43,9 +43,8 @@ G5-12 e G5-13 podem ser considerados atendidos localmente. O encerramento formal
 
 - metadata do mutmut é interna à versão pinada e exige nova conformance em qualquer upgrade;
 - a imagem de quality precisa ser construída localmente enquanto não houver distribuição por registry;
-- a baseline demonstra o perfil Python de referência limitado, não um threshold universal nem suporte a repositórios arbitrários;
-- publicação de tag/release depende de todos os cinco jobs verdes na CI pública.
+- a baseline demonstra o perfil Python de referência limitado, não um threshold universal nem suporte a repositórios arbitrários.
 
 ## Próxima decisão
 
-Publicar o commit da candidata, acompanhar a CI e, somente com os cinco jobs aprovados, criar a tag anotada e a pré-release `v0.1.0a4`.
+Publicar o commit documental de fechamento, confirmar sua CI e então criar a tag anotada e a pré-release `v0.1.0a4`.

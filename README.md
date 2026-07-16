@@ -10,7 +10,7 @@ Este repositório também registra a jornada de desenvolvimento assistido por IA
 
 ## Estado atual
 
-**Experimental — pré-alpha.** Os incrementos 5.1 a 5.4 foram publicados como [`v0.1.0a3`](https://github.com/lucasteixeirati/asef-agentic-test-factory/releases/tag/v0.1.0a3), e o 5.5 foi concluído com Smoke Dataset 20/20 local e na CI. O 5.6 implementa coverage e mutation do SUT com imagem pinada, budgets e evidências e compõe a candidata `0.1.0a4`; a CI pública dessa candidata ainda está pendente. O fluxo combinado do 5.3 ainda não integra a CLI pública. O projeto não deve ser usado para executar código arbitrariamente hostil ou em produção.
+**Experimental — pré-alpha.** Os incrementos 5.1 a 5.4 foram publicados como [`v0.1.0a3`](https://github.com/lucasteixeirati/asef-agentic-test-factory/releases/tag/v0.1.0a3), e o 5.5 foi concluído com Smoke Dataset 20/20 local e na CI. O 5.6 implementa coverage e mutation do SUT com imagem pinada, budgets e evidências; a candidata `0.1.0a4` foi aprovada pelos cinco jobs da CI e aguarda apenas publicação da tag/release. O fluxo combinado do 5.3 ainda não integra a CLI pública. O projeto não deve ser usado para executar código arbitrariamente hostil ou em produção.
 
 Já demonstrado:
 
@@ -144,7 +144,7 @@ As tarifas não são congeladas no repositório. Confirme preço, câmbio, model
 2. Contratos, workflow e avaliação — concluído.
 3. Spikes arquiteturais — revisão técnica concluída.
 4. Walking skeleton e hardening — concluídos; Gate 4 aprovado.
-5. Alpha Python — incrementos 5.1 a 5.4 publicados como pré-alpha `0.1.0a3`; 5.5 concluído com Smoke Dataset 20/20; 5.6 preparado como candidata `0.1.0a4`, aguardando CI pública.
+5. Alpha Python — incrementos 5.1 a 5.4 publicados como pré-alpha `0.1.0a3`; 5.5 concluído com Smoke Dataset 20/20; candidata `0.1.0a4` do 5.6 aprovada em cinco jobs da CI e pronta para publicação.
 
 O Smoke Dataset Alpha pode ser executado de forma determinística e sem chave de provider:
 
