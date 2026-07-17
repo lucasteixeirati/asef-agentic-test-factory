@@ -2,7 +2,7 @@
 
 - **Plano:** `docs/project/stage-05-alpha-python-plan.md`
 - **Gate:** `docs/project/gates/gate-05-acceptance-plan.md`
-- **Estado atual:** incrementos 5.1 a 5.7 publicados até `v0.1.0a5`; seis fatias do 5.8 concluídas localmente na candidata `0.1.0a6`, aguardando checkpoint de CI/publicação
+- **Estado atual:** incrementos 5.1 a 5.7 publicados até `v0.1.0a5`; candidata `0.1.0a6` do 5.8 aprovada na CI pública, aguardando decisão de tag/pré-release
 
 ## 5.1 — Contratos, ADRs e suíte de referência
 
@@ -325,7 +325,7 @@ Lucas aprovou o planejamento detalhado e autorizou separadamente as fatias 5.8.1
 
 O plano executável está em `docs/project/stage-05-increment-58-plan.md`. Ele propõe seis fatias: contrato/schema; builder e cobertura de terminais; jornada pública; arquitetura/contribuição; package audit e job `public-experience`; revisão/candidata. Participante externo real, retrospectiva final e Gate 5 permanecem fora do 5.8.
 
-Contrato/schema/threat model da 5.8.1, publicação da 5.8.2, jornada pública da 5.8.3, arquitetura/contribuição da 5.8.4, experiência instalada/CI da 5.8.5 e revisão/candidata da 5.8.6 foram concluídos localmente. Commit/push, CI pública, tag e release dependem de decisões explícitas.
+Contrato/schema/threat model da 5.8.1, publicação da 5.8.2, jornada pública da 5.8.3, arquitetura/contribuição da 5.8.4, experiência instalada/CI da 5.8.5 e revisão/candidata da 5.8.6 foram concluídos. O commit `9739c1e` foi enviado à `main` após aprovação explícita e passou na matriz pública de sete jobs. Tag e pré-release dependem de nova decisão explícita.
 
 ### Fatia 5.8.1 — contrato, schema e threat model do report
 
@@ -381,4 +381,4 @@ O walkthrough frio partiu de diretório vazio, instalou o wheel com `--no-deps` 
 
 Smoke `smoke-20260717T151010Z-359283e8` permaneceu 20/20; Security `security-20260717T151032Z-e354e383` permaneceu 12/12. A matriz Docker/quality descobriu 20 integrações, aprovou 17 e manteve três skips conhecidos do host Windows; as duas provas Linux ignoradas localmente passaram 2/2 em container isolado. A regressão aprovou 345 testes, com 33 skips opcionais e branch coverage de 85,34%.
 
-O parecer técnico recomenda o checkpoint da candidata, mas nenhuma mutação remota ocorreu. Commit/push, execução dos sete jobs, tag, pré-release, conclusão do 5.8 e Gate 5 dependem de autorizações humanas explícitas. Parecer: `docs/reviews/2026-07-17-revisao-fatia-586.md`; walkthrough: `docs/reviews/2026-07-17-walkthrough-frio-58.md`.
+Lucas aprovou o checkpoint de commit/push/CI. O commit `9739c1e` foi enviado à `main` e a [CI pública `29597109452`](https://github.com/lucasteixeirati/asef-agentic-test-factory/actions/runs/29597109452) aprovou `core`, `framework-spikes`, `docker-security`, `alpha-smoke`, `quality-capabilities`, `alpha-security` e `public-experience`. Tag, pré-release, conclusão do 5.8 e Gate 5 continuam dependentes de autorizações humanas explícitas. Parecer: `docs/reviews/2026-07-17-revisao-fatia-586.md`; walkthrough: `docs/reviews/2026-07-17-walkthrough-frio-58.md`.

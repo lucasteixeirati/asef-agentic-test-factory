@@ -1,7 +1,7 @@
 # Revisão técnica — fatia 5.8.6
 
 - **Data:** 2026-07-17
-- **Estado:** candidata local aprovada tecnicamente; publicação depende de decisão humana
+- **Estado:** candidata aprovada tecnicamente e nos sete jobs públicos; publicação depende de decisão humana
 - **Escopo:** versão candidata, walkthrough frio, regressões, package/scanner e fechamento documental
 
 ## Findings corrigidos
@@ -35,5 +35,4 @@
 
 ## Parecer
 
-A implementação local das seis fatias do 5.8 está tecnicamente pronta para o checkpoint de candidata `0.1.0a6`. O incremento não deve ser declarado publicado nem concluído antes de: revisão humana deste parecer; autorização explícita para commit/push e CI; sete jobs verdes; nova revisão dos artifacts construídos no commit; e autorização separada para tag/pré-release. Gate 5, 5.9 e Etapa 6 permanecem decisões independentes.
-
+A implementação das seis fatias do 5.8 foi consolidada no commit `9739c1e`. Após autorização explícita de Lucas, o commit foi enviado à `main` e a [CI pública `29597109452`](https://github.com/lucasteixeirati/asef-agentic-test-factory/actions/runs/29597109452) aprovou os sete jobs, inclusive `public-experience`. A candidata `0.1.0a6` está apta ao checkpoint separado de tag/pré-release; o incremento ainda não deve ser declarado publicado nem concluído sem essa decisão. Gate 5, 5.9 e Etapa 6 permanecem decisões independentes.

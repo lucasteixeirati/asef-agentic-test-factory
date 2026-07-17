@@ -1,10 +1,10 @@
 # Incremento 5.8 — Relatórios e experiência pública
 
 - **Data:** 2026-07-16
-- **Estado:** aprovado; seis fatias concluídas localmente, candidata `0.1.0a6` aguarda checkpoint humano de commit/push/CI
+- **Estado:** aprovado; seis fatias concluídas e candidata `0.1.0a6` aprovada na CI pública, aguardando decisão de tag/pré-release
 - **Dependências:** incrementos 5.1 a 5.7 concluídos e publicados até `v0.1.0a5`
 - **Gate relacionado:** G5-05, G5-14 e G5-18, com evidência complementar para G5-01, G5-02, G5-09, G5-15, G5-17, G5-19 e G5-20
-- **Decisão vigente:** Lucas aprovou separadamente as seis fatias. A conclusão técnica local da 5.8.6 não autoriza commit/push, CI, tag, pré-release, conclusão do 5.8, Gate 5 ou Etapa 6
+- **Decisão vigente:** Lucas aprovou separadamente as seis fatias e o checkpoint de commit/push/CI. Tag, pré-release, conclusão do 5.8, Gate 5 e Etapa 6 continuam sem autorização
 
 ## 1. Objetivo
 
@@ -572,7 +572,7 @@ Cada fatia termina com testes e revisão próprios. A autorização de uma fatia
 
 **Progresso da 5.8.5 em 2026-07-17:** o checker offline passou a validar arquivos/links/anchors, versão, comandos, paths, claims, placeholders e fontes canônicas. O auditor instalado reconciliou doctor, stdout, state, manifest, contrato/schema empacotado, Markdown e hashes fora do checkout. A imagem quality foi corretamente reclassificada como opcional no doctor da demo. O sétimo job `public-experience` foi adicionado sem acoplar os seis existentes. Os critérios 29 e 30 foram atendidos localmente; execução pública, candidata e decisão final continuam na 5.8.6.
 
-**Progresso da 5.8.6 em 2026-07-17:** metadata e fallbacks foram promovidos para `0.1.0a6`; JSON Schema passou a ser executado por validator Draft 2020-12 pinado; walkthrough frio em diretório vazio foi aprovado. Smoke 20/20, Security 12/12, Docker/quality 17/20 com três skips conhecidos, provas Linux 2/2, regressão de 345 testes/33 skips e coverage 85,34% ficaram verdes localmente. A candidata aguarda revisão humana e autorização para commit/push/CI; tag, release e Gate 5 não estão autorizados.
+**Progresso da 5.8.6 em 2026-07-17:** metadata e fallbacks foram promovidos para `0.1.0a6`; JSON Schema passou a ser executado por validator Draft 2020-12 pinado; walkthrough frio em diretório vazio foi aprovado. Smoke 20/20, Security 12/12, Docker/quality 17/20 com três skips conhecidos, provas Linux 2/2, regressão de 345 testes/33 skips e coverage 85,34% ficaram verdes localmente. Após aprovação humana, o commit `9739c1e` foi enviado à `main` e os sete jobs da CI pública `29597109452` passaram. Tag, release e Gate 5 não estão autorizados.
 
 ## 13. Critérios de aceite
 
