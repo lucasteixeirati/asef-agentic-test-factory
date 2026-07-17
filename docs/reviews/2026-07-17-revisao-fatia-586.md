@@ -1,7 +1,7 @@
 # Revisão técnica — fatia 5.8.6
 
 - **Data:** 2026-07-17
-- **Estado:** candidata aprovada tecnicamente e nos sete jobs públicos; publicação depende de decisão humana
+- **Estado:** aprovada, publicada e encerrada em `v0.1.0a6`
 - **Escopo:** versão candidata, walkthrough frio, regressões, package/scanner e fechamento documental
 
 ## Findings corrigidos
@@ -35,4 +35,4 @@
 
 ## Parecer
 
-A implementação das seis fatias do 5.8 foi consolidada no commit `9739c1e`. Após autorização explícita de Lucas, o commit foi enviado à `main` e a [CI pública `29597109452`](https://github.com/lucasteixeirati/asef-agentic-test-factory/actions/runs/29597109452) aprovou os sete jobs, inclusive `public-experience`. A candidata `0.1.0a6` está apta ao checkpoint separado de tag/pré-release; o incremento ainda não deve ser declarado publicado nem concluído sem essa decisão. Gate 5, 5.9 e Etapa 6 permanecem decisões independentes.
+A implementação das seis fatias do 5.8 foi consolidada no commit `9739c1e`. Após autorização explícita de Lucas, o commit foi enviado à `main` e a [CI pública `29597109452`](https://github.com/lucasteixeirati/asef-agentic-test-factory/actions/runs/29597109452) aprovou os sete jobs, inclusive `public-experience`. O fechamento `ddeeb3a` passou novamente nos sete jobs em `29597666988`. Após autorização separada, a tag anotada e a [pré-release `v0.1.0a6`](https://github.com/lucasteixeirati/asef-agentic-test-factory/releases/tag/v0.1.0a6) foram publicadas com wheel e sdist auditados. O incremento 5.8 está concluído; Gate 5, 5.9 e Etapa 6 permanecem decisões independentes.

@@ -2,7 +2,7 @@
 
 > Documento vivo para orientar a construção da aplicação, da documentação pública e do futuro livro.
 
-**Status:** vigente — 5.1 a 5.7 publicados até `v0.1.0a5`; candidata 5.8/`0.1.0a6` aprovada na CI pública e aguardando decisão de publicação
+**Status:** vigente — 5.1 a 5.8 publicados até `v0.1.0a6`; 5.9 e Gate 5 aguardam decisão humana
 **Data de início:** 2026-07-11  
 **Responsável:** Lucas  
 **Natureza:** projeto open source, educacional, experimental e de portfólio  
@@ -746,7 +746,7 @@ As datas serão estimadas após a baseline das primeiras sessões. Os gates são
 **Plano executável:** `docs/project/stage-05-alpha-python-plan.md`
 
 **Plano de aceite:** `docs/project/gates/gate-05-acceptance-plan.md`
-**Status:** 5.1 a 5.7 concluídos e publicados até `v0.1.0a5`. A candidata `0.1.0a6` do 5.8 passou nas regressões locais e nos sete jobs da CI pública `29597109452`, no commit `9739c1e`. Tag, pré-release e conclusão do incremento aguardam decisão humana. O Gate 5 permanece em execução por causa do checkpoint de publicação do 5.8 e do incremento 5.9.
+**Status:** 5.1 a 5.8 concluídos e publicados até [`v0.1.0a6`](https://github.com/lucasteixeirati/asef-agentic-test-factory/releases/tag/v0.1.0a6). A implementação `9739c1e` e o fechamento documental `ddeeb3a` passaram nas matrizes públicas de sete jobs `29597109452` e `29597666988`. O Gate 5 permanece em execução por causa do incremento 5.9.
 
 **Aplicação**
 
@@ -1078,4 +1078,4 @@ Estas questões serão decididas nas etapas indicadas, não agora:
 
 ## 27. Próxima decisão
 
-Revisar a candidata `0.1.0a6`, já aprovada nos sete jobs da CI pública `29597109452`, e autorizar, ajustar ou rejeitar sua tag/pré-release. Conclusão do 5.8, 5.9, Gate 5 e Etapa 6 continuam decisões posteriores e separadas.
+Decidir se o incremento 5.9 — avaliação externa e fechamento — deve ser planejado detalhadamente. Gate 5 e Etapa 6 continuam decisões posteriores e separadas.

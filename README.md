@@ -8,7 +8,7 @@ O ASEF investiga como LLMs podem propor análises e testes sem receber autoridad
 
 **Experimental — pré-alpha. Não use em produção nem contra código arbitrariamente hostil.**
 
-A última pré-release publicada é [`v0.1.0a5`](https://github.com/lucasteixeirati/asef-agentic-test-factory/releases/tag/v0.1.0a5), com os incrementos 5.1 a 5.7. A linha de desenvolvimento contém as fatias 5.8.1 a 5.8.6 na candidata local `0.1.0a6`, ainda sem tag ou publicação; isso não transforma a release anterior em uma release 5.8.
+A última pré-release publicada é [`v0.1.0a6`](https://github.com/lucasteixeirati/asef-agentic-test-factory/releases/tag/v0.1.0a6), com os incrementos 5.1 a 5.8. Ela permanece experimental, pré-alpha e inadequada para produção ou código arbitrariamente hostil.
 
 Comprovado até aqui:
 
@@ -141,8 +141,8 @@ Quality capabilities enriquecem evidência, mas não mudam a classificação fun
 
 1. visão, domínio, contratos e spikes — concluídos;
 2. walking skeleton e hardening — concluídos;
-3. Alpha Python 5.1 a 5.7 — publicado até `v0.1.0a5`;
-4. relatórios e experiência pública 5.8 — em desenvolvimento;
+3. Alpha Python 5.1 a 5.7 — concluído;
+4. relatórios e experiência pública 5.8 — publicado em `v0.1.0a6`;
 5. avaliação externa/fechamento 5.9 — pendente;
 6. perfis TypeScript/Java e developer preview — futuros.
 
