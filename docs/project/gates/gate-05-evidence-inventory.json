@@ -1,0 +1,274 @@
+{
+  "schema_version": "1.0.0",
+  "gate_id": "G5",
+  "phase": "INVENTORY",
+  "generated_on": "2026-07-17",
+  "release": {
+    "version": "0.1.0a6",
+    "tag": "v0.1.0a6",
+    "tagged_commit": "ddeeb3a0e309a8acdaba14802cbf62649b0d438c",
+    "implementation_commit": "9739c1e5e524895eceefd59967abb515a78b7029",
+    "published_at": "2026-07-17T16:53:33Z",
+    "url": "https://github.com/lucasteixeirati/asef-agentic-test-factory/releases/tag/v0.1.0a6",
+    "assets": [
+      {
+        "role": "wheel",
+        "name": "asef_agentic_test_factory-0.1.0a6-py3-none-any.whl",
+        "size": 167571,
+        "digest": "sha256:0b40e6597acb1064c15122a7ac96934e7b1e3f62df64bf5ff1dedcd62831ff72",
+        "url": "https://github.com/lucasteixeirati/asef-agentic-test-factory/releases/download/v0.1.0a6/asef_agentic_test_factory-0.1.0a6-py3-none-any.whl"
+      },
+      {
+        "role": "sdist",
+        "name": "asef_agentic_test_factory-0.1.0a6.tar.gz",
+        "size": 497111,
+        "digest": "sha256:b2963ce50ddcb4bf52080510fdc55656a9ab7cd42ff66ce3008c76fac2f46289",
+        "url": "https://github.com/lucasteixeirati/asef-agentic-test-factory/releases/download/v0.1.0a6/asef_agentic_test_factory-0.1.0a6.tar.gz"
+      }
+    ]
+  },
+  "ci_runs": [
+    {
+      "id": 29597109452,
+      "head_sha": "9739c1e5e524895eceefd59967abb515a78b7029",
+      "conclusion": "success",
+      "url": "https://github.com/lucasteixeirati/asef-agentic-test-factory/actions/runs/29597109452",
+      "jobs": [
+        "core",
+        "framework-spikes",
+        "docker-security",
+        "alpha-smoke",
+        "quality-capabilities",
+        "alpha-security",
+        "public-experience"
+      ]
+    },
+    {
+      "id": 29597666988,
+      "head_sha": "ddeeb3a0e309a8acdaba14802cbf62649b0d438c",
+      "conclusion": "success",
+      "url": "https://github.com/lucasteixeirati/asef-agentic-test-factory/actions/runs/29597666988",
+      "jobs": [
+        "core",
+        "framework-spikes",
+        "docker-security",
+        "alpha-smoke",
+        "quality-capabilities",
+        "alpha-security",
+        "public-experience"
+      ]
+    },
+    {
+      "id": 29598190484,
+      "head_sha": "8fba63d1100e19a4010aa655d0b95d2c6d38a514",
+      "conclusion": "success",
+      "url": "https://github.com/lucasteixeirati/asef-agentic-test-factory/actions/runs/29598190484",
+      "jobs": [
+        "core",
+        "framework-spikes",
+        "docker-security",
+        "alpha-smoke",
+        "quality-capabilities",
+        "alpha-security",
+        "public-experience"
+      ]
+    }
+  ],
+  "external_evaluation": {
+    "protocol_version": "1.0.0",
+    "protocol": "docs/evaluations/alpha-python-external-evaluation-protocol.md",
+    "template": "docs/templates/external-evaluation-observation-template.md",
+    "participant_kit": "docs/evaluations/alpha-python-external-evaluation-participant-kit.md",
+    "facilitator_checklist": "docs/evaluations/alpha-python-external-evaluation-facilitator-checklist.md",
+    "preflight": "docs/evaluations/2026-07-17-alpha-python-release-preflight.json",
+    "status": "NOT_STARTED",
+    "results": []
+  },
+  "criteria": [
+    {
+      "id": "G5-01",
+      "status": "MET",
+      "summary": "Wheel e sdist publicados foram auditados e o wheel executou fora do checkout.",
+      "evidence": [
+        "docs/reviews/2026-07-17-walkthrough-frio-58.md",
+        "tests/test_public_experience_audit.py"
+      ]
+    },
+    {
+      "id": "G5-02",
+      "status": "MET",
+      "summary": "A demo e o Smoke Dataset executam sem chave de provider.",
+      "evidence": [
+        "tests/test_smoke_runner.py",
+        "docs/reviews/2026-07-17-revisao-fatia-586.md"
+      ]
+    },
+    {
+      "id": "G5-03",
+      "status": "MET",
+      "summary": "O adapter live compartilha portas, policies e budgets e possui smoke manual documentado.",
+      "evidence": [
+        "docs/reviews/2026-07-14-revisao-final-incremento-54.md",
+        "tests/test_live_agent.py"
+      ]
+    },
+    {
+      "id": "G5-04",
+      "status": "MET",
+      "summary": "O perfil Python executa pytest no adapter Docker controlado.",
+      "evidence": [
+        "tests/integration/test_pytest_adapter_docker.py",
+        "docs/architecture/alpha-python-architecture.md"
+      ]
+    },
+    {
+      "id": "G5-05",
+      "status": "MET",
+      "summary": "Análise, requisitos, tentativas, resultados e evidências são rastreáveis no report tipado.",
+      "evidence": [
+        "tests/test_report_contracts.py",
+        "src/asef/schemas/alpha-run-report.schema.json"
+      ]
+    },
+    {
+      "id": "G5-06",
+      "status": "MET",
+      "summary": "O oracle curado permanece fora do prompt e possui workspace/evidência independente.",
+      "evidence": [
+        "tests/test_oracle_execution.py",
+        "docs/architecture/adr/ADR-009-oracle-combinado-e-isolado-do-prompt.md"
+      ]
+    },
+    {
+      "id": "G5-07",
+      "status": "MET",
+      "summary": "TEST_ERROR permite correção somente do artifact e respeita o limite de duas tentativas.",
+      "evidence": [
+        "tests/test_complete_workflow.py",
+        "datasets/smoke/SMK-006/case.json"
+      ]
+    },
+    {
+      "id": "G5-08",
+      "status": "MET",
+      "summary": "SUT_DEFECT_SUSPECTED exige oracle independente e checkpoint humano.",
+      "evidence": [
+        "tests/test_human_checkpoint.py",
+        "datasets/smoke/SMK-007/case.json"
+      ]
+    },
+    {
+      "id": "G5-09",
+      "status": "MET",
+      "summary": "Policy, budget, infraestrutura e resultado funcional possuem estados e exits distintos.",
+      "evidence": [
+        "tests/test_cli_exit_matrix.py",
+        "src/asef/contracts.py"
+      ]
+    },
+    {
+      "id": "G5-10",
+      "status": "MET",
+      "summary": "SMK-001 a SMK-010 são materializados e executados em duas repetições determinísticas.",
+      "evidence": [
+        "tests/test_smoke_contracts.py",
+        "docs/quality/datasets/catalog.md"
+      ]
+    },
+    {
+      "id": "G5-11",
+      "status": "MET",
+      "summary": "SEC-001 a SEC-012 passam no ambiente de referência e na prova Linux complementar.",
+      "evidence": [
+        "tests/test_security_runner.py",
+        "tests/integration/test_cleanup_linux.py"
+      ]
+    },
+    {
+      "id": "G5-12",
+      "status": "MET",
+      "summary": "Coverage Python é normalizada com linhas, branches, escopo e limitações.",
+      "evidence": [
+        "tests/test_quality_adapter.py",
+        "docs/reviews/2026-07-15-revisao-final-incremento-56.md"
+      ]
+    },
+    {
+      "id": "G5-13",
+      "status": "MET",
+      "summary": "Mutation é admitida e executada dentro de budgets e hard timeout.",
+      "evidence": [
+        "tests/test_quality_evaluation.py",
+        "docs/quality/mutmut-3.6.0-characterization.md"
+      ]
+    },
+    {
+      "id": "G5-14",
+      "status": "MET",
+      "summary": "JSON normativo e Markdown derivado separam fatos, inferências, recomendações e limitações.",
+      "evidence": [
+        "tests/test_alpha_report_publication.py",
+        "docs/guides/report-interpretation.md"
+      ]
+    },
+    {
+      "id": "G5-15",
+      "status": "MET",
+      "summary": "Logs e evidências possuem correlação, limites, retenção e secret scan.",
+      "evidence": [
+        "docs/quality/retention-policy.md",
+        "tools/secret_scan.py"
+      ]
+    },
+    {
+      "id": "G5-16",
+      "status": "MET",
+      "summary": "Doctor diagnostica requisitos com facts allowlisted e sem expor credenciais.",
+      "evidence": [
+        "tests/test_doctor_runner.py",
+        "docs/architecture/doctor.md"
+      ]
+    },
+    {
+      "id": "G5-17",
+      "status": "MET",
+      "summary": "Core permanece neutro em relação a pytest, Docker, provider e workflow opcional.",
+      "evidence": [
+        "tests/test_alpha_contracts.py",
+        "docs/architecture/contracts/alpha-python-contracts.md"
+      ]
+    },
+    {
+      "id": "G5-18",
+      "status": "BLOCKED",
+      "summary": "Main local, walkthrough e auditor estão verdes, mas a documentação congelada em v0.1.0a6 contradiz a identidade da release; PREFLIGHT-F-001 bloqueia a sessão.",
+      "evidence": [
+        "tests/test_docs_check.py",
+        "docs/reviews/2026-07-17-walkthrough-frio-58.md"
+      ]
+    },
+    {
+      "id": "G5-19",
+      "status": "PARTIAL",
+      "summary": "Journals e baseline existem, mas retrospectiva final, Lesson 003 e consolidação pós-Alpha permanecem pendentes.",
+      "evidence": [
+        "docs/project/measurement-baseline.md",
+        "book/source-map.md"
+      ]
+    },
+    {
+      "id": "G5-20",
+      "status": "MET",
+      "summary": "Regressões do Gate 4 e sete jobs públicos permanecem verdes.",
+      "evidence": [
+        ".github/workflows/ci.yml",
+        "docs/project/stage-05-progress.md"
+      ]
+    }
+  ],
+  "decision": {
+    "status": "PENDING_HUMAN",
+    "technical_recommendation": "NOT_READY",
+    "reason": "G5-18 está bloqueado por PREFLIGHT-F-001, G5-19 permanece parcial e a sessão externa não foi iniciada."
+  }
+}

@@ -112,5 +112,6 @@ Na percepção de Lucas, as interações recentes exigiram mais aprimoramentos d
 | Etapa 5.6 — coverage e mutation do SUT | Implementação/CI | 2026-07-15 | 2026-07-15 | 1 | Concluído e publicado em `v0.1.0a4`; cinco jobs verdes |
 | Etapa 5.7 — segurança, doctor e retenção | Implementação/revisão | 2026-07-15 | 2026-07-16 | 2+ | Concluído e publicado em `v0.1.0a5`; seis jobs verdes |
 | Etapa 5.8 — relatórios e experiência pública | Implementação/revisão | 2026-07-16 | 2026-07-17 | 2 | Concluído e publicado em `v0.1.0a6`; walkthrough/regressões e duas matrizes de sete jobs verdes |
+| Etapa 5.9 — avaliação final, livro e Gate 5 | Implementação/revisão | 2026-07-17 | — | 1+ | 5.9.1 aprovada; preflight 5.9.2 ficou `NOT_READY`; candidata corretiva local `0.1.0a7` passou na jornada instalada e aguarda checkpoint de publicação; sessão não iniciada |
 
 Esta baseline é retrospectiva e cobre apenas os registros disponíveis. A medição prospectiva começa após sua criação.

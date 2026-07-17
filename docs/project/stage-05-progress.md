@@ -2,7 +2,7 @@
 
 - **Plano:** `docs/project/stage-05-alpha-python-plan.md`
 - **Gate:** `docs/project/gates/gate-05-acceptance-plan.md`
-- **Estado atual:** incrementos 5.1 a 5.8 publicados até `v0.1.0a6`; 5.9 e Gate 5 aguardam decisão humana
+- **Estado atual:** incrementos 5.1 a 5.8 publicados até `v0.1.0a6`; 5.9.1 aprovada e preflight 5.9.2 bloqueado por divergência documental da tag; Gate 5 pendente
 
 ## 5.1 — Contratos, ADRs e suíte de referência
 
@@ -382,3 +382,35 @@ O walkthrough frio partiu de diretório vazio, instalou o wheel com `--no-deps` 
 Smoke `smoke-20260717T151010Z-359283e8` permaneceu 20/20; Security `security-20260717T151032Z-e354e383` permaneceu 12/12. A matriz Docker/quality descobriu 20 integrações, aprovou 17 e manteve três skips conhecidos do host Windows; as duas provas Linux ignoradas localmente passaram 2/2 em container isolado. A regressão aprovou 345 testes, com 33 skips opcionais e branch coverage de 85,34%.
 
 Lucas aprovou o checkpoint de commit/push/CI. O commit `9739c1e` foi enviado à `main` e a [CI pública `29597109452`](https://github.com/lucasteixeirati/asef-agentic-test-factory/actions/runs/29597109452) aprovou `core`, `framework-spikes`, `docker-security`, `alpha-smoke`, `quality-capabilities`, `alpha-security` e `public-experience`. O fechamento `ddeeb3a` repetiu os sete jobs com sucesso na CI `29597666988`. Após nova autorização explícita, a tag anotada e a [pré-release `v0.1.0a6`](https://github.com/lucasteixeirati/asef-agentic-test-factory/releases/tag/v0.1.0a6) foram publicadas com wheel e sdist auditados. O incremento 5.8 está concluído; 5.9, Gate 5 e Etapa 6 permanecem decisões separadas. Parecer: `docs/reviews/2026-07-17-revisao-fatia-586.md`; walkthrough: `docs/reviews/2026-07-17-walkthrough-frio-58.md`.
+
+## 5.9 — Avaliação final, livro e Gate 5
+
+O planejamento detalhado foi produzido e aprovado em 2026-07-17 e está em `docs/project/stage-05-increment-59-plan.md`. A execução divide o fechamento em seis fatias: inventário/contrato de evidências; ensaio da release; sessão com QE externo; triagem/remediação; baseline/retrospectiva/livro; e pacote decisório do Gate 5.
+
+O plano exige participante humano externo real, consentimento e resultado anonimizado; preflight do mantenedor ou IA não conta. Finding crítico/alto bloqueia recomendação de aprovação. Uma candidata `0.1.0a7` só será proposta se houver mudança material no package ou na jornada pública avaliada.
+
+### Fatia 5.9.1 — inventário e contrato de evidências
+
+Lucas autorizou somente a primeira fatia. O inventário JSON congelou `v0.1.0a6`, commit da tag, commit funcional, wheel/sdist, tamanhos, SHA-256 e três execuções públicas com os sete jobs. A matriz inicial possui G5-01 a G5-20 em ordem e 40 referências locais: 18 `MET`, G5-18 `MET_WITH_RESIDUAL_RISK` até a sessão externa e G5-19 `PARTIAL` até baseline/retrospectiva final.
+
+O protocolo `ASEF-EXT-ALPHA 1.0.0` define elegibilidade, consentimento, coleta mínima, tarefas EXT-01 a EXT-08, intervenções, rubrica e severidade. Nenhum participante foi contatado e `results` permanece vazio. O checker offline rejeita alterações nos digests congelados, jobs/IDs/paths inválidos, aprovação contraditória, PII inclusive aninhada, consentimento/privacidade ausentes, intervenção central e crítico/alto aberto em sessão marcada válida. O `public-experience` passou a executar o checker sem adicionar job ou chamada externa.
+
+O docs checker ganhou consistência da release canônica entre README, quickstart e suporte, corrigindo duas referências históricas encontradas no planejamento. Nove testes do checker e cinco testes documentais passaram; a regressão completa aprovou 355 testes com 33 skips opcionais e branch coverage de 85%. A 5.9.1 está pronta para revisão humana. 5.9.2, participante, sessão, release, Gate 5 e Etapa 6 continuam não autorizados.
+
+Lucas aprovou a 5.9.1 e autorizou somente a 5.9.2.
+
+### Fatia 5.9.2 — ensaio da release e kit do participante
+
+Wheel e sdist foram baixados da release oficial em diretório temporário fora do checkout. Os hashes conferiram; a venv instalou `0.1.0a6` sem dependências; a imagem pytest foi construída do sdist. Doctor retornou `DEGRADED/READY` com 12 checks, a demo terminou `SUCCEEDED/ACCEPTED`, o auditor passou 9/9, cleanup ficou em `DRY_RUN_COMPLETE`, scanner passou e nenhum container gerenciado permaneceu.
+
+O ensaio encontrou `PREFLIGHT-F-001`: README, quickstart e suporte dentro da tag `v0.1.0a6` afirmam que `v0.1.0a5` é a última release e que `0.1.0a6` não foi publicada. A correção existe apenas na árvore local posterior à tag. Como EXT-01/EXT-02 exigem identidade documental imutável, o finding foi classificado alto e aberto. O preflight terminou `BLOCKED/NOT_READY`; kit e checklist ficaram `HOLD`. Nenhum participante foi contatado.
+
+A 5.9.2 satisfez sua regra de parada: runtime aprovado, finding conhecido transformado em bloqueio explícito. A regressão final aprovou 356 testes com 33 skips opcionais e branch coverage de 85%; checker 10/10 e documentação 126 arquivos/107 links permaneceram verdes. A 5.9.3 não está autorizada nem tecnicamente pronta. O próximo checkpoint é decidir se uma candidata corretiva deve ser preparada e auditada antes da sessão.
+
+### Correção do bloqueio da 5.9.2 — candidata local `0.1.0a7`
+
+Lucas autorizou preparar a candidata corretiva, sem autorizar 5.9.3, commit, push, CI, tag ou publicação. O novo `release-state.json` separa a última publicação `v0.1.0a6` da versão em desenvolvimento `0.1.0a7`; metadata, fallbacks e os três documentos canônicos foram reconciliados. O docs checker agora protege ambas as identidades.
+
+Wheel e sdist locais foram construídos e escaneados. Fora do checkout, o sdist passou na auditoria de 126 arquivos/107 links; o wheel instalou sem dependências e reportou `0.1.0a7`; doctor terminou `DEGRADED/READY` com 12 checks; demo `SUCCEEDED/ACCEPTED`; auditor 9/9; cleanup `DRY_RUN_COMPLETE`; scanner verde; zero containers gerenciados. A regressão aprovou 357 testes, 33 skips e coverage de 85%.
+
+Parecer: `READY_FOR_PUBLICATION_CHECKPOINT`. Como os artifacts ainda são locais e mutáveis, `PREFLIGHT-F-001` permanece alto/aberto, kit/checklist permanecem `HOLD` e a 5.9.3 continua bloqueada. Evidência: `docs/evaluations/2026-07-17-alpha-python-candidate-a7-preflight.json`; revisão: `docs/reviews/2026-07-17-revisao-candidata-corretiva-a7.md`.

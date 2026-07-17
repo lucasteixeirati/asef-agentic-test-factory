@@ -10,6 +10,8 @@ O ASEF investiga como LLMs podem propor análises e testes sem receber autoridad
 
 A última pré-release publicada é [`v0.1.0a6`](https://github.com/lucasteixeirati/asef-agentic-test-factory/releases/tag/v0.1.0a6), com os incrementos 5.1 a 5.8. Ela permanece experimental, pré-alpha e inadequada para produção ou código arbitrariamente hostil.
 
+A versão em desenvolvimento é a candidata corretiva local `0.1.0a7`. Ela ainda não foi publicada e não substitui a `v0.1.0a6` até aprovação, tag e pré-release imutável em checkpoint separado.
+
 Comprovado até aqui:
 
 - fluxo demo por cassette, sem chave e sem chamada de provider;
@@ -143,7 +145,7 @@ Quality capabilities enriquecem evidência, mas não mudam a classificação fun
 2. walking skeleton e hardening — concluídos;
 3. Alpha Python 5.1 a 5.7 — concluído;
 4. relatórios e experiência pública 5.8 — publicado em `v0.1.0a6`;
-5. avaliação externa/fechamento 5.9 — pendente;
+5. avaliação externa/fechamento 5.9 — protocolo aprovado; preflight bloqueou sessão por divergência documental da tag;
 6. perfis TypeScript/Java e developer preview — futuros.
 
 Veja o [planejamento mestre](PLANEJAMENTO_MESTRE.md) para gates, dependências e critérios completos.

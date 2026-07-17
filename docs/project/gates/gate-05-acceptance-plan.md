@@ -1,8 +1,9 @@
 # Gate 5 — Plano de aceite do Alpha Python
 
-- **Estado:** execução em andamento; 5.8 publicado em `v0.1.0a6`; 5.9 pendente
+- **Estado:** execução em andamento; 5.8 publicado em `v0.1.0a6`; 5.9.2 bloqueou a sessão e a candidata corretiva local `0.1.0a7` aguarda checkpoint de publicação
 - **Responsável pela decisão final:** Lucas
 - **Ambiente de referência:** Windows, Docker Desktop com backend WSL2 e Python 3.13 suportado pelo package
+- **Inventário mecânico:** `docs/project/gates/gate-05-evidence-inventory.json` — decisão continua pendente e humana
 
 ## Critérios obrigatórios
 
@@ -25,7 +26,7 @@
 | G5-15 | Logs/evidências são correlacionados, limitados e sem secrets | test logs + secret scan | Atendido no 5.7: policy 1.0.0, cleanup, tombstones, debug, scanner e artifacts sanitizados aprovados localmente e no `alpha-security` |
 | G5-16 | `asef doctor` diagnostica requisitos sem expor credenciais | CLI end-to-end | Atendido no 5.7: 12 checks, wheel isolado e validação pública no `alpha-security` aprovados |
 | G5-17 | Core não importa Python tooling, Docker, OpenAI ou LangGraph | import boundaries + job core mínimo | Atendido até `v0.1.0a6`: fronteiras AST e job core aprovados |
-| G5-18 | README, quickstart, tutorial, arquitetura, segurança e limitações refletem o Alpha real | auditoria documental | Atendido no 5.8.6: checker sem findings, walkthrough frio completo e job `public-experience` verde |
+| G5-18 | README, quickstart, tutorial, arquitetura, segurança e limitações refletem o Alpha real | auditoria documental | Bloqueio externo: a candidata local `0.1.0a7` corrige os três documentos e passou no ensaio instalado, mas `v0.1.0a6` permanece a release imutável divergente; `PREFLIGHT-F-001` alto aberto até publicar e baixar novamente os novos assets |
 | G5-19 | Métricas, falhas, decisões humanas e contribuição da IA estão registradas | journal + baseline + retrospectiva | Parcial forte: sincronizado até o início do Dia 6; retrospectiva final 5.9 pendente |
 | G5-20 | CI pública e regressões do Gate 4 permanecem verdes | execução GitHub Actions | Atendido no checkpoint 5.8: commit `9739c1e` aprovado nos sete jobs da CI `29597109452` |
 

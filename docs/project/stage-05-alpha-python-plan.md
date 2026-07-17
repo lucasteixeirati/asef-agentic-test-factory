@@ -1,6 +1,6 @@
 # Etapa 5 — Plano detalhado do Alpha Python de referência
 
-- **Estado:** vigente; incrementos 5.1 a 5.8 publicados até `v0.1.0a6`; 5.9 e Gate 5 pendentes
+- **Estado:** vigente; incrementos 5.1 a 5.8 publicados até `v0.1.0a6`; preflight 5.9.2 `NOT_READY`; candidata corretiva local `0.1.0a7` pronta para checkpoint de publicação; Gate 5 pendente
 - **Planejado em:** 2026-07-13
 - **Pré-condição:** Gate 4 aprovado
 - **Decisão registrada:** plano e quatro escolhas centrais aprovados; execução incremental, começando por 5.1
@@ -245,6 +245,8 @@ Eventos públicos continuam append-only e logs operacionais continuam JSONL. Sa�
 **Entregas:** regressão completa, instalação a partir do wheel em diretório vazio, baseline Alpha, pacote de evidências, retrospectiva, lição aprendida e proposta de release.
 
 **Aceite:** todos os critérios G5 possuem evidência ou risco explícito; CI pública passa; decisão continua humana; nenhuma release estável ou início da Etapa 6 ocorre automaticamente.
+
+**Plano detalhado aprovado:** `docs/project/stage-05-increment-59-plan.md`. O desenho separa preflight de sessão externa real, exige consentimento/minimização, impede simulação por IA e torna qualquer nova pré-release condicional a mudança material. A 5.9.1 foi aprovada; o preflight 5.9.2 passou tecnicamente, mas bloqueou o kit por divergência nos documentos da tag. Nenhuma sessão foi iniciada.
 
 ## 12. Dependências e ordem
 

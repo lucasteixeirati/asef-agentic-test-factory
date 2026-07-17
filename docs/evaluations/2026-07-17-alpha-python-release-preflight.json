@@ -1,0 +1,95 @@
+{
+  "schema_version": "1.0.0",
+  "preflight_id": "ASEF-PF-20260717-592",
+  "executed_on": "2026-07-17",
+  "status": "BLOCKED",
+  "readiness": "NOT_READY",
+  "target_release": {
+    "tag": "v0.1.0a6",
+    "tagged_commit": "ddeeb3a0e309a8acdaba14802cbf62649b0d438c",
+    "assets_downloaded_from_github_release": true,
+    "wheel_digest_verified": true,
+    "sdist_digest_verified": true
+  },
+  "environment": {
+    "host_family": "Windows",
+    "python": "3.13.5",
+    "docker_client": "28.2.2",
+    "docker_server": "28.2.2",
+    "docker_engine_os": "linux",
+    "docker_engine_arch": "amd64"
+  },
+  "installed_journey": {
+    "outside_checkout": true,
+    "empty_session_directory": true,
+    "installed_version": "0.1.0a6",
+    "wheel_installed_without_dependencies": true,
+    "pytest_image_built_from_published_sdist": true,
+    "openai_api_key_absent": true,
+    "doctor": {
+      "status": "DEGRADED",
+      "classification": "READY",
+      "checks": 12,
+      "exit_code": 0,
+      "stderr_empty": true
+    },
+    "demo": {
+      "run_id": "5eaf13f5-57cb-4252-812a-a2275adb1434",
+      "status": "SUCCEEDED",
+      "classification": "ACCEPTED",
+      "report_schema_version": "1.0.0",
+      "exit_code": 0,
+      "stderr_empty": true
+    },
+    "public_experience_audit": {
+      "passed": true,
+      "passed_checks": 9,
+      "total_checks": 9,
+      "report_json_sha256": "530a6129332a8d6f41a637dd96383d3faad2047d9faa4b7e1ff5af44f61d0cb5",
+      "report_markdown_sha256": "1c153dedae2ae21fa53013727b808779c954f5bb72b66f6822e7d1809a8479a9"
+    },
+    "cleanup": {
+      "status": "SUCCEEDED",
+      "classification": "DRY_RUN_COMPLETE",
+      "mode": "DRY_RUN",
+      "exit_code": 0,
+      "stderr_empty": true
+    },
+    "secret_scan": "PASS",
+    "managed_containers_after_run": 0
+  },
+  "documentation_consistency": {
+    "status": "FAIL",
+    "expected_latest_release": "v0.1.0a6",
+    "claims": [
+      {
+        "path": "README.md",
+        "sha256": "6ba0d2a5e74a0d6d8cece91957b6474fb80a4fb20e644cf0a7360470a3f08941",
+        "observed_claim": "v0.1.0a5 is latest and 0.1.0a6 is unpublished"
+      },
+      {
+        "path": "docs/getting-started/quickstart.md",
+        "sha256": "ff0e46e6ec25e121ad553d6eaf27bb10915cd9369b23b52ca7a94f83132ca970",
+        "observed_claim": "v0.1.0a5 is latest and 0.1.0a6 is unpublished"
+      },
+      {
+        "path": "docs/project/support-and-limitations.md",
+        "sha256": "cc60ce12d5788cba1e9696d5e9ca0a798b3cd8a2861b912e881d435c9c2d45a5",
+        "observed_claim": "0.1.0a5 is latest and 0.1.0a6 is unpublished"
+      }
+    ]
+  },
+  "findings": [
+    {
+      "id": "PREFLIGHT-F-001",
+      "severity": "HIGH",
+      "state": "OPEN",
+      "tasks": [
+        "EXT-01",
+        "EXT-02"
+      ],
+      "summary": "Frozen release documentation contradicts the identity and publication state of v0.1.0a6.",
+      "decision": "Block participant distribution until a corrected immutable release is audited."
+    }
+  ]
+}

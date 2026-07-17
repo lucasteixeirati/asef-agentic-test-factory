@@ -14,7 +14,9 @@ Você precisa de:
 - imagem local `asef/python-pytest:8.3.3` construída a partir do tooling da mesma revisão;
 - um wheel construído da mesma revisão deste documento ou um checkout do repositório.
 
-A última pré-release publicada é `v0.1.0a5`. A linha de desenvolvimento usa a candidata local `0.1.0a6`; só atribua seu report à release quando existir tag e artifact publicados correspondentes.
+A última pré-release publicada é `v0.1.0a6`. Use wheel, source archive, documentação e imagem construídos da mesma tag para manter a evidência atribuível à release.
+
+A versão em desenvolvimento é a candidata corretiva local `0.1.0a7`, ainda não publicada. Não misture seus artefatos com os da `v0.1.0a6`; use sempre pacote, documentação e imagem da mesma revisão.
 
 ## 1. Criar um diretório vazio
 

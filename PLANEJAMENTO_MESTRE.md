@@ -2,7 +2,7 @@
 
 > Documento vivo para orientar a construção da aplicação, da documentação pública e do futuro livro.
 
-**Status:** vigente — 5.1 a 5.8 publicados até `v0.1.0a6`; 5.9 e Gate 5 aguardam decisão humana
+**Status:** vigente — 5.1 a 5.8 publicados até `v0.1.0a6`; 5.9.1 aprovada e preflight 5.9.2 bloqueado por documentação congelada divergente; decisão corretiva pendente
 **Data de início:** 2026-07-11  
 **Responsável:** Lucas  
 **Natureza:** projeto open source, educacional, experimental e de portfólio  
@@ -746,7 +746,7 @@ As datas serão estimadas após a baseline das primeiras sessões. Os gates são
 **Plano executável:** `docs/project/stage-05-alpha-python-plan.md`
 
 **Plano de aceite:** `docs/project/gates/gate-05-acceptance-plan.md`
-**Status:** 5.1 a 5.8 concluídos e publicados até [`v0.1.0a6`](https://github.com/lucasteixeirati/asef-agentic-test-factory/releases/tag/v0.1.0a6). A implementação `9739c1e` e o fechamento documental `ddeeb3a` passaram nas matrizes públicas de sete jobs `29597109452` e `29597666988`. O Gate 5 permanece em execução por causa do incremento 5.9.
+**Status:** 5.1 a 5.8 concluídos e publicados até [`v0.1.0a6`](https://github.com/lucasteixeirati/asef-agentic-test-factory/releases/tag/v0.1.0a6). A 5.9.1 foi aprovada. O preflight 5.9.2 comprovou runtime/package, mas bloqueou a sessão porque os documentos dentro da tag ainda declaram `v0.1.0a5` como última release. Nenhum participante foi contatado. O Gate 5 permanece em execução.
 
 **Aplicação**
 
@@ -1078,4 +1078,4 @@ Estas questões serão decididas nas etapas indicadas, não agora:
 
 ## 27. Próxima decisão
 
-Decidir se o incremento 5.9 — avaliação externa e fechamento — deve ser planejado detalhadamente. Gate 5 e Etapa 6 continuam decisões posteriores e separadas.
+Revisar o finding `PREFLIGHT-F-001` e autorizar, ajustar ou rejeitar a preparação de uma candidata corretiva imutável antes da sessão externa. A decisão não autoriza antecipadamente 5.9.3, participante, Gate 5 ou Etapa 6.

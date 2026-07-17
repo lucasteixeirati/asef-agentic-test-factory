@@ -1,0 +1,94 @@
+{
+  "schema_version": "1.0.0",
+  "recorded_at": "2026-07-17",
+  "candidate": {
+    "version": "0.1.0a7",
+    "publication_state": "LOCAL_UNPUBLISHED",
+    "build_origin": "WORKTREE",
+    "immutable": false
+  },
+  "release_state": {
+    "latest_published_version": "0.1.0a6",
+    "latest_published_tag": "v0.1.0a6",
+    "development_version": "0.1.0a7",
+    "development_status": "CANDIDATE"
+  },
+  "artifacts": [
+    {
+      "kind": "wheel",
+      "name": "asef_agentic_test_factory-0.1.0a7-py3-none-any.whl",
+      "size_bytes": 167628,
+      "sha256": "f4751c710e051e35f16d11d360fd4280d2ad7de20280e660bfc2c0ace6ff55c0"
+    },
+    {
+      "kind": "sdist",
+      "name": "asef_agentic_test_factory-0.1.0a7.tar.gz",
+      "size_bytes": 532330,
+      "sha256": "502775bbe4de7b10331d9b59d69d195edfb91dcb6e6903d894835d639aa8f603"
+    }
+  ],
+  "environment": {
+    "python": "3.13.5",
+    "docker_client": "28.2.2",
+    "docker_server": "28.2.2",
+    "docker_os": "linux",
+    "docker_arch": "amd64"
+  },
+  "checks": {
+    "sdist_documentation": {
+      "passed": true,
+      "checked_files": 126,
+      "checked_links": 107,
+      "findings": 0
+    },
+    "installed_metadata": "0.1.0a7",
+    "wheel_installed_without_dependencies": true,
+    "doctor": {
+      "status": "DEGRADED",
+      "classification": "READY",
+      "checks": 12,
+      "exit_code": 0,
+      "stderr_bytes": 0
+    },
+    "demo": {
+      "status": "SUCCEEDED",
+      "classification": "ACCEPTED",
+      "run_id": "62110c12-a312-4e8b-86ee-ec331359fbcd",
+      "exit_code": 0,
+      "stderr_bytes": 0
+    },
+    "cleanup": {
+      "status": "SUCCEEDED",
+      "classification": "DRY_RUN_COMPLETE",
+      "exit_code": 0,
+      "stderr_bytes": 0
+    },
+    "public_experience_audit": {
+      "passed": true,
+      "passed_checks": 9,
+      "total_checks": 9,
+      "report_json_sha256": "930a3cfeecd550cb4cd388bf5e03ee6599a2b1b93f35b679565c38249337d3f3",
+      "report_markdown_sha256": "95185543b69610b44b00dac9f1756eccbe204505444a128c9803cf165045bf3c"
+    },
+    "secret_scan_passed": true,
+    "managed_containers_remaining": 0,
+    "regression": {
+      "passed_tests": 357,
+      "skipped_tests": 33,
+      "branch_coverage_percent": 85
+    },
+    "gate_checker": {
+      "passed_tests": 10,
+      "criteria": 20,
+      "evidence_references": 40,
+      "findings": 0
+    }
+  },
+  "decision": {
+    "candidate_status": "READY_FOR_PUBLICATION_CHECKPOINT",
+    "gate_status": "BLOCKED",
+    "external_session_status": "NOT_AUTHORIZED_NOT_READY",
+    "blocking_finding": "PREFLIGHT-F-001",
+    "reason": "The local candidate is coherent and passes the installed journey, but it is not an immutable published release. The finding can only be closed after an authorized release is published and re-audited from its remote assets."
+  }
+}

@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "asef-agentic-test-factory"
-version = "0.1.0a6"
+version = "0.1.0a7"
 description = "Context-aware, policy-controlled Agentic Test Factory for Quality Engineering"
 readme = "README.md"
 license = "MIT"

@@ -208,10 +208,78 @@ class DocumentationChecker:
         except (OSError, UnicodeError, KeyError, TypeError, tomllib.TOMLDecodeError) as exc:
             self._add("VERSION_UNREADABLE", "pyproject.toml", type(exc).__name__)
             return
-        for relative in ("README.md", "docs/project/support-and-limitations.md"):
+        release_state_path = self.root / "docs/project/release-state.json"
+        try:
+            release_state = json.loads(release_state_path.read_text(encoding="utf-8"))
+            published_version = release_state["latest_published_version"]
+            published_tag = release_state["latest_published_tag"]
+            development_version = release_state["development_version"]
+            development_status = release_state["development_status"]
+            if not all(
+                isinstance(value, str) and value
+                for value in (published_version, published_tag, development_version, development_status)
+            ):
+                raise TypeError("release state values must be non-empty strings")
+        except (OSError, UnicodeError, json.JSONDecodeError, KeyError, TypeError) as exc:
+            self._add("RELEASE_STATE_UNREADABLE", "docs/project/release-state.json", type(exc).__name__)
+            return
+        if release_state.get("schema_version") != SCHEMA_VERSION:
+            self._add(
+                "RELEASE_STATE_SCHEMA",
+                "docs/project/release-state.json",
+                f"expected {SCHEMA_VERSION}",
+            )
+        if development_version != str(version):
+            self._add(
+                "DEVELOPMENT_VERSION_DIVERGENCE",
+                "docs/project/release-state.json",
+                f"state is {development_version}; package metadata is {version}",
+            )
+        if published_tag != f"v{published_version}":
+            self._add(
+                "PUBLISHED_TAG_DIVERGENCE",
+                "docs/project/release-state.json",
+                f"tag {published_tag}; expected v{published_version}",
+            )
+        canonical_release_docs = (
+            "README.md",
+            "docs/getting-started/quickstart.md",
+            "docs/project/support-and-limitations.md",
+        )
+        for relative in canonical_release_docs:
             path = self.root / relative
-            if path.is_file() and str(version) not in self._read(path):
-                self._add("VERSION_DIVERGENCE", relative, f"missing current version {version}")
+            if not path.is_file():
+                continue
+            content = self._read(path)
+            if development_version not in content:
+                self._add(
+                    "VERSION_DIVERGENCE",
+                    relative,
+                    f"missing development version {development_version}",
+                )
+            if published_version not in content:
+                self._add(
+                    "PUBLISHED_VERSION_MISSING",
+                    relative,
+                    f"missing latest published version {published_version}",
+                )
+        claim = re.compile(
+            r"(?:A última (?:pré-)?release publicada|A última versão publicada)[^\n]*?`?v?"
+            r"(?P<version>[0-9]+\.[0-9]+\.[0-9]+a[0-9]+)`?",
+            re.IGNORECASE,
+        )
+        for relative in canonical_release_docs:
+            path = self.root / relative
+            if not path.is_file():
+                continue
+            for match in claim.finditer(self._read(path)):
+                claimed = match.group("version")
+                if claimed != published_version:
+                    self._add(
+                        "RELEASE_CLAIM_DIVERGENCE",
+                        relative,
+                        f"claims {claimed}; latest published version is {published_version}",
+                    )
 
     def _check_public_commands(self) -> None:
         try:

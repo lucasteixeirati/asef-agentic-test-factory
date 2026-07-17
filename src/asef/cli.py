@@ -72,7 +72,7 @@ def _package_version() -> str:
         return metadata.version("asef-agentic-test-factory")
     except metadata.PackageNotFoundError:
         # Source-tree execution used by contributors before an editable install.
-        return "0.1.0a6"
+        return "0.1.0a7"
 
 
 def build_parser() -> argparse.ArgumentParser:
