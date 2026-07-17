@@ -105,6 +105,8 @@ class HumanWorkflowTests(unittest.TestCase):
                 completed.state.facts["analysis"]["response_id"],
                 "cassette-calculator-clarification-001",
             )
+            self.assertTrue((completed.run_dir / "report.json").is_file())
+            self.assertTrue((completed.run_dir / "report.md").is_file())
 
     def test_ws007_cancels_wait_without_artifact_or_workspace(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -128,6 +130,7 @@ class HumanWorkflowTests(unittest.TestCase):
             self.assertFalse((cancelled.run_dir / "workspace").exists())
             self.assertFalse((cancelled.run_dir / "artifacts").exists())
             self.assertTrue((cancelled.run_dir / "report.json").is_file())
+            self.assertTrue((cancelled.run_dir / "report.md").is_file())
 
     def test_public_wait_resume_and_cancel_exit_codes(self) -> None:
         Path(".asef").mkdir(exist_ok=True)
@@ -154,6 +157,10 @@ class HumanWorkflowTests(unittest.TestCase):
                     ]
                 )
             self.assertEqual(resume_code, 0)
+            resumed = json.loads(resume_out.getvalue())
+            self.assertTrue(Path(resumed["report_json"]).is_file())
+            self.assertTrue(Path(resumed["report_markdown"]).is_file())
+            self.assertEqual(resumed["report_schema_version"], "1.0.0")
 
         with tempfile.TemporaryDirectory(dir=Path(".asef")) as directory:
             wait_out = StringIO()
@@ -174,6 +181,9 @@ class HumanWorkflowTests(unittest.TestCase):
                     ]
                 )
             self.assertEqual(cancel_code, 130)
+            cancelled = json.loads(cancel_out.getvalue())
+            self.assertTrue(Path(cancelled["report_json"]).is_file())
+            self.assertTrue(Path(cancelled["report_markdown"]).is_file())
 
 
 if __name__ == "__main__":

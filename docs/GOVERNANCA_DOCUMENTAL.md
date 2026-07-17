@@ -49,10 +49,12 @@ Toda mudança relevante deve verificar impactos em:
 | `docs/project/stage-04-progress.md` | Progresso e checkpoints da implementação do skeleton |
 | `docs/project/gates/gate-04-acceptance-plan.md` | Critérios objetivos previstos para o Gate 4 |
 | `docs/project/stage-05-alpha-python-plan.md` | Escopo, incrementos, dependências e Definition of Done da Etapa 5 |
+| `docs/project/stage-05-increment-58-plan.md` | Plano executável de relatórios e experiência pública do Alpha Python |
 | `docs/project/stage-05-progress.md` | Progresso e checkpoints da implementação do Alpha Python |
 | `docs/project/gates/gate-05-acceptance-plan.md` | Critérios objetivos previstos para o Gate 5 |
 | `docs/project/requirements-v01.md` | Requisitos e atributos de qualidade pretendidos para v0.1 |
-| `docs/project/language-matrix.md` | Níveis de suporte e toolchains candidatos |
+| `docs/project/support-and-limitations.md` | Fonte canônica de hosts, perfis, capabilities e limitações públicas |
+| `docs/project/language-matrix.md` | Declaração implementada de perfis e capabilities por linguagem |
 | `docs/project/first-workflow.md` | Seleção conceitual do primeiro workflow |
 | `docs/project/gates/` | Decisões formais de aprovação ou bloqueio dos gates |
 | `docs/architecture/adr/` | Decisões arquiteturais vigentes |
@@ -63,6 +65,13 @@ Toda mudança relevante deve verificar impactos em:
 | `docs/architecture/contracts/alpha-python-contracts.md` | Contratos concretos de datasets e métricas iniciados no 5.1 |
 | `docs/architecture/adr/` | Decisões arquiteturais aceitas |
 | `docs/architecture/evidence-model.md` | Eventos, manifests e rastreabilidade |
+| `docs/architecture/alpha-python-architecture.md` | Arquitetura real e fronteiras implementadas do Alpha Python |
+| `docs/architecture/report-publication-threat-model.md` | Conteúdo publicável, ameaças e autoridades do Alpha report |
+| `docs/getting-started/quickstart.md` | Jornada instalada keyless, validação mínima e cleanup seguro |
+| `docs/tutorials/wf-001-demo.md` | Percurso narrado da demo WF-001 e seus limites |
+| `docs/tutorials/wf-001-live.md` | Operação live opt-in, secret no host, tarifas e budgets |
+| `docs/guides/report-interpretation.md` | Semântica pública de reports, classificações, quality e integridade |
+| `docs/guides/troubleshooting.md` | Diagnóstico por exit/classification e ações operacionais seguras |
 | `docs/architecture/observability.md` | Separação vigente entre audit trail e logs operacionais |
 | `docs/quality/security-strategy.md` | Threat model, sandbox e controles |
 | `docs/quality/evaluation-strategy.md` | Datasets, oracles, métricas e validade |
@@ -72,6 +81,9 @@ Toda mudança relevante deve verificar impactos em:
 | `tooling/python-pytest/` | Build reproduzível da imagem de ferramenta pytest |
 | `docs/quality/stage-04r8-test-hardening.md` | Baselines de coverage e mutation do hardening pré-Gate 4 |
 | `docs/project/open-source-strategy.md` | Publicação, experiência externa e comunidade |
+| `CONTRIBUTING.md` | Setup, validação e regras gerais de contribuição |
+| `docs/contributing/adapter-guide.md` | Extensão de capabilities, adapters e perfis sem contaminar o core |
+| `CODE_OF_CONDUCT.md` | Conduta e aplicação nos espaços da comunidade |
 | `docs/reviews/` | Revisões independentes e respostas |
 | `docs/templates/` | Modelos operacionais para novos registros |
 | `book/README.md` | Estratégia editorial e estrutura provisória |

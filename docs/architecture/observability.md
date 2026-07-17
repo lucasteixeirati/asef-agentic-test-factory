@@ -57,3 +57,5 @@ Testes verificam que valores sensíveis conhecidos não sobrevivem à formataç�
 - logs não são assinados e não constituem armazenamento imutável.
 
 Essas limitações são aceitáveis para uma CLI experimental de usuário único e devem ser revistas antes de execução distribuída ou compartilhada.
+
+A árvore de evidências, integridade e relação entre eventos, manifest e `AlphaRunReport` estão em [`evidence-model.md`](evidence-model.md). Ambientes e garantias não oferecidas estão em [`../project/support-and-limitations.md`](../project/support-and-limitations.md).

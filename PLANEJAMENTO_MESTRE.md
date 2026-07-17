@@ -2,7 +2,7 @@
 
 > Documento vivo para orientar a construção da aplicação, da documentação pública e do futuro livro.
 
-**Status:** vigente — incrementos 5.1 a 5.7 concluídos e publicados até a pré-alpha `v0.1.0a5`
+**Status:** vigente — 5.1 a 5.7 publicados até `v0.1.0a5`; candidata local 5.8/`0.1.0a6` aguarda CI e decisão de publicação
 **Data de início:** 2026-07-11  
 **Responsável:** Lucas  
 **Natureza:** projeto open source, educacional, experimental e de portfólio  
@@ -746,7 +746,7 @@ As datas serão estimadas após a baseline das primeiras sessões. Os gates são
 **Plano executável:** `docs/project/stage-05-alpha-python-plan.md`
 
 **Plano de aceite:** `docs/project/gates/gate-05-acceptance-plan.md`
-**Status:** 5.1 a 5.7 concluídos e publicados até `v0.1.0a5`. A candidata passou nos seis jobs da CI pública antes da tag e seus artefatos foram auditados. O Gate 5 permanece em execução por causa dos incrementos 5.8 e 5.9.
+**Status:** 5.1 a 5.7 concluídos e publicados até `v0.1.0a5`. A candidata local `0.1.0a6` do 5.8 passou nas regressões locais e aguarda a nova matriz pública de sete jobs e decisão de publicação. O Gate 5 permanece em execução por causa do checkpoint do 5.8 e do incremento 5.9.
 
 **Aplicação**
 
@@ -1078,4 +1078,4 @@ Estas questões serão decididas nas etapas indicadas, não agora:
 
 ## 27. Próxima decisão
 
-Planejar detalhadamente o incremento 5.8 — relatórios e experiência pública — e submetê-lo à aprovação explícita antes da implementação. A publicação de `v0.1.0a5` não aprova automaticamente o Gate 5 nem o início da Etapa 6.
+Revisar o parecer da 5.8.6 e autorizar, ajustar ou rejeitar o checkpoint de commit/push/CI da candidata `0.1.0a6`. Tag, pré-release, conclusão do 5.8, 5.9, Gate 5 e Etapa 6 continuam decisões posteriores e separadas.

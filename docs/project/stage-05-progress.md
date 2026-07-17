@@ -2,7 +2,7 @@
 
 - **Plano:** `docs/project/stage-05-alpha-python-plan.md`
 - **Gate:** `docs/project/gates/gate-05-acceptance-plan.md`
-- **Estado atual:** incrementos 5.1 a 5.7 concluídos e publicados até `v0.1.0a5`; 5.8 aguarda planejamento e aprovação
+- **Estado atual:** incrementos 5.1 a 5.7 publicados até `v0.1.0a5`; seis fatias do 5.8 concluídas localmente na candidata `0.1.0a6`, aguardando checkpoint de CI/publicação
 
 ## 5.1 — Contratos, ADRs e suíte de referência
 
@@ -318,3 +318,67 @@ O package audit instalou o wheel sem dependências em venv/diretório fora do ch
 A matriz Docker/quality local descobriu 20 integrações: 17 passaram e três foram ignoradas pelo host Windows; as duas provas Linux ignoradas localmente passaram no container separado. A regressão final descobriu 318 testes, executou 285 e ignorou 33 opcionais, com branch coverage de 85,16%.
 
 A implementação das seis fatias está concluída. O checkpoint `2de3c44` acionou a CI pública `29528937211`, que aprovou `core`, `framework-spikes`, `docker-security`, `alpha-smoke`, `quality-capabilities` e `alpha-security`. O commit documental `4c8073c` passou novamente nos seis jobs na CI `29530753021`. Após aprovação explícita de Lucas, a tag anotada e a [pré-release `v0.1.0a5`](https://github.com/lucasteixeirati/asef-agentic-test-factory/releases/tag/v0.1.0a5) foram publicadas com wheel e sdist auditados. O incremento 5.7 está encerrado; Gate 5, 5.8 e Etapa 6 permanecem decisões separadas.
+
+## 5.8 — Relatórios e experiência pública
+
+Lucas aprovou o planejamento detalhado e autorizou separadamente as fatias 5.8.1, 5.8.2 e 5.8.3. A baseline encontrou três lacunas principais: o report da run era composto diretamente pelo store e não possuía contrato público próprio; fatos, inferências, recomendações e limitações não eram tipos distintos; e a experiência pública permanecia concentrada no README, sem jornada dedicada de quickstart, tutorial, interpretação e troubleshooting.
+
+O plano executável está em `docs/project/stage-05-increment-58-plan.md`. Ele propõe seis fatias: contrato/schema; builder e cobertura de terminais; jornada pública; arquitetura/contribuição; package audit e job `public-experience`; revisão/candidata. Participante externo real, retrospectiva final e Gate 5 permanecem fora do 5.8.
+
+Contrato/schema/threat model da 5.8.1, publicação da 5.8.2, jornada pública da 5.8.3, arquitetura/contribuição da 5.8.4, experiência instalada/CI da 5.8.5 e revisão/candidata da 5.8.6 foram concluídos localmente. Commit/push, CI pública, tag e release dependem de decisões explícitas.
+
+### Fatia 5.8.1 — contrato, schema e threat model do report
+
+Após a aprovação do plano, foi iniciada somente a primeira fatia. `AlphaRunReport 1.0.0` define requirement, traceability, artifacts, attempts, resultado funcional, quality, intervenções humanas, policy/budgets, usage, evidence, facts, inferences, recommendations e limitations. O parser é estrito, o JSON Schema usa Draft 2020-12 e o módulo permanece neutro em relação a tooling, provider e workflow engine.
+
+O contrato rejeita links de rastreabilidade inventados, IDs não contíguos, references desconhecidas, status/classification incoerentes, acceptance sem pass integral, evidence publicável não verificada/sanitizada, paths externos, assinaturas sensíveis, inference sem base e recommendation fora da allowlist. Ao encerramento desta primeira fatia, builder, Markdown, store, CLI e reports reais permaneciam reservados à 5.8.2.
+
+A revisão local aprovou 13 testes específicos e a regressão integral de 331 testes, com 33 skips opcionais e branch coverage geral de 85,10%. JSON Schema Draft 2020-12 validou uma instância real, e wheel/sdist incluem o módulo e o schema. O parecer está em `docs/reviews/2026-07-16-revisao-fatia-581.md`.
+
+### Fatia 5.8.2 — builder, evidências, renderer, store e terminais
+
+`BuildAlphaReportService` passou a compor deterministicamente o contrato a partir de state, snapshot, avaliação e observações tipadas de evidência, sem acessar filesystem ou presentation. `ReportEvidenceVerifier` confina refs à run, rejeita paths não canônicos, não segue links/junctions e distingue `VERIFIED`, `MISSING` e `MISMATCH`. `AlphaReportMarkdownRenderer` recebe somente contrato validado e mantém a ordem pública fixa, com escape de conteúdo não confiável.
+
+`AlphaReportStore` valida JSON reaberto, persiste JSON/Markdown/manifest em transação recuperável e reconcilia hashes existentes antes de qualquer reemissão. `JsonRunStore` apenas delega publicação. O manifest referencia os dois reports por SHA-256; a CLI acrescenta `report_json`, `report_markdown` e `report_schema_version`, preservando `report_path`. Runs terminalizadas após persistência — inclusive policy, budget, cancel, resume e falha de infraestrutura — recebem report; esperas humanas continuam sem alegar terminal.
+
+A regressão aprovou 337 testes, com 33 skips opcionais e branch coverage geral de 85,34%. Seis testes específicos cobrem idempotência, mismatch/missing, tamper, escape Markdown, rollback transacional e terminal anterior ao artifact. O parecer está em `docs/reviews/2026-07-16-revisao-fatia-582.md`.
+
+### Fatia 5.8.3 — jornada pública de uso
+
+O README passou a comunicar propósito, estado experimental, evidência comprovada/não comprovada, quickstart curto, mapa documental, suporte e roadmap sem concentrar todos os detalhes operacionais. A distinção entre a release publicada `v0.1.0a5` e o report 5.8 ainda local ficou explícita.
+
+Foram criados quickstart instalado keyless, tutorial WF-001 demo, tutorial live opt-in, guia de interpretação do report e troubleshooting seguro. A jornada começa por doctor, usa os paths retornados pelo CLI, diferencia demo linear do oracle combinado 5.3, trata `null` como não observado, explica todos os estados de quality e não fixa modelo/preço/câmbio. Live exige secret somente no host, tarifas do operador e budget positivo; troubleshooting proíbe prune amplo, relaxamento de sandbox e execução de código gerado no host.
+
+Links locais, paths, flags, classifications e estados documentados foram confrontados com o código. Secret scan dos seis documentos, `git diff --check` e regressão de 337 testes/33 skips com branch coverage de 85,34% foram aprovados. O parecer está em `docs/reviews/2026-07-17-revisao-fatia-583.md`.
+
+### Fatia 5.8.4 — arquitetura, suporte e contribuição
+
+A arquitetura real do Alpha Python passou a documentar o fluxo implementado, autoridades de core/application/adapters/tooling/datasets, jornada linear versus oracle combinado, quality opcional, checkpoint humano e publicação tipada. O documento histórico do walking skeleton agora aponta para essa autoridade vigente.
+
+O modelo de evidências foi reconciliado com `context-snapshot.json`, state/events/manifest, `results`, artifacts, attempts, oracle, quality e reports. Estratégias de avaliação e segurança passaram a explicitar interpretação, validade, superfície publicável e integridade `VERIFIED`/`MISSING`/`MISMATCH`. Observabilidade, doctor, cleanup e live apontam para fontes canônicas.
+
+`support-and-limitations.md` tornou-se a fonte única para host, níveis, capabilities, sandbox, live, cleanup e alcance de Smoke/Security. A matriz não promove Node/Java além da inicialização histórica; `python-pytest` permanece experimental. CONTRIBUTING ganhou setup/extras, matriz de testes, opt-ins Docker, scanner, fronteiras e governança de IA; adapter guide e código de conduta foram criados. Os templates existentes foram preservados, com apenas um check de fronteira/suporte no PR.
+
+A revisão de 115 arquivos Markdown aprovou todos os links locais. A regressão permaneceu em 337 testes aprovados, 33 skips opcionais e branch coverage de 85,34%; secret scan documental e `git diff --check` passaram. Nenhum Docker/live, commit, push, CI, package/version ou release foi executado. O parecer está em `docs/reviews/2026-07-17-revisao-fatia-584.md`.
+
+### Fatia 5.8.5 — experiência instalada e CI
+
+`tools/docs_check.py` introduziu validação offline e sem crawler externo para arquivos obrigatórios, links/anchors, versão canônica, comandos do CLI, paths de exemplo, links locais absolutos, claims proibidas, placeholders e consistência README/suporte. O checker final percorreu 117 arquivos e 103 links sem findings; testes adversariais cobrem target/anchor ausente, path absoluto e placeholder.
+
+`tools/public_experience_audit.py` valida JSON estrito e containment antes de reconciliar doctor, stdout da run, state, manifest, parser público, schema Draft 2020-12 empacotado, hashes e seções Markdown. Somente após nove checks aprovados ele copia report JSON/Markdown e resumo sanitizado para a superfície publicável. Durante a primeira prova, a captura local do PowerShell adicionou BOM e foi recusada; a normalização da captura para UTF-8 sem BOM permitiu auditar a mesma run, sem mascarar falha funcional.
+
+A prova também revelou que a imagem `python-quality`, opcional ao caminho linear, bloqueava doctor embora o plano construísse apenas pytest. A ausência agora é `WARN/DEGRADED`; pytest continua obrigatório. Quickstart e limites declaram que o wheel não contém imagem Docker e que seu build usa o tooling da mesma revisão.
+
+Wheel e sdist foram construídos sob metadata ainda intencionalmente `0.1.0a5`, em diretório isolado, e passaram no scanner. O wheel inclui contrato e schema. Uma venv temporária fora do checkout instalou o wheel com `--no-deps`; doctor terminou `DEGRADED/READY`, demo keyless `SUCCEEDED/ACCEPTED`, os nove checks passaram, o scanner aprovou toda `.asef` e nenhum container gerenciado permaneceu.
+
+O workflow ganhou o sétimo job independente `public-experience`: checker, build/scan, instalação limpa, somente imagem pytest, doctor/demo keyless, auditor, scanner, orphan check e publicação por sete dias apenas dos dois reports e dois resumos. A regressão final aprovou 344 testes, com 33 skips opcionais e branch coverage de 85,34%. A composição YAML contém sete jobs, mas nenhuma CI pública foi acionada nesta fatia. O parecer está em `docs/reviews/2026-07-17-revisao-fatia-585.md`.
+
+### Fatia 5.8.6 — revisão final e candidata
+
+A metadata foi promovida para `0.1.0a6`, mantendo `v0.1.0a5` como última release publicada. CLI e builder agora possuem fallbacks reconciliados com `pyproject.toml`. `jsonschema==4.25.1` entrou apenas no extra de teste/auditoria; o wheel continua sem dependências obrigatórias. O auditor passou a executar validação Draft 2020-12 completa.
+
+O walkthrough frio partiu de diretório vazio, instalou o wheel com `--no-deps` e, seguindo os documentos, executou doctor, demo, parser, checklist, cleanup e rotas comunitárias. Terminou `DEGRADED/READY`, `SUCCEEDED/ACCEPTED`, evidência somente `VERIFIED` e `DRY_RUN_COMPLETE`, sem finding novo.
+
+Smoke `smoke-20260717T151010Z-359283e8` permaneceu 20/20; Security `security-20260717T151032Z-e354e383` permaneceu 12/12. A matriz Docker/quality descobriu 20 integrações, aprovou 17 e manteve três skips conhecidos do host Windows; as duas provas Linux ignoradas localmente passaram 2/2 em container isolado. A regressão aprovou 345 testes, com 33 skips opcionais e branch coverage de 85,34%.
+
+O parecer técnico recomenda o checkpoint da candidata, mas nenhuma mutação remota ocorreu. Commit/push, execução dos sete jobs, tag, pré-release, conclusão do 5.8 e Gate 5 dependem de autorizações humanas explícitas. Parecer: `docs/reviews/2026-07-17-revisao-fatia-586.md`; walkthrough: `docs/reviews/2026-07-17-walkthrough-frio-58.md`.

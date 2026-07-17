@@ -116,7 +116,7 @@ class DoctorCheckExecutor:
                 "pytest-image", PYTEST_IMAGE, required=True
             ),
             "quality-image": lambda: self._image(
-                "quality-image", QUALITY_IMAGE, required=True
+                "quality-image", QUALITY_IMAGE, required=False
             ),
             "context": lambda: self._context(request.context_ref),
             "live-key-presence": lambda: self._live_key(request.mode),
@@ -346,13 +346,23 @@ class DoctorCheckExecutor:
         if available:
             facts["image_id"] = image_id
         return (
-            DoctorCheckStatus.PASS if available else DoctorCheckStatus.FAIL,
+            (
+                DoctorCheckStatus.PASS
+                if available
+                else DoctorCheckStatus.FAIL
+                if required
+                else DoctorCheckStatus.WARN
+            ),
             f"{check_id.upper().replace('-', '_')}_AVAILABLE"
             if available
             else f"{check_id.upper().replace('-', '_')}_MISSING",
-            "The required Docker image is available."
+            "The Docker image is available."
             if available
-            else "The required Docker image is not available locally.",
+            else (
+                "The required Docker image is not available locally."
+                if required
+                else "The optional Docker image is not available locally."
+            ),
             facts,
             required,
         )

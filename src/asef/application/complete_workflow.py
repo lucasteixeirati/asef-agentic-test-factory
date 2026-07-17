@@ -40,6 +40,30 @@ class CompleteWorkflowService:
     def complete_generated(self, generated: GenerateUnitResult) -> CompleteWorkflowResult:
         state = generated.state
         if generated.workspace is None:
+            if state.status in {
+                RunStatus.FAILED,
+                RunStatus.CANCELLED,
+                RunStatus.POLICY_BLOCKED,
+                RunStatus.BUDGET_EXHAUSTED,
+            }:
+                stored = state.facts.get("evaluation") or state.facts.get(
+                    "latest_evaluation"
+                )
+                evaluation = (
+                    dict(stored)
+                    if isinstance(stored, dict)
+                    else {
+                        "accepted": False,
+                        "conclusion": "The workflow reached a terminal before test execution",
+                        "tests": None,
+                        "passed": None,
+                        "failed": None,
+                        "errors": None,
+                        "skipped": None,
+                    }
+                )
+                report_path = self.run_store.save_report(state, None, evaluation)
+                return CompleteWorkflowResult(state, generated.run_dir, report_path)
             return CompleteWorkflowResult(state, generated.run_dir, None)
 
         PrepareRunService._move(state, RunStatus.EXECUTING_TESTS, "static_validation_passed")

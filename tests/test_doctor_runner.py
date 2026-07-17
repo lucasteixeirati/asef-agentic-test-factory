@@ -102,7 +102,38 @@ class DoctorExecutorTests(unittest.TestCase):
         self.assertEqual(by_id["docker-daemon"].diagnostic_code, "DOCKER_CLI_MISSING")
         self.assertEqual(by_id["pytest-image"].diagnostic_code, "PYTEST_IMAGE_MISSING")
         self.assertEqual(by_id["quality-image"].diagnostic_code, "QUALITY_IMAGE_MISSING")
+        self.assertFalse(by_id["quality-image"].required)
+        self.assertIs(by_id["quality-image"].status, DoctorCheckStatus.WARN)
         self.assertIs(by_id["managed-containers"].status, DoctorCheckStatus.SKIP)
+
+    def test_demo_is_degraded_not_blocked_when_only_optional_quality_image_is_missing(self) -> None:
+        class PytestOnlyDocker(_HealthyDocker):
+            def __call__(self, command: list[str], **kwargs: object) -> subprocess.CompletedProcess[str]:
+                if command[:3] == ["docker", "image", "inspect"] and "python-quality" in command[-1]:
+                    self.commands.append(command)
+                    return subprocess.CompletedProcess(command, 1, "", "")
+                return super().__call__(command, **kwargs)
+
+        with tempfile.TemporaryDirectory() as directory:
+            checks = DoctorCheckExecutor(
+                PytestOnlyDocker(),
+                distribution_version=lambda _: "0.1.0a5",
+                environ={},
+                workspace_root=Path(directory),
+            ).execute(DoctorRequest("demo", Path(".asef/doctor")))
+            report = DoctorRunner(
+                type("Checks", (), {"execute": lambda self, _: checks})(),
+                DoctorReportStore(Path(directory)),
+                asef_version="0.1.0a5",
+                python_version="3.13.5",
+                environment="linux-amd64",
+            ).run(DoctorRequest("demo", Path(".asef/doctor"))).report
+
+        quality = next(item for item in checks if item.check_id == "quality-image")
+        self.assertIs(quality.status, DoctorCheckStatus.WARN)
+        self.assertFalse(quality.required)
+        self.assertTrue(report.healthy)
+        self.assertIs(report.status, DoctorAggregateStatus.DEGRADED)
 
     def test_raw_docker_output_and_live_key_value_are_never_persisted(self) -> None:
         sentinel = "sk-proj-" + ("SENSITIVE" * 4)

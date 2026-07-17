@@ -1,74 +1,40 @@
-# Matriz inicial de linguagens e toolchains
+# Matriz de linguagens e capabilities
 
-## Decisão proposta para o Gate 1
+Esta matriz descreve implementação, não intenção de roadmap. Definições públicas de nível e ambientes estão em [`support-and-limitations.md`](support-and-limitations.md).
 
-| Ecossistema | Nível pretendido na v0.1 | Papel arquitetural |
-|---|---|---|
-| Python | Referência | Primeiro workflow completo e baseline |
-| TypeScript/Node.js | Suportado | Provar independência do core e tooling web |
-| Java | Experimental | Provar composição com build corporativo complexo |
-| Go | Planejado | Candidato de simplicidade e binários compilados |
-| .NET | Planejado | Candidato corporativo e multiplataforma |
+## Estado atual
 
-## Toolchains candidatos
+| Perfil | Ecossistema | Nível atual | Alvo declarado | Evidência |
+|---|---|---|---|---|
+| `python-pytest` | Python 3.13 / pytest | experimental | reference | WF-001, Smoke, adapter pytest, coverage/mutation delimitados |
+| `node-typescript` | Node 22 | planned | supported | somente inicialização histórica de imagem por digest |
+| `java-junit` | Java 21 | planned | experimental | somente inicialização histórica de imagem por digest |
+| Go | Go | planned | não declarado no código | nenhuma capability executável |
+| .NET | .NET | planned | não declarado no código | nenhuma capability executável |
 
-| Capacidade | Python | TypeScript | Java |
+Alvo futuro não promove o nível atual. “Imagem inicia” não significa que projeto, dependências, build, testes ou resultados sejam suportados.
+
+## Declaração do perfil Python
+
+| Capability | Status | Adapter/contrato | Limite |
 |---|---|---|---|
-| Project detection | `pyproject.toml` | `package.json` | `pom.xml` inicialmente |
-| Dependências | uv/pip a experimentar | npm/pnpm a experimentar | Maven inicialmente |
-| Build/validation | compile/import checks | TypeScript compiler | Maven compiler |
-| Test runner | pytest | Vitest inicialmente | JUnit 5 |
-| Static analysis | Ruff | ESLint | Checkstyle/SpotBugs a avaliar |
-| Coverage | coverage.py | V8/Istanbul | JaCoCo |
-| Mutation | mutmut ou Cosmic Ray | StrykerJS | PIT |
-| Resultado normalizado | contrato ASEF | contrato ASEF | contrato ASEF |
-| Container | imagem Python fixada | imagem Node fixada | imagem JDK/Maven fixada |
+| `unit` | partial | `pytest-docker-junit` / `NormalizedExecutionResult` | adapter existe, mas o CLI público ainda tem recorte fixo e experimental |
+| `project-detection` | partial | `quality-context` | markers e scopes delimitados; sem detecção geral de projetos externos |
+| `coverage` | available | `python-quality-docker` / `CoverageResult` | validada na fixture de referência e budgets definidos |
+| `mutation` | available | `python-quality-docker` / `MutationResult` | validada na fixture de referência e budgets definidos |
+| `backend-api` | planned | — | sem adapter/conformance |
+| `performance` | planned | — | sem adapter/conformance |
 
-As ferramentas são candidatas, não decisões arquiteturais definitivas. Cada seleção dependerá de spike, licença, automação, formato de saída, estabilidade e custo de manutenção.
+As imagens `python-pytest` e `python-quality` são pinadas/reproduzíveis, mas precisam de build local até existir decisão de distribuição por registry.
 
-## Critérios de seleção
+## Perfis planejados
 
-- relevância para a comunidade de qualidade;
-- diversidade suficiente para testar a arquitetura;
-- execução não interativa;
-- resultados estruturados ou normalizáveis;
-- imagem de container reproduzível;
-- licença compatível;
-- comunidade e manutenção ativas;
-- integração viável com coverage e mutação;
-- complexidade sustentável para um mantenedor inicial.
+Node declara `unit`, `web-ui`, `backend-api`, `coverage`, `mutation` e `performance` como planned. Java declara `unit`, `backend-api`, `coverage`, `mutation`, `performance` e `mobile` como planned. Nenhuma delas possui adapter ou contrato de resultado ativo no Alpha.
 
-## Capabilities por nível
+Ferramentas como Vitest/Jest, Maven/Gradle, JaCoCo, PIT ou Stryker continuam escolhas futuras; não são dependências suportadas por esta matriz.
 
-| Capacidade | Referência | Suportado | Experimental |
-|---|---:|---:|---:|
-| Descoberta | Obrigatória | Obrigatória | Obrigatória |
-| Build/validação | Obrigatória | Obrigatória | Obrigatória |
-| Test runner | Obrigatória | Obrigatória | Obrigatória |
-| Normalização | Obrigatória | Obrigatória | Obrigatória |
-| Coverage | Obrigatória | Obrigatória | Desejável |
-| Mutation | Obrigatória | Obrigatória | Desejável |
-| Tutorial | Completo | Completo | Básico |
-| Conformance suite | Completa | Completa | Subconjunto publicado |
+## Critério para promoção
 
-## Ambiente
+Uma promoção exige contrato neutro, adapter encapsulado, imagem/toolchain pinados, detecção, staging, execução, normalização, failure paths, isolamento, conformance, tutorial e limitações públicas. A evidência precisa cobrir o recorte anunciado em host/CI definido.
 
-O ambiente de referência será Windows com Docker Desktop/WSL2. Cada perfil executará o SUT em imagem fixada e não deverá depender de a linguagem estar instalada diretamente no host, além dos componentes necessários à própria CLI.
-
-## Baseline comprovada na Etapa 3
-
-| Perfil | Estado atual | Evidência |
-|---|---|---|
-| Python 3.13 | Executor por digest aprovado | EXP-006 |
-| Node 22 / TypeScript futuro | Inicialização por digest aprovada | EXP-006 |
-| Java 21 | Inicialização por digest aprovada | EXP-006 |
-
-“Inicialização aprovada” não equivale a suporte. Detecção de projeto, instalação, build, test runner, coverage, mutation e normalização ainda exigem conformance por ecossistema.
-
-## Questões para os spikes
-
-- uv ou pip oferece a melhor baseline reprodutível para Python?
-- Vitest ou Jest reduz complexidade sem perder representatividade?
-- Maven é suficiente para o primeiro perfil Java ou Gradle precisa estar no alpha?
-- quais ferramentas oferecem relatórios estruturados mais estáveis?
-- quais mutation engines funcionam adequadamente em containers e CI?
+O procedimento de proposta está no [`../contributing/adapter-guide.md`](../contributing/adapter-guide.md). A arquitetura não aceita condicionais de ecossistema espalhadas pelo core.

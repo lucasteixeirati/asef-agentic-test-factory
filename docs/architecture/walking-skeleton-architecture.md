@@ -1,5 +1,7 @@
 # Arquitetura planejada do Walking Skeleton
 
+> Documento histórico da Etapa 4. A arquitetura implementada e vigente do Alpha está em [`alpha-python-architecture.md`](alpha-python-architecture.md).
+
 - **Estado:** package consolidado em 4.R1; contexto/estado 1.1 implementados em 4.R2
 - **Etapa:** 4
 

@@ -17,11 +17,13 @@ from ..contracts import (
     state_from_dict,
 )
 from ..ephemeral_cleanup import cleanup_ephemeral_directory
+from .alpha_report_store import AlphaReportStore
 
 
 class JsonRunStore:
     def __init__(self, output_root: Path) -> None:
         self.output_root = output_root
+        self.alpha_reports = AlphaReportStore()
 
     def save_prepared(self, state: SkeletonRunState, snapshot: ContextSnapshot) -> Path:
         run_dir = self.output_root / state.run_id
@@ -267,57 +269,12 @@ class JsonRunStore:
         execution: NormalizedExecutionResult | None,
         evaluation: dict[str, object],
     ) -> str:
+        del execution
         run_dir = self.output_root / state.run_id
-        report = {
-            "schema_version": "1.0.0",
-            "run_id": state.run_id,
-            "workflow_id": state.workflow_id,
-            "status": state.status.value,
-            "classification": state.classification.value,
-            "requirement": {
-                "title": state.request.requirement_title,
-                "description": state.request.requirement_description,
-            },
-            "evaluation": evaluation,
-            "quality": state.facts.get("quality"),
-            "execution": execution.to_dict() if execution else None,
-            "usage": {
-                "model_calls": state.usage.model_calls,
-                "test_corrections": state.usage.test_corrections,
-                "input_tokens": state.usage.input_tokens,
-                "output_tokens": state.usage.output_tokens,
-            },
-            "evidence_refs": [ref.to_dict() if hasattr(ref, "to_dict") else {
-                "kind": ref.kind,
-                "relative_path": ref.relative_path,
-                "sha256": ref.sha256,
-                "schema_version": ref.schema_version,
-            } for ref in state.evidence_refs],
-        }
-        self._write_json(run_dir / "report.json", report)
-        title = self._markdown_text(state.request.requirement_title)
-        markdown = (
-            "# ASEF Run Report\n\n"
-            f"- Run: `{state.run_id}`\n"
-            f"- Requirement: {title}\n"
-            f"- Status: `{state.status.value}`\n"
-            f"- Classification: `{state.classification.value}`\n"
-            f"- Tests: `{evaluation.get('tests', 'unknown')}`\n"
-            f"- Passed: `{evaluation.get('passed', 'unknown')}`\n"
-            f"- Failed: `{evaluation.get('failed', 'unknown')}`\n"
-            f"- Conclusion: {self._markdown_text(str(evaluation.get('conclusion', '')))}\n"
-        )
-        quality = state.facts.get("quality")
-        if isinstance(quality, dict):
-            markdown += (
-                "\n## Quality capabilities\n\n"
-                f"- Complete: `{quality.get('complete', False)}`\n"
-                f"- Observations: `{len(quality.get('observations', [])) if isinstance(quality.get('observations'), list) else 0}`\n"
-                "- Interpretation: evidence only; no universal threshold applied.\n"
-            )
-        (run_dir / "report.md").write_text(markdown, encoding="utf-8")
+        snapshot = self.load_snapshot(state.run_id)
+        paths = self.alpha_reports.save(run_dir, state, snapshot, evaluation)
         self._write_state_files(run_dir, state)
-        return "report.md"
+        return paths.report_markdown
 
     def _write_state_files(self, run_dir: Path, state: SkeletonRunState) -> None:
         self._write_json(run_dir / "state.json", state.to_dict())

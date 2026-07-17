@@ -29,7 +29,6 @@ Inclua, quando seguro:
 
 ## Limitações conhecidas
 
-- Docker Desktop/WSL2 é a única baseline testada;
-- o daemon de referência reporta `DOCKER_INSECURE_NO_IPTABLES_RAW`;
-- macOS, Linux nativo e ARM64 ainda não foram validados;
-- integrações MCP reais ainda serão adicionadas incrementalmente.
+A matriz vigente de hosts, perfis, sandbox, provider live, cleanup e datasets está em [`docs/project/support-and-limitations.md`](docs/project/support-and-limitations.md). Em particular, resultados Smoke/Security não são certificação, e hash/sanitização não tornam evidência imutável ou provam ausência de vulnerabilidade.
+
+Não execute artifacts gerados no host, não monte o socket Docker e não relaxe rede, mounts ou budgets como workaround.

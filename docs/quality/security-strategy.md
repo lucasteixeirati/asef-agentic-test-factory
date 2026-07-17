@@ -2,7 +2,7 @@
 
 ## Decisão de ambiente
 
-Docker Desktop será o ambiente de containers adotado inicialmente. O ambiente de referência de desenvolvimento será Windows com Docker Desktop usando backend WSL2. Outros hosts suportados deverão ser validados explicitamente antes de serem anunciados.
+Docker Desktop é o ambiente de containers do Alpha. O ambiente de referência de desenvolvimento é Windows com Docker Desktop usando backend WSL2. A matriz comprovada e os ambientes não validados estão na fonte canônica [`../project/support-and-limitations.md`](../project/support-and-limitations.md).
 
 `subprocess` é mecanismo de execução, não sandbox. Blacklists de imports e manipulação de `sys.modules` podem apoiar política ou diagnóstico, mas não constituem fronteira de segurança.
 
@@ -108,3 +108,13 @@ Somente código revisado do package seleciona executor, imagem, argv, mounts, la
 - mounts de output sobrepostos, ancestrais, descendentes ou fora da raiz são rejeitados;
 - XML limitado a 2 MiB e DTD/entities rejeitados;
 - ausência ou corrupção do resultado vira erro de tooling, não falha do SUT.
+
+## Superfície de publicação — 5.8
+
+`AlphaRunReport 1.0.0` é uma projeção pública restrita, não um dump da run. Ele pode conter identidades, status/classification, contagens, códigos allowlisted, paths relativos, hashes e sínteses tipadas. Ele não publica source, prompt, resposta bruta do provider, environment, headers, secrets, stdout/stderr bruto ou workspace.
+
+Toda evidence ref publicável passa por containment, path canônico, rejeição de symlink/junction, allowlist de tipo e SHA-256. Somente `VERIFIED` sustenta fato; `MISSING` e `MISMATCH` permanecem falhas de integridade visíveis. Hash não prova autoria ou segurança do produtor.
+
+O JSON é validado contra contrato estrito; Markdown é derivado somente desse contrato e escapa conteúdo não confiável. O store reconcilia tamper prévio e atualiza JSON, Markdown e manifest em transação recuperável. Uma falha de publicação não pode reescrever state/classification nem substituir silenciosamente evidência histórica.
+
+O threat model detalhado e as alegações proibidas estão em [`../architecture/report-publication-threat-model.md`](../architecture/report-publication-threat-model.md). O formato e a árvore de evidências estão em [`../architecture/evidence-model.md`](../architecture/evidence-model.md).

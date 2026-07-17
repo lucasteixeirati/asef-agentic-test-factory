@@ -18,3 +18,4 @@
 - [ ] Testes relevantes foram executados.
 - [ ] Documentação foi atualizada.
 - [ ] Capabilities experimentais não são apresentadas como suportadas.
+- [ ] Mudanças de adapter/perfil respeitam ports, conformance e a matriz canônica de suporte.

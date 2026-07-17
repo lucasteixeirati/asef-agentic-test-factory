@@ -73,6 +73,9 @@ class PublicExitCodeMatrixTests(unittest.TestCase):
                 self.assertEqual((code, payload["status"]), (0, "SUCCEEDED"))
                 self.assertEqual(stderr, "")
                 self.assertTrue(Path(payload["report_path"]).is_file())
+                self.assertTrue(Path(payload["report_json"]).is_file())
+                self.assertTrue(Path(payload["report_markdown"]).is_file())
+                self.assertEqual(payload["report_schema_version"], "1.0.0")
                 self.assertTrue(Path(".asef/demo/v1/context.json").is_file())
                 logs = [
                     json.loads(line)
@@ -124,6 +127,8 @@ class PublicExitCodeMatrixTests(unittest.TestCase):
             self.assertEqual(payload["status"], "POLICY_BLOCKED")
             run_dir = Path(payload["run_dir"])
             self.assertFalse((run_dir / "workspace").exists())
+            self.assertTrue(Path(payload["report_json"]).is_file())
+            self.assertTrue(Path(payload["report_markdown"]).is_file())
 
     def test_ws005_repeated_invalid_output_returns_six(self) -> None:
         with tempfile.TemporaryDirectory(dir=Path(".asef")) as directory:
@@ -142,6 +147,8 @@ class PublicExitCodeMatrixTests(unittest.TestCase):
             self.assertEqual(state["usage"]["provider_retries"], 1)
             self.assertEqual(state["usage"]["model_calls"], 3)
             self.assertEqual(len(state["errors"]), 2)
+            self.assertTrue(Path(payload["report_json"]).is_file())
+            self.assertEqual(payload["report_schema_version"], "1.0.0")
 
     def test_ws006_missing_docker_returns_seven_with_report(self) -> None:
         with tempfile.TemporaryDirectory(dir=Path(".asef")) as directory, patch(
@@ -151,6 +158,7 @@ class PublicExitCodeMatrixTests(unittest.TestCase):
             self.assertEqual(code, 7)
             self.assertEqual(payload["classification"], "INFRASTRUCTURE_ERROR")
             self.assertTrue(Path(payload["report_path"]).is_file())
+            self.assertTrue(Path(payload["report_json"]).is_file())
 
 
 if __name__ == "__main__":

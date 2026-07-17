@@ -83,7 +83,10 @@ class CompleteWorkflowServiceTests(unittest.TestCase):
             state = json.loads((result.run_dir / "state.json").read_text(encoding="utf-8"))
             manifest = json.loads((result.run_dir / "manifest.json").read_text(encoding="utf-8"))
             self.assertEqual({report["status"], state["status"], manifest["status"]}, {"SUCCEEDED"})
-            self.assertTrue(report["evaluation"]["accepted"])
+            self.assertTrue(report["functional_result"]["accepted"])
+            self.assertEqual(report["schema_version"], "1.0.0")
+            self.assertEqual(manifest["reports"]["json"]["relative_path"], "report.json")
+            self.assertEqual(manifest["reports"]["markdown"]["relative_path"], "report.md")
             self.assertTrue((result.run_dir / "results/execution.json").is_file())
             self.assertTrue((result.run_dir / "report.md").is_file())
 
@@ -103,7 +106,8 @@ class CompleteWorkflowServiceTests(unittest.TestCase):
             )
             report = json.loads((result.run_dir / "report.json").read_text(encoding="utf-8"))
             markdown = (result.run_dir / "report.md").read_text(encoding="utf-8")
-            self.assertTrue(report["quality"]["complete"])
+            self.assertTrue(report["quality"][0]["complete"])
+            self.assertEqual(report["quality"][0]["capability"], "coverage")
             self.assertIn("## Quality capabilities", markdown)
             self.assertIn("evidence only; no universal threshold", markdown)
             self.assertEqual(

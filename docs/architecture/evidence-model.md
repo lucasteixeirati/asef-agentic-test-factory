@@ -2,55 +2,88 @@
 
 ## Objetivo
 
-Permitir explicar, auditar e comparar cada execução dentro dos limites de reprodutibilidade dos modelos utilizados.
+Permitir explicar, auditar e comparar cada execução sem prometer determinismo de provider ou imutabilidade do filesystem. O estado funcional, a trilha de eventos, as evidências brutas delimitadas e o relatório público têm papéis diferentes.
 
-## Artefatos mínimos
+## Árvore real de uma run
+
+Itens aparecem conforme o caminho executado; uma falha anterior ao artifact não inventa arquivos posteriores.
 
 ```text
-runs/<run-id>/
-├── input.json
-├── manifest.json
+.asef/runs/<run-id>/
+├── context-snapshot.json
+├── state.json
 ├── events.jsonl
+├── manifest.json
 ├── artifacts/
-├── test-results/
-├── metrics.json
+│   ├── attempt-001/
+│   │   ├── <teste-gerado>
+│   │   └── metadata.json               # fluxo combinado
+│   └── rejected/attempt-001.txt       # somente quando rejeitado
+├── results/                            # fluxo linear
+│   ├── static-validation.json
+│   ├── execution.json
+│   ├── <resultado-nativo>
+│   ├── stdout.txt
+│   └── stderr.txt
+├── attempts/
+│   └── 001/
+│       ├── generated/
+│       │   ├── execution.json
+│       │   ├── <resultado-nativo>      # quando produzido
+│       │   ├── stdout.txt
+│       │   └── stderr.txt
+│       ├── oracle/                     # fluxo combinado
+│       └── evaluation.json
+├── oracle/                            # oracle curado, quando usado
+│   ├── test_oracle.py
+│   └── identity.json
+├── quality/                            # capabilities solicitadas
+├── report.json
 └── report.md
 ```
 
-## Evento mínimo
+Workspaces efêmeros podem existir durante a execução, mas não são superfície pública nem evidência final por si só. Smoke, Security, doctor e cleanup têm stores próprios sob `.asef`; seus reports não devem ser confundidos com `AlphaRunReport`.
 
-- `run_id`, `event_id`, `parent_event_id` e correlation IDs;
-- timestamp e duração;
-- versão do schema do evento;
-- workflow, etapa, tentativa e operação;
-- provider e modelo quando aplicável;
-- status e classificação de erro;
-- consumo e custo estimado;
-- referências a inputs e artefatos por hash;
-- decisão automática ou humana;
-- política ou aprovação relacionada;
-- indicador de sanitização.
+## Papéis dos documentos
 
-## Baseline implementada no walking skeleton
+- `context-snapshot.json`: contexto efetivo primitivo e scopes resolvidos;
+- `state.json`: estado, classificação, budgets, usage e referências funcionais;
+- `events.jsonl`: sequência append-only em condições normais, com transições e decisões;
+- `manifest.json`: identidade da run, hashes do SUT, status, usage, refs e hashes dos reports;
+- `artifacts/`, `attempts/`, `oracle/` e `quality/`: evidências delimitadas por tentativa/capability;
+- `report.json`: projeção normativa validada como `AlphaRunReport 1.0.0`;
+- `report.md`: view determinística do JSON validado, sem fatos adicionais.
 
-A implementação atual cobre identidade do evento e da run, timestamp UTC, tempo desde o evento anterior, transições, motivos, decisões humanas sem duplicação e sequência append-only. O schema completo acima continua como alvo evolutivo: parent/correlation IDs, duração de operações agênticas, custo estimado por evento e indicador explícito de sanitização ainda não estão todos presentes.
+Logs operacionais ficam em `.asef/logs/asef.jsonl` e servem a diagnóstico, não a decisão funcional. Veja [`observability.md`](observability.md).
 
-Logs operacionais não são confundidos com evidência. A separação, o formato e as limitações estão em [`observability.md`](observability.md).
+## Eventos e manifest
 
-## Manifest mínimo
+Cada evento novo possui schema, `event_id`, `run_id`, timestamp UTC, tempo desde o anterior, tipo e campos específicos; transições registram source, target e reason. Saves idempotentes não duplicam eventos e corrupção não é sobrescrita silenciosamente. Parent/correlation IDs completos, assinatura e coordenação multiwriter continuam ausentes.
 
-- versão e hash do workflow;
-- provider, identificador exato do modelo e parâmetros;
-- hashes dos prompts e templates;
-- versão e hash dos datasets;
-- adaptadores e versões;
-- imagem e digest da sandbox;
-- dependências e lockfiles;
-- sistema operacional, arquitetura e configuração relevante;
-- seeds, quando suportadas;
-- budgets e políticas aplicados;
-- referências imutáveis aos artefatos de entrada e saída.
+O manifest registra os dados efetivamente disponíveis: identidade e versão, status/classificação, hashes do SUT, contexto/policies, usage, evidências e reports. Campos aspiracionais — por exemplo seed de um provider que não a expõe — não são fabricados.
 
-## Privacidade
+Após a publicação, `reports.json` e `reports.markdown` contêm `relative_path` e SHA-256. O report não referencia o próprio hash; o manifest é atualizado depois da escrita para evitar circularidade.
 
-Prompts, logs e artefatos não serão publicados automaticamente. Conteúdo sensível deve ser removido ou substituído por referências sanitizadas antes de qualquer publicação.
+## Integridade de evidências
+
+Antes de compor o report, `ReportEvidenceVerifier`:
+
+1. aceita somente path relativo canônico e contido na run;
+2. rejeita traversal, path absoluto, symlink e junction;
+3. limita a superfície a tipos publicáveis allowlisted;
+4. recalcula SHA-256 e compara com a referência persistida;
+5. retorna `VERIFIED`, `MISSING` ou `MISMATCH`.
+
+Somente evidência `VERIFIED` e sanitizada pode sustentar um fato publicável. Ausência/divergência gera limitação e `EVIDENCE_INTEGRITY_FAILURE`; não altera retrospectivamente o terminal funcional da run. Hash detecta diferença de bytes, mas não prova autoria, correção semântica, ausência de comprometimento anterior ou armazenamento imutável.
+
+`AlphaReportStore` valida contrato, JSON reaberto e paridade do Markdown; reconcilia hashes existentes para detectar tamper e persiste JSON, Markdown e manifest por transação recuperável. A operação reduz estados parciais, mas não cria transação ACID entre todos os arquivos históricos da run.
+
+## Fatos, inferências e decisões
+
+Fatos apontam para evidências/trace IDs existentes. Inferências declaram suas bases e nunca são serializadas como observação. Recomendações usam códigos allowlisted. Decisões humanas são sanitizadas, identificadas e append-only; não reescrevem o que a ferramenta observou.
+
+## Privacidade e publicação
+
+O report público não inclui source, prompt, resposta bruta do provider, environment bruto, headers, secrets ou stdout/stderr bruto. Ele publica metadados fechados, contagens, códigos, paths relativos e hashes. Evidência bruta continua local e não deve ser anexada automaticamente.
+
+O threat model normativo da superfície pública está em [`report-publication-threat-model.md`](report-publication-threat-model.md). Suporte e limites estão em [`../project/support-and-limitations.md`](../project/support-and-limitations.md).

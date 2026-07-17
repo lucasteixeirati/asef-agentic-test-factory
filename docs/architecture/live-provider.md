@@ -51,3 +51,5 @@ Somente requisito e arquivos concretos autorizados pelo `read_scope` entram no p
 ## Smoke manual
 
 O teste `ManualOpenAILiveSmokeTests` fica desabilitado por padrão. Sua execução requer `ASEF_RUN_LIVE_TESTS=1`, chave, modelo, budget e tarifas explícitos. Ele nunca integra o gate obrigatório de PR.
+
+O percurso operacional está no [`../tutorials/wf-001-live.md`](../tutorials/wf-001-live.md). Estado experimental, ambientes e garantias não oferecidas permanecem canônicos em [`../project/support-and-limitations.md`](../project/support-and-limitations.md).

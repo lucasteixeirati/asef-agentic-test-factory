@@ -1,0 +1,68 @@
+# Suporte e limitações do Alpha
+
+Este documento é a fonte canônica para suporte operacional e limitações públicas. Tutoriais e políticas podem explicar o contexto, mas não devem manter matrizes concorrentes.
+
+## Estado do produto
+
+ASEF é uma pré-release experimental. A última versão publicada é `0.1.0a5`; a linha 5.8 compõe a candidata local `0.1.0a6`, ainda sem tag ou publicação. O projeto não oferece garantia de uso em produção, certificação de segurança, pentest ou isolamento de código arbitrariamente hostil.
+
+## Ambiente de referência
+
+| Componente | Situação comprovada |
+|---|---|
+| Host de desenvolvimento | Windows 11 x86-64 |
+| Runtime local | Python 3.13 |
+| Containers | Docker Desktop com backend Linux/WSL2 |
+| Package publicado | requer Python `>=3.13` |
+| Provider da demo | recorded, keyless e sem rede de provider |
+
+A CI executa testes do core e provas delimitadas em Linux x86-64, incluindo Security 12/12, symlink e cleanup recursivo controlado. Isso não equivale a validar toda a jornada instalada em Linux como ambiente anunciado. macOS, Linux como host público geral, WSL sem Docker Desktop e ARM64 não foram validados para suporte.
+
+## Perfis de linguagem
+
+| Perfil | Nível atual | Capabilities comprovadas | Limites |
+|---|---|---|---|
+| `python-pytest` | experimental | `unit` parcial; detecção de projeto parcial; coverage e mutation disponíveis no recorte de referência | imagem pytest precisa de build local para a demo; quality é opcional; projetos externos exigem scope/budgets e não têm compatibilidade geral prometida |
+| `node-typescript` | planejado | inicialização histórica de container Node 22 por digest | sem detecção, build, test runner, normalização ou quality end-to-end |
+| `java-junit` | planejado | inicialização histórica de container Java 21 por digest | sem detecção, build, test runner, normalização ou quality end-to-end |
+| Go / .NET | planejado | nenhuma capability executável | seleção de tooling e conformance futuras |
+
+Níveis significam:
+
+- **reference:** caminho principal completo, documentado e coberto pela conformance definida;
+- **supported:** caminho completo mantido com contrato e documentação públicos;
+- **experimental:** executável no recorte declarado, sujeito a mudança e limitações conhecidas;
+- **planned:** intenção ou spike, sem suporte de uso.
+
+O código ainda declara `python-pytest` como experimental com alvo futuro `reference`; alvo não é estado atual.
+
+## Sandbox e segurança
+
+O código gerado executa em container efêmero, com usuário não privilegiado, rede desabilitada, workspace read-only, output separado, imagem/argv controlados e budgets. O daemon Docker e o host permanecem parte da fronteira confiável. No ambiente de referência existe o diagnóstico `DOCKER_INSECURE_NO_IPTABLES_RAW`; os controles reduzem risco, mas não provam ausência de escape, vulnerabilidade do daemon, canal lateral ou negação de serviço no host.
+
+Não execute artifacts gerados diretamente no host e não monte o socket Docker. `subprocess`, blacklist de imports e sanitização não são sandbox.
+
+## Provider live
+
+O modo live é experimental, opt-in e fora do gate obrigatório de PR. Exige contexto explícito, operações autorizadas, modelo, tarifas fornecidas pelo operador, budget positivo e `OPENAI_API_KEY` somente no host. Preço, câmbio e disponibilidade do provider são externos; custo persistido é estimativa. Cassettes live são opt-in e não devem ser publicados sem revisão humana.
+
+O modo live não garante determinismo, qualidade sem revisão, confidencialidade de dados enviados ao provider ou compatibilidade futura do modelo/API. Use apenas contexto fictício ou autorizado e leia o [guia live](../tutorials/wf-001-live.md).
+
+## Cleanup e retenção
+
+`asef cleanup` é dry-run por padrão e atua somente sob `.asef`, por selectors, idade, identidade e manifest validados. No Windows caracterizado, apply recursivo de diretórios é recusado porque a primitive disponível não sustenta resistência a ataques de link. Arquivos regulares e containers gerenciados podem ser removidos após revalidação; a prova recursiva existe apenas no runner Linux controlado.
+
+Não há secure erase, backup, recuperação ou garantia de espaço físico liberado. Não use `docker system prune` como substituto.
+
+## Limites dos datasets
+
+- **Smoke:** dez casos públicos e pequenos do WF-001, executados duas vezes na baseline publicada (20/20). Eles provam regressão determinística desses casos, não eficácia geral, ausência de vazamento, qualidade estatística ou desempenho em projetos reais.
+- **Security:** doze controles enumerados (12/12 no ambiente registrado). O resultado prova apenas os controles, versões e precondições observados; não é certificação, pentest ou garantia contra código hostil.
+- **Quality:** coverage e mutation usam fixtures e budgets delimitados. Percentuais e mutation score não são limiares universais de aceitação do produto.
+- Evaluation, Holdout e Language Conformance completos continuam futuros.
+
+## Evidência e operação
+
+Reports públicos omitem source, prompt, ambiente bruto, stdout/stderr bruto e secrets. Hash SHA-256 detecta divergência; não prova autoria, veracidade do produtor ou armazenamento imutável. Logs são locais, rotacionados e sanitizados, sem OpenTelemetry ou coordenação multiwriter.
+
+Para problemas operacionais, use [`../guides/troubleshooting.md`](../guides/troubleshooting.md). Para vulnerabilidades, siga [`../../SECURITY.md`](../../SECURITY.md).

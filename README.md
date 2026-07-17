@@ -1,207 +1,161 @@
 # ASEF — Fábrica de Testes Agêntica
 
-> Um projeto open source para estudar e construir automações de Quality Engineering assistidas por IA, com contexto validado, workflows controlados, execução isolada e evidências auditáveis.
+> Projeto open source experimental para construir automações de Quality Engineering assistidas por IA, com contexto validado, decisões controladas, execução isolada e evidências auditáveis.
 
-## Por que este projeto existe
-
-O ASEF nasceu como uma ideia ampla de automação agêntica do SDLC e foi redirecionado para Quality Engineering a partir da experiência prática do autor. O objetivo é demonstrar como construir uma fábrica de testes moderna sem entregar decisões críticas a um modelo de linguagem.
-
-Este repositório também registra a jornada de desenvolvimento assistido por IA: hipóteses, velocidade, custos, falhas, retrabalho, decisões humanas e lições que poderão formar um futuro livro.
+O ASEF investiga como LLMs podem propor análises e testes sem receber autoridade sobre estados, budgets, políticas, execução ou classificação. O runtime continua determinístico nessas fronteiras; decisões humanas e limitações permanecem visíveis.
 
 ## Estado atual
 
-**Experimental — pré-alpha.** Os incrementos 5.1 a 5.7 estão publicados até [`v0.1.0a5`](https://github.com/lucasteixeirati/asef-agentic-test-factory/releases/tag/v0.1.0a5). O 5.7 entrega Security 12/12, hardening Docker, `asef doctor`, retention/cleanup e os seis jobs da [CI pública `29528937211`](https://github.com/lucasteixeirati/asef-agentic-test-factory/actions/runs/29528937211) verdes, incluindo `alpha-security`. O fluxo combinado do 5.3 ainda não integra a CLI pública. O projeto não deve ser usado para executar código arbitrariamente hostil ou em produção.
+**Experimental — pré-alpha. Não use em produção nem contra código arbitrariamente hostil.**
 
-Já demonstrado:
+A última pré-release publicada é [`v0.1.0a5`](https://github.com/lucasteixeirati/asef-agentic-test-factory/releases/tag/v0.1.0a5), com os incrementos 5.1 a 5.7. A linha de desenvolvimento contém as fatias 5.8.1 a 5.8.6 na candidata local `0.1.0a6`, ainda sem tag ou publicação; isso não transforma a release anterior em uma release 5.8.
 
-- máquina de estados explícita e budgets compartilhados;
-- structured output com validação e recuperação limitada;
-- modo demo por cassette e chamada OpenAI live controlada;
-- LangGraph com checkpoint, interrupção e retomada SQLite;
-- comparação separada com PydanticAI;
-- Docker Desktop com rede, filesystem, memória, PIDs, timeout e paths controlados;
-- coverage e mutation Python em container dedicado, com resultados nativos e normalizados;
-- baselines em Python, Node/TypeScript e Java por imagens fixadas em digest;
-- contexto validável de QA, equipes, sistemas, repositórios, skills, MCPs e LLMs;
-- journals, experimentos, ADRs e lições aprendidas.
+Comprovado até aqui:
 
-## Visão arquitetural
+- fluxo demo por cassette, sem chave e sem chamada de provider;
+- geração e static validation de um teste unitário Python;
+- execução Docker com rede, filesystem, memória, PIDs, timeout e paths controlados;
+- estados, budgets, retries, evidências e exit codes tipados;
+- reports JSON/Markdown com facts, inferences, recommendations e limitations separados;
+- evidence integrity por containment e SHA-256, com hashes dos reports no manifest;
+- checkpoints humanos opcionais com LangGraph;
+- coverage/mutation experimentais e datasets Smoke/Security offline;
+- doctor, logs estruturados, retention e cleanup conservador.
 
-```text
-QualityContext + decisão humana
-              |
-      runtime e políticas ASEF
-       /        |         \
- workflow     skills     MCP/LLM adapters
-       \        |         /
-       sandbox + evidências
-```
+Ainda não comprovado:
 
-O runtime mantém autoridade sobre estados, budgets, retries, permissões e evidências. LLMs propõem análises e artefatos tipados. Skills oferecem capacidades delimitadas. MCPs somente executam operações autorizadas pelo contexto e pela política.
+- segurança para produção ou isolamento absoluto;
+- qualidade de um modelo/provider em cenário real contínuo;
+- validação por participante externo;
+- suporte completo a TypeScript, Java, macOS ou Linux;
+- que coverage/mutation ou `ACCEPTED` provem correção universal do SUT.
 
-## Skills planejadas
+## Quickstart de cinco minutos
 
-- web UI e WebView;
-- backend/API;
-- mobile;
-- testes unitários;
-- mutation testing;
-- performance.
-
-O catálogo está em [`docs/skills/catalog.md`](docs/skills/catalog.md). Uma skill aparecer no catálogo não significa que esteja implementada ou suportada.
-
-## Contexto de Quality Engineering
-
-Cada organização poderá descrever, sem armazenar secrets:
-
-- perfil e fronteiras de aprovação do QA;
-- objetivos e riscos da equipe;
-- sistemas e fluxos críticos;
-- repositórios e escopos de leitura/escrita;
-- capabilities e skills permitidas;
-- MCPs e operações autorizadas;
-- política de modelos, dados e budgets.
-
-Veja [`docs/context/README.md`](docs/context/README.md) e o [exemplo fictício](examples/context/quality-context.example.json).
-
-## Quickstart — demo sem chave de API
-
-Requisitos: Git, Python 3.13 e Docker Desktop iniciado. Em um PowerShell:
+Requisitos: Python 3.13 e Docker Desktop iniciado. Git é necessário apenas para a instalação por checkout. Consulte a fonte canônica de [suporte e limitações](docs/project/support-and-limitations.md) antes de usar outro host, perfil ou modo live.
 
 ```powershell
 git clone https://github.com/lucasteixeirati/asef-agentic-test-factory.git
 cd asef-agentic-test-factory
 py -3.13 -m venv .venv
 .\.venv\Scripts\python.exe -m pip install .
+.\.venv\Scripts\asef.exe doctor --mode demo --output .asef/doctor
 .\.venv\Scripts\asef.exe run
 ```
 
-O resultado esperado é um JSON com `"status": "SUCCEEDED"` e `"classification": "ACCEPTED"`. O relatório fica no caminho indicado por `report_path`. A demo cria contexto, SUT fictício e cassettes públicos sob `.asef/demo/v1`; ela não lê `OPENAI_API_KEY`, não chama um modelo e não exige checkout para funcionar depois da instalação.
+O caminho feliz retorna um único JSON em stdout com:
 
-O comando executa o WS-001 completo no Docker Desktop, sem rede no container e sem escrever no SUT original. Estado, snapshot de contexto, manifest, eventos, artifact, resultado e relatórios permanecem sob `.asef/runs`. Por policy, `--output` também deve permanecer dentro de `.asef`.
-
-O audit trail de cada run é append-only. Logs operacionais JSONL ficam em `.asef/logs/asef.jsonl`, com rotação e redaction básica. Use `--log-level DEBUG|INFO|WARNING|ERROR` sem alterar o JSON público do stdout. Veja [`docs/architecture/observability.md`](docs/architecture/observability.md).
-
-Para observar fronteiras intermediárias sem executar o container:
-
-```powershell
-.\.venv\Scripts\asef.exe prepare
-.\.venv\Scripts\asef.exe generate
+```json
+{
+  "status": "SUCCEEDED",
+  "classification": "ACCEPTED",
+  "report_json": ".asef/runs/RUN_ID/report.json",
+  "report_markdown": ".asef/runs/RUN_ID/report.md",
+  "report_schema_version": "1.0.0"
+}
 ```
 
-Limitações atuais: apenas a skill `unit` e o perfil Python do calculator percorrem o fluxo completo; o modo live exige configuração explícita e permanece experimental; o isolamento depende do daemon local do Docker; e a demo gravada prova o workflow, não a qualidade de um modelo em produção.
+Use os paths reais retornados pelo CLI. A demo materializa somente assets fictícios sob `.asef/demo/v1`, não lê `OPENAI_API_KEY` e não usa rede no container.
 
-Checkpoint e decisão humana usam um extra opcional:
+Para instalação por wheel, validação do report e cleanup dry-run, siga o [quickstart completo](docs/getting-started/quickstart.md).
+
+## O que acontece na demo
+
+```text
+request + QualityContext
+  -> snapshot e policies
+  -> análise gravada: behaviors, risks e scenarios
+  -> artifact tipado + static validation
+  -> workspace efêmero
+  -> execução Docker normalizada
+  -> avaliação funcional determinística
+  -> AlphaRunReport JSON + Markdown + hashes no manifest
+```
+
+O fluxo público linear não usa o oracle curado combinado do incremento 5.3. `ACCEPTED` significa apenas que a execução registrada satisfez a regra funcional desta run e deste perfil experimental.
+
+## Mapa da documentação
+
+Comece por:
+
+- [quickstart instalado](docs/getting-started/quickstart.md) — instalação, doctor, run, validação e cleanup;
+- [tutorial WF-001 demo](docs/tutorials/wf-001-demo.md) — requisito, análise, artifact, execução e report;
+- [interpretação do report](docs/guides/report-interpretation.md) — classificações, quality e evidence integrity;
+- [troubleshooting](docs/guides/troubleshooting.md) — exits e ações seguras;
+- [tutorial live](docs/tutorials/wf-001-live.md) — provider opt-in, secret no host e budget explícito.
+
+Referências técnicas atuais:
+
+- [QualityContext](docs/context/README.md);
+- [contratos do Alpha](docs/architecture/contracts/alpha-python-contracts.md);
+- [threat model de publicação](docs/architecture/report-publication-threat-model.md);
+- [observabilidade](docs/architecture/observability.md);
+- [doctor](docs/architecture/doctor.md);
+- [cleanup](docs/architecture/cleanup.md);
+- [provider live](docs/architecture/live-provider.md).
+
+A [arquitetura real do Alpha](docs/architecture/alpha-python-architecture.md), o [guia de adapters](docs/contributing/adapter-guide.md) e o [guia de contribuição](CONTRIBUTING.md) documentam as fronteiras vigentes.
+
+## Comandos públicos
+
+```text
+asef prepare    fronteira anterior à análise
+asef generate   análise, geração e static validation
+asef run        demo linear completa no Docker
+asef wait       pausa opcional para esclarecimento humano
+asef resume     retoma a mesma run aguardando decisão
+asef cancel     cancela a mesma run aguardando decisão
+asef doctor     diagnóstico read-only do ambiente
+asef smoke      dataset funcional offline
+asef security   dataset de controles offline
+asef cleanup    planejamento/aplicação conservadora sob .asef
+```
+
+Exit codes: `0` sucesso, `2` input/contexto, `3` espera humana, `4` falha funcional, `5` policy, `6` budget, `7` provider/infraestrutura e `130` cancelamento.
+
+Checkpoint humano requer o extra opcional:
 
 ```powershell
 .\.venv\Scripts\python.exe -m pip install ".[workflow-langgraph]"
-.\.venv\Scripts\asef.exe wait
-.\.venv\Scripts\asef.exe resume --run-id <RUN_ID> --answer "Only signed integers"
-.\.venv\Scripts\asef.exe cancel --run-id <RUN_ID> --reason "No longer required"
 ```
 
-`wait` retorna 3, `resume` reutiliza a mesma run e `cancel` retorna 130. O modo linear continua funcionando sem instalar o extra.
+## Suporte e limitações
 
-Exit codes públicos: 0 sucesso, 2 input/contexto, 3 espera humana, 4 falha funcional, 5 policy, 6 budget, 7 provider/infraestrutura e 130 cancelamento. A matriz é exercitada automaticamente nos testes.
+O único caminho completo atual usa a skill `unit`, o perfil experimental `python-pytest`, o SUT fictício calculator e Docker Desktop local. Node/TypeScript e Java possuem apenas baselines anteriores e continuam planejados como perfis do produto. A [matriz canônica](docs/project/support-and-limitations.md) distingue capability comprovada de alvo futuro.
 
-Para desenvolver e executar toda a suíte localmente, use o checkout:
+O modo live exige provider/modelo disponível, tarifas atuais informadas pelo operador e budget positivo. Disponibilidade, preço e câmbio não são congelados no repositório. Nunca coloque chave real em arquivo, argumento, contexto, cassette, report ou issue.
 
-```powershell
-$env:PYTHONPATH='src'
-$env:ASEF_RUN_DOCKER_TESTS='1'
-python -m unittest discover -s tests\integration -v
-```
+Quality capabilities enriquecem evidência, mas não mudam a classificação funcional e não aplicam threshold universal.
 
-Nunca coloque uma chave real em arquivos do repositório. O modo live exige `OPENAI_API_KEY` no host e budget explícito.
+## Estrutura do repositório
 
-O adapter live experimental exige também contexto próprio e tarifas atuais informadas pelo operador:
-
-```powershell
-$env:OPENAI_API_KEY='<somente-no-host>'
-asef generate --mode live `
-  --context examples/context/walking-skeleton-live-context.example.json `
-  --model gpt-5.4 `
-  --api-budget-brl 1.00 `
-  --input-cost-brl-per-million <TARIFA_ATUAL> `
-  --output-cost-brl-per-million <TARIFA_ATUAL>
-```
-
-As tarifas não são congeladas no repositório. Confirme preço, câmbio, modelo disponível e teto antes do smoke manual. O modo demo continua sem chave e sem rede. Veja [`docs/architecture/live-provider.md`](docs/architecture/live-provider.md).
-
-## Estrutura
-
-- `src/asef/` — contratos, application services, runtime, adapters e baseline legada temporária;
-- `spikes/` — comparações descartáveis ou isoladas;
-- `tests/` — testes unitários e integrações Docker;
-- `docs/` — arquitetura, projeto, qualidade, contexto e experimentos;
-- `journal/` — fatos contemporâneos da jornada;
+- `src/asef/` — contratos, application services, runtime e adapters;
+- `tests/` — testes unitários, adversariais e integrações opcionais;
+- `datasets/` — fixtures Smoke/Security públicas e fictícias;
+- `docs/` — arquitetura, guias, projeto, qualidade e experimentos;
+- `journal/` — fatos contemporâneos do desenvolvimento;
 - `book/` — estratégia e notas do futuro livro;
 - `concepcao/` — documentos históricos preservados.
 
-## Roadmap resumido
+## Roadmap
 
-1. Marco Zero e planejamento — concluído.
-2. Contratos, workflow e avaliação — concluído.
-3. Spikes arquiteturais — revisão técnica concluída.
-4. Walking skeleton e hardening — concluídos; Gate 4 aprovado.
-5. Alpha Python — incrementos 5.1 a 5.7 publicados até `v0.1.0a5`; o próximo incremento planejado é o 5.8.
+1. visão, domínio, contratos e spikes — concluídos;
+2. walking skeleton e hardening — concluídos;
+3. Alpha Python 5.1 a 5.7 — publicado até `v0.1.0a5`;
+4. relatórios e experiência pública 5.8 — em desenvolvimento;
+5. avaliação externa/fechamento 5.9 — pendente;
+6. perfis TypeScript/Java e developer preview — futuros.
 
-O Smoke Dataset Alpha pode ser executado de forma determinística e sem chave de provider:
+Veja o [planejamento mestre](PLANEJAMENTO_MESTRE.md) para gates, dependências e critérios completos.
 
-```powershell
-asef smoke `
-  --dataset-root datasets/smoke `
-  --context examples/context/python-alpha-smoke-context.json `
-  --output .asef/smoke `
-  --repeat 1
-```
+## Contribuição, segurança e licença
 
-Os dez resultados incluem caminhos felizes e encerramentos negativos esperados. O exit code da suíte é `0` quando todos correspondem às expectativas, `4` em caso de mismatch e `7` quando há erro do runner; classificações negativas esperadas de um caso não tornam a suíte falha.
+Leia [`CONTRIBUTING.md`](CONTRIBUTING.md) antes de propor mudanças. Para vulnerabilidades ou possível exposição, siga [`SECURITY.md`](SECURITY.md) e não abra issue pública com dados sensíveis.
 
-O Security Dataset também é offline e keyless:
-
-```powershell
-asef security --dataset-root datasets/security --output .asef/security
-```
-
-O comando exige 12 `PASSED`; control failure retorna `4` e erro/unsupported retorna `7`.
-
-O diagnóstico do ambiente não instala, corrige, faz pull/build ou executa provider:
-
-```powershell
-asef doctor --mode demo --output .asef/doctor
-```
-
-`HEALTHY` e `DEGRADED` retornam exit `0`; requisito obrigatório ausente produz `BLOCKED` e exit `7`. Contexto explícito inválido também bloqueia. Facts e recomendações são allowlisted, e a presença de chave live é publicada somente como booleano.
-
-Cleanup é sempre dry-run sem `--apply`:
-
-```powershell
-asef cleanup --kind all --older-than-days 7
-```
-
-Para aplicar um plano elegível:
-
-```powershell
-asef cleanup --kind logs --older-than-days 7 --apply
-```
-
-A raiz é fixa em `.asef`; idade vem de manifest/timestamp validado; tombstones ficam em `.asef/maintenance/cleanup`. No Windows atualmente caracterizado, diretórios permanecem dry-run/falha segura porque apply recursivo resistente a links não foi comprovado. Arquivos regulares e containers gerenciados usam revalidação e identidade exata. O comando não promete secure erase.
-6. Perfis TypeScript e Java.
-7. Developer preview e hardening da v0.1.
-
-Veja o [`PLANEJAMENTO_MESTRE.md`](PLANEJAMENTO_MESTRE.md).
-
-## Contribuição e segurança
-
-Leia [`CONTRIBUTING.md`](CONTRIBUTING.md) e [`SECURITY.md`](SECURITY.md). Resultados experimentais, limitações e decisões revertidas são contribuições válidas; o projeto não busca uma narrativa artificial de sucesso contínuo.
-
-## Licença
-
-Código e documentação são disponibilizados sob a licença MIT. Consulte [`LICENSE`](LICENSE).
+Código e documentação usam a licença [MIT](LICENSE). Resultados negativos, limitações e decisões revertidas são parte válida da evidência do projeto.
 
 ---
 
 ### English summary
 
-ASEF is an experimental open-source Agentic Test Factory for learning how to build context-aware, policy-controlled and evidence-driven Quality Engineering automation with LLMs, skills, MCP integrations and isolated execution.
+ASEF is an experimental open-source Agentic Test Factory for context-aware, policy-controlled and evidence-driven Quality Engineering automation. The current complete path is a keyless Python demo; production safety, broad language support and external validation are not claimed.

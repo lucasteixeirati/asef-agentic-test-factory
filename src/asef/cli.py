@@ -46,12 +46,13 @@ from .application.security_runner import (
     SecuritySuiteInfrastructureError,
     SecuritySuiteRunner,
 )
+from .report_contracts import REPORT_SCHEMA_VERSION
 from .context import ContextValidationError
 from .contracts import ContractValidationError, SkeletonRunRequest
 from .security_contracts import CleanupKind, CleanupMode, CleanupRequest
 from .application.ports import ProviderError
 from .demo import materialize_demo_assets
-from .outcomes import exit_code_for
+from .outcomes import RunStatus, exit_code_for
 from .observability import close_operational_logging, configure_operational_logging
 from .skills.unit import UnitSkill
 
@@ -71,7 +72,7 @@ def _package_version() -> str:
         return metadata.version("asef-agentic-test-factory")
     except metadata.PackageNotFoundError:
         # Source-tree execution used by contributors before an editable install.
-        return "0.1.0a5"
+        return "0.1.0a6"
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -447,6 +448,19 @@ def main(argv: list[str] | None = None) -> int:
                     if decided.report_path
                     else None
                 ),
+                "report_json": (
+                    f"{decided.run_dir.as_posix()}/report.json"
+                    if decided.report_path
+                    else None
+                ),
+                "report_markdown": (
+                    f"{decided.run_dir.as_posix()}/report.md"
+                    if decided.report_path
+                    else None
+                ),
+                "report_schema_version": (
+                    REPORT_SCHEMA_VERSION if decided.report_path else None
+                ),
             }
             code = int(exit_code_for(decided.state.status, decided.state.classification))
             _log_completion(logger, args.command, decided.state.run_id, payload, code)
@@ -512,6 +526,18 @@ def main(argv: list[str] | None = None) -> int:
             )
             if args.command in {"generate", "wait"}:
                 generated = generation_service.execute(request)
+                terminal_report_path = None
+                if generated.workspace is None and generated.state.status in {
+                    RunStatus.FAILED,
+                    RunStatus.CANCELLED,
+                    RunStatus.POLICY_BLOCKED,
+                    RunStatus.BUDGET_EXHAUSTED,
+                }:
+                    terminal_report_path = CompleteWorkflowService(
+                        generation_service,
+                        DockerUnitTestAdapter(args.output, timeout_seconds=60),
+                        store,
+                    ).complete_generated(generated).report_path
                 payload = {
                     "run_id": generated.state.run_id,
                     "status": generated.state.status.value,
@@ -521,7 +547,33 @@ def main(argv: list[str] | None = None) -> int:
                     "ready_for": (
                         "test_execution"
                         if generated.workspace
-                        else "human_decision"
+                        else (
+                            "human_decision"
+                            if generated.state.status
+                            in {
+                                RunStatus.WAITING_FOR_CLARIFICATION,
+                                RunStatus.WAITING_FOR_HUMAN_REVIEW,
+                            }
+                            else None
+                        )
+                    ),
+                    "report_path": (
+                        f"{generated.run_dir.as_posix()}/{terminal_report_path}"
+                        if terminal_report_path
+                        else None
+                    ),
+                    "report_json": (
+                        f"{generated.run_dir.as_posix()}/report.json"
+                        if terminal_report_path
+                        else None
+                    ),
+                    "report_markdown": (
+                        f"{generated.run_dir.as_posix()}/report.md"
+                        if terminal_report_path
+                        else None
+                    ),
+                    "report_schema_version": (
+                        REPORT_SCHEMA_VERSION if terminal_report_path else None
                     ),
                 }
                 code = 0 if generated.workspace else int(
@@ -542,6 +594,19 @@ def main(argv: list[str] | None = None) -> int:
                         f"{completed.run_dir.as_posix()}/{completed.report_path}"
                         if completed.report_path
                         else None
+                    ),
+                    "report_json": (
+                        f"{completed.run_dir.as_posix()}/report.json"
+                        if completed.report_path
+                        else None
+                    ),
+                    "report_markdown": (
+                        f"{completed.run_dir.as_posix()}/report.md"
+                        if completed.report_path
+                        else None
+                    ),
+                    "report_schema_version": (
+                        REPORT_SCHEMA_VERSION if completed.report_path else None
                     ),
                 }
                 code = int(exit_code_for(completed.state.status, completed.state.classification))
