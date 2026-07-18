@@ -9,7 +9,7 @@ from typing import Any
 
 
 SCHEMA_VERSION = "1.0.0"
-EXPECTED_INVENTORY_REVISION = "1.4.0"
+EXPECTED_INVENTORY_REVISION = "1.5.0"
 EXPECTED_EXTERNAL_PROTOCOL_VERSION = "1.0.1"
 EXPECTED_GATE_IDS = tuple(f"G5-{index:02d}" for index in range(1, 21))
 EXPECTED_JOBS = {
@@ -26,6 +26,8 @@ EXPECTED_RELEASE_TAG = "v0.1.0a7"
 EXPECTED_PREFLIGHT_ID = "ASEF-PF-20260718-A7"
 EXPECTED_TAGGED_COMMIT = "79fbeb0dbbef39799801b86cebd59f8b55edaa0a"
 EXPECTED_IMPLEMENTATION_COMMIT = "58ea802bdc912f906e9cffcf7646424e8c66e6ed"
+EXPECTED_FINAL_COMMIT = "2e7655eb51876ff0bff8fdbd87442dc812c53077"
+EXPECTED_FINAL_CI = 29654457005
 EXPECTED_ASSETS = {
     "wheel": (
         "asef_agentic_test_factory-0.1.0a7-py3-none-any.whl",
@@ -112,7 +114,11 @@ class Gate5EvidenceChecker:
             self._check_internal_evaluation(payload.get("internal_evaluation"))
             self._check_criteria(payload.get("criteria"))
             self._check_decision(
-                payload.get("decision"), payload.get("criteria"), payload.get("external_evaluation")
+                payload.get("decision"),
+                payload.get("criteria"),
+                payload.get("external_evaluation"),
+                payload.get("internal_evaluation"),
+                payload.get("phase"),
             )
         return EvidenceAudit(
             inventory=self.inventory.as_posix(),
@@ -204,6 +210,7 @@ class Gate5EvidenceChecker:
             self._add("CI_RUNS", "ci_runs", "at least one successful seven-job run is required")
             return
         identifiers: set[int] = set()
+        final_ci_found = False
         for index, run in enumerate(runs):
             path = f"ci_runs[{index}]"
             if not isinstance(run, dict):
@@ -214,6 +221,8 @@ class Gate5EvidenceChecker:
                 self._add("CI_RUN_ID", f"{path}.id", str(identifier))
             if isinstance(identifier, int):
                 identifiers.add(identifier)
+            if identifier == EXPECTED_FINAL_CI and run.get("head_sha") == EXPECTED_FINAL_COMMIT:
+                final_ci_found = True
             if run.get("conclusion") != "success":
                 self._add("CI_CONCLUSION", f"{path}.conclusion", str(run.get("conclusion")))
             if not _COMMIT.fullmatch(str(run.get("head_sha", ""))):
@@ -223,6 +232,8 @@ class Gate5EvidenceChecker:
                 self._add("CI_JOBS", f"{path}.jobs", "expected the seven canonical jobs exactly once")
             if not str(run.get("url", "")).startswith("https://github.com/"):
                 self._add("CI_URL", f"{path}.url", "expected GitHub HTTPS URL")
+        if not final_ci_found:
+            self._add("FINAL_CI", "ci_runs", "final candidate CI/commit pair is missing")
 
     def _check_protocol(self, external: object) -> None:
         if not isinstance(external, dict):
@@ -486,27 +497,53 @@ class Gate5EvidenceChecker:
                 if self._safe_file(relative, evidence_path) is not None:
                     self.checked_evidence += 1
 
-    def _check_decision(self, decision: object, criteria: object, external: object) -> None:
+    def _check_decision(
+        self,
+        decision: object,
+        criteria: object,
+        external: object,
+        internal: object,
+        phase: object,
+    ) -> None:
         if not isinstance(decision, dict):
             self._add("DECISION_TYPE", "decision", "must be an object")
             return
-        if decision.get("status") != "PENDING_HUMAN":
-            self._add("DECISION_STATUS", "decision.status", "must remain PENDING_HUMAN before Gate 5")
+        status = decision.get("status")
+        if status not in {"PENDING_HUMAN", "APPROVED_WITH_CONDITIONS", "REJECTED_BLOCKED"}:
+            self._add("DECISION_STATUS", "decision.status", "unexpected human decision state")
         recommendation = decision.get("technical_recommendation")
-        if recommendation != "NOT_READY":
-            self._add("DECISION_RECOMMENDATION", "decision.technical_recommendation", "must remain NOT_READY")
+        if phase != "FINAL" and recommendation != "NOT_READY":
+            self._add("DECISION_RECOMMENDATION", "decision.technical_recommendation", "must remain NOT_READY before FINAL")
+        if phase == "FINAL" and recommendation not in {"APPROVE_WITH_CONDITIONS", "REJECT_BLOCK"}:
+            self._add("DECISION_RECOMMENDATION", "decision.technical_recommendation", "unexpected FINAL recommendation")
+        conditions = decision.get("conditions")
+        if recommendation == "APPROVE_WITH_CONDITIONS" and (
+            not isinstance(conditions, list)
+            or not conditions
+            or any(not isinstance(item, str) or not item.strip() for item in conditions)
+        ):
+            self._add("DECISION_CONDITIONS", "decision.conditions", "non-empty conditions are required")
         if isinstance(criteria, list) and any(
             isinstance(item, dict) and item.get("status") in {"PARTIAL", "BLOCKED", "NOT_MET"}
             for item in criteria
         ) and recommendation in {"APPROVE", "APPROVE_WITH_CONDITIONS"}:
             self._add("DECISION_CONTRADICTION", "decision", "open criteria cannot recommend approval")
         external_status = external.get("status") if isinstance(external, dict) else None
-        if external_status != "COMPLETED" and recommendation in {"APPROVE", "APPROVE_WITH_CONDITIONS"}:
+        internal_status = internal.get("status") if isinstance(internal, dict) else None
+        if external_status != "COMPLETED" and recommendation == "APPROVE":
             self._add(
                 "DECISION_EXTERNAL_CONTRADICTION",
                 "decision",
-                "approval recommendation requires completed external evaluation",
+                "unconditional approval requires completed external evaluation",
             )
+        if external_status == "DEFERRED" and recommendation == "APPROVE_WITH_CONDITIONS" and internal_status != "COMPLETED":
+            self._add(
+                "DECISION_INTERNAL_CONTRADICTION",
+                "decision",
+                "deferred external evaluation requires completed internal evidence for conditional recommendation",
+            )
+        if status == "APPROVED_WITH_CONDITIONS" and recommendation != "APPROVE_WITH_CONDITIONS":
+            self._add("DECISION_STATUS_CONTRADICTION", "decision", "human decision and recommendation diverge")
 
     def _safe_file(self, relative: object, path: str) -> Path | None:
         if not isinstance(relative, str) or not relative:

@@ -432,7 +432,7 @@ Usar quando a correção ultrapassar o escopo, o participante não estiver dispo
 
 **Checkpoint final:** Lucas escolhe explicitamente `APPROVE`, `APPROVE_WITH_CONDITIONS` ou `REJECT/BLOCK`. Aprovação autoriza somente planejar a Etapa 6.
 
-**Candidata local em 2026-07-18:** regressão aprovou 362 testes/33 skips e branch coverage de 85%. Pacote G5 foi produzido com recomendação condicional e riscos explícitos. A fatia aguarda autorização de commit/push, sete jobs públicos verdes e decisão humana; produto e package a7 não foram alterados.
+**Fechamento técnico em 2026-07-18:** regressão aprovou 362 testes/33 skips e branch coverage de 85%. O commit `2e7655e` e a CI `29654457005` aprovaram os sete jobs. Pacote e inventário final recomendam `APPROVE_WITH_CONDITIONS`; resta exclusivamente a decisão humana. Produto e package a7 não foram alterados.
 
 ### Modo acelerado autorizado para 5.9.3–5.9.6
 

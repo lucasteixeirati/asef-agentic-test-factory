@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0.0",
-  "inventory_revision": "1.4.0",
+  "inventory_revision": "1.5.0",
   "gate_id": "G5",
-  "phase": "INTERNAL_EVALUATED",
+  "phase": "FINAL",
   "generated_on": "2026-07-18",
   "release": {
     "version": "0.1.0a7",
@@ -64,6 +64,21 @@
       "head_sha": "3d74c91617caead59eeb5804f6cc89e55b7bd133",
       "conclusion": "success",
       "url": "https://github.com/lucasteixeirati/asef-agentic-test-factory/actions/runs/29648119788",
+      "jobs": [
+        "core",
+        "framework-spikes",
+        "docker-security",
+        "alpha-smoke",
+        "quality-capabilities",
+        "alpha-security",
+        "public-experience"
+      ]
+    },
+    {
+      "id": 29654457005,
+      "head_sha": "2e7655eb51876ff0bff8fdbd87442dc812c53077",
+      "conclusion": "success",
+      "url": "https://github.com/lucasteixeirati/asef-agentic-test-factory/actions/runs/29654457005",
       "jobs": [
         "core",
         "framework-spikes",
@@ -277,16 +292,23 @@
     {
       "id": "G5-20",
       "status": "MET",
-      "summary": "Regressões históricas e os sete jobs públicos da release e do postflight permanecem verdes.",
+      "summary": "Regressões históricas e os sete jobs públicos da release, postflight e candidata final permanecem verdes.",
       "evidence": [
         ".github/workflows/ci.yml",
-        "docs/reviews/2026-07-18-revisao-publicacao-a7.md"
+        "docs/reviews/2026-07-18-revisao-publicacao-a7.md",
+        "docs/reviews/2026-07-18-revisao-local-fatia-596.md"
       ]
     }
   ],
   "decision": {
     "status": "PENDING_HUMAN",
-    "technical_recommendation": "NOT_READY",
-    "reason": "Regressão local e pacote decisório estão prontos; commit/CI pública final e decisão humana permanecem pendentes, com independência externa adiada."
+    "technical_recommendation": "APPROVE_WITH_CONDITIONS",
+    "conditions": [
+      "Coletar feedback anonimizado de usuário ou QE externo quando houver adoção.",
+      "Repetir a jornada instalada fora do checkout com pessoa não pertencente à autoria.",
+      "Manter linguagem experimental e não aprovada para produção ou código hostil.",
+      "Planejar separadamente qualquer experimento com SUT público e a Etapa 6."
+    ],
+    "reason": "Candidata final e sete jobs públicos aprovados; recomendação condicional preserva a independência externa adiada e aguarda decisão explícita de Lucas."
   }
 }

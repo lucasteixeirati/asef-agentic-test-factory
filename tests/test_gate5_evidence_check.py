@@ -20,6 +20,7 @@ INVENTORY = ROOT / "docs/project/gates/gate-05-evidence-inventory.json"
 
 def _fixture_payload() -> dict[str, object]:
     payload = copy.deepcopy(json.loads(INVENTORY.read_text(encoding="utf-8")))
+    payload["phase"] = "INTERNAL_EVALUATED"
     external = payload["external_evaluation"]
     assert isinstance(external, dict)
     external["protocol_version"] = "1.0.1"
@@ -34,6 +35,11 @@ def _fixture_payload() -> dict[str, object]:
     internal["status"] = "READY_FOR_SESSION"
     internal["results"] = []
     internal.pop("summary", None)
+    decision = payload["decision"]
+    assert isinstance(decision, dict)
+    decision["status"] = "PENDING_HUMAN"
+    decision["technical_recommendation"] = "NOT_READY"
+    decision.pop("conditions", None)
     criteria = payload["criteria"]
     assert isinstance(criteria, list)
     for criterion in criteria:

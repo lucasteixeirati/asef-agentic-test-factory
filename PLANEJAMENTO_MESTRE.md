@@ -2,7 +2,7 @@
 
 > Documento vivo para orientar a construção da aplicação, da documentação pública e do futuro livro.
 
-**Status:** vigente — `v0.1.0a7` e postflight aprovados; 5.9.1–5.9.5 concluídas; candidata 5.9.6 local pronta; commit/CI e decisão humana do Gate 5 pendentes
+**Status:** vigente — 5.9.1–5.9.6 tecnicamente concluídas; `v0.1.0a7`, postflight e CI final `29654457005` aprovados; decisão humana do Gate 5 pendente
 **Data de início:** 2026-07-11  
 **Responsável:** Lucas  
 **Natureza:** projeto open source, educacional, experimental e de portfólio  
@@ -746,7 +746,7 @@ As datas serão estimadas após a baseline das primeiras sessões. Os gates são
 **Plano executável:** `docs/project/stage-05-alpha-python-plan.md`
 
 **Plano de aceite:** `docs/project/gates/gate-05-acceptance-plan.md`
-**Status:** 5.1 a 5.8 concluídos e `v0.1.0a7` aprovada em postflight. 5.9.1–5.9.5 concluídas; avaliação interna anonimizada e externa adiada. A candidata local 5.9.6 passou em regressão e recomenda aprovação condicional, mas ainda depende de commit/CI pública e decisão explícita de Lucas. O Gate 5 permanece em execução.
+**Status:** 5.1 a 5.9 tecnicamente concluídos. `v0.1.0a7`, postflight e commit final `2e7655e` passaram nas matrizes públicas; avaliação interna foi anonimizada e a externa adiada. O pacote recomenda aprovação condicional e aguarda decisão explícita de Lucas. O Gate 5 permanece em execução.
 
 **Aplicação**
 
@@ -945,11 +945,11 @@ Cada nova versão deverá declarar hipótese, baseline, mudança, resultado, lim
 
 ### Agora — fechamento da Etapa 5
 
-1. autorizar commit/push da candidata documental/checker do fechamento;
-2. obter sete jobs públicos verdes no commit auditado;
-3. reconciliar a CI no inventário e congelar o pacote final;
-4. decidir explicitamente `APPROVE_WITH_CONDITIONS` ou `REJECT/BLOCK` para o Gate 5;
-5. não iniciar feature ou Etapa 6 antes dessa decisão.
+1. decidir explicitamente `APPROVE_WITH_CONDITIONS` ou `REJECT/BLOCK` para o Gate 5;
+2. registrar a decisão e as condições no pacote/inventário;
+3. fechar a Etapa 5 apenas se a decisão for favorável;
+4. não iniciar feature ou Etapa 6 antes dessa decisão;
+5. se aprovado, autorizar somente o planejamento detalhado da Etapa 6.
 
 ### Em seguida — somente após Gate 5
 
@@ -1067,4 +1067,4 @@ Decisões já encerradas e registradas: nome público ASEF; licença MIT; Python
 
 ## 27. Próxima decisão
 
-Autorizar ou negar o commit/push da candidata 5.9.6. Se autorizada, executar os sete jobs públicos, reconciliar o SHA da CI no inventário e reapresentar o Gate 5 para decisão explícita. A recomendação técnica é `APPROVE_WITH_CONDITIONS`; nenhuma decisão foi presumida e a Etapa 6 continua não autorizada.
+Decidir explicitamente o Gate 5. A recomendação técnica é `APPROVE_WITH_CONDITIONS`, com feedback externo, jornada humana isolada, linguagem experimental e planejamento separado como condições. Alternativa: `REJECT/BLOCK`. Nenhuma decisão foi presumida e a Etapa 6 continua não autorizada.

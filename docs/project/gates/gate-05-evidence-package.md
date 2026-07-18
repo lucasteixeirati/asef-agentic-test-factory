@@ -3,14 +3,14 @@
 - **Etapa:** 5 — Alpha Python
 - **Data da auditoria local:** 2026-07-18
 - **Release avaliada:** `v0.1.0a7`
-- **Estado técnico:** candidata local; aguarda commit, CI pública e decisão humana
+- **Estado técnico:** pronta para decisão humana; commit e CI pública final aprovados
 - **Autoridade de aprovação:** Lucas
 
 ## Parecer técnico
 
-**Recomendação condicionada à CI final: `APPROVE_WITH_CONDITIONS`.** Dezenove critérios estão `MET`; G5-18 está `MET_WITH_RESIDUAL_RISK`. Não há finding crítico/alto aberto. A release e o postflight são reproduzíveis, mas não houve avaliação externa independente e a jornada humana isolada foi pulada na sessão interna.
+**Recomendação: `APPROVE_WITH_CONDITIONS`.** Dezenove critérios estão `MET`; G5-18 está `MET_WITH_RESIDUAL_RISK`. Não há finding crítico/alto aberto. A release, o postflight e a candidata final passaram publicamente, mas não houve avaliação externa independente e a jornada humana isolada foi pulada na sessão interna.
 
-A recomendação não é aprovação automática. Antes da decisão, o commit documental/checker final precisa passar nos sete jobs públicos. Uma aprovação deve aceitar expressamente as condições abaixo e autoriza somente planejar a Etapa 6.
+A recomendação não é aprovação automática. O commit `2e7655e` passou nos sete jobs da CI `29654457005`. Uma aprovação deve aceitar expressamente as condições abaixo e autoriza somente planejar a Etapa 6.
 
 ## Matriz consolidada
 
@@ -22,7 +22,7 @@ A recomendação não é aprovação automática. Antes da decisão, o commit do
 | G5-14 a G5-17 | MET | JSON/Markdown, logs/retention, doctor e fronteiras neutras do core |
 | G5-18 | MET_WITH_RESIDUAL_RISK | documentação/postflight coerentes e sessão I01 informativa; QE externo ausente |
 | G5-19 | MET | baseline, journals, retrospectiva, Lesson 003 e contribuição IA/humana |
-| G5-20 | MET; confirmação final pendente | três matrizes públicas de sete jobs verdes; nova CI necessária para o pacote local |
+| G5-20 | MET | quatro matrizes públicas de sete jobs verdes, incluindo a candidata final `29654457005` |
 
 O inventário mecânico contém G5-01 a G5-20, release, hashes, CIs e caminhos primários. O checker local aprovou 20 critérios e 42 evidências antes da criação deste pacote.
 
@@ -43,7 +43,7 @@ O inventário mecânico contém G5-01 a G5-20, release, hashes, CIs e caminhos p
 - documentação e links: checker sem findings;
 - nenhum produto/package foi alterado após a release a7.
 
-As provas Docker, Smoke, Security e experiência instalada permanecem atribuídas às CIs públicas da release/postflight. A CI do commit final ainda é obrigatória porque checker e documentos de Gate foram alterados.
+As provas Docker, Smoke, Security e experiência instalada permanecem atribuídas às CIs públicas da release/postflight e foram repetidas com sucesso na candidata final `29654457005`.
 
 ## Avaliação humana e findings
 
@@ -76,7 +76,7 @@ A avaliação externa está `DEFERRED`. A sessão interna `I01` foi publicada co
 ## Decisão humana
 
 - [ ] `APPROVE` — não recomendado sem remover o risco externo;
-- [ ] `APPROVE_WITH_CONDITIONS` — recomendação técnica após CI final verde;
+- [ ] `APPROVE_WITH_CONDITIONS` — recomendação técnica vigente;
 - [ ] `REJECT/BLOCK` — devolver para correções ou exigir avaliação externa antes do Gate.
 
 **Decisão/condições de Lucas:** pendente.

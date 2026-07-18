@@ -1,7 +1,7 @@
 # Revisão local — fatia 5.9.6 e candidata do Gate 5
 
 - **Data:** 2026-07-18
-- **Parecer:** `READY_FOR_COMMIT_AND_PUBLIC_CI_CHECKPOINT`
+- **Parecer:** `READY_FOR_HUMAN_GATE_DECISION`
 - **Produto/package:** inalterado após `v0.1.0a7`
 
 ## Resultado
@@ -14,11 +14,10 @@
 - G5-01 a G5-20 reconciliados; somente G5-18 mantém risco residual;
 - recomendação proposta: `APPROVE_WITH_CONDITIONS` depois da CI final.
 
-## Pendências que impedem fechar 5.9.6
+## CI final
 
-1. autorização de commit/push do pacote local;
-2. sete jobs públicos verdes no commit auditado;
-3. reconciliação da CI no inventário final;
-4. decisão explícita de Lucas sobre o Gate 5.
+O commit `2e7655eb51876ff0bff8fdbd87442dc812c53077` foi publicado após autorização. A CI `29654457005` aprovou os sete jobs canônicos. O inventário `1.5.0` registra a matriz e está em fase `FINAL`.
+
+Resta somente a decisão explícita de Lucas sobre o Gate 5.
 
 Nenhuma dessas pendências autoriza nova feature, release ou Etapa 6.
