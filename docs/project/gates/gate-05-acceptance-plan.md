@@ -1,6 +1,6 @@
 # Gate 5 — Plano de aceite do Alpha Python
 
-- **Estado:** candidata local do Gate pronta; regressão aprovada; commit/CI final e decisão humana pendentes
+- **Estado:** Gate 5 aprovado com condições por Lucas em 2026-07-18
 - **Responsável pela decisão final:** Lucas
 - **Ambiente de referência:** Windows, Docker Desktop com backend WSL2 e Python 3.13 suportado pelo package
 - **Inventário mecânico:** `docs/project/gates/gate-05-evidence-inventory.json` — decisão continua pendente e humana

@@ -2,7 +2,7 @@
 
 > Documento vivo para orientar a construção da aplicação, da documentação pública e do futuro livro.
 
-**Status:** vigente — 5.9.1–5.9.6 tecnicamente concluídas; `v0.1.0a7`, postflight e CI final `29654457005` aprovados; decisão humana do Gate 5 pendente
+**Status:** vigente — Etapa 5 concluída e Gate 5 aprovado com condições em 2026-07-18; autorizado somente o planejamento detalhado da Etapa 6
 **Data de início:** 2026-07-11  
 **Responsável:** Lucas  
 **Natureza:** projeto open source, educacional, experimental e de portfólio  
@@ -746,7 +746,7 @@ As datas serão estimadas após a baseline das primeiras sessões. Os gates são
 **Plano executável:** `docs/project/stage-05-alpha-python-plan.md`
 
 **Plano de aceite:** `docs/project/gates/gate-05-acceptance-plan.md`
-**Status:** 5.1 a 5.9 tecnicamente concluídos. `v0.1.0a7`, postflight e commit final `2e7655e` passaram nas matrizes públicas; avaliação interna foi anonimizada e a externa adiada. O pacote recomenda aprovação condicional e aguarda decisão explícita de Lucas. O Gate 5 permanece em execução.
+**Status:** concluída. 5.1 a 5.9, `v0.1.0a7`, postflight e matrizes públicas foram aprovados. Lucas aprovou o Gate 5 com condições em 2026-07-18; avaliação externa, jornada humana isolada e linguagem experimental permanecem condições. Somente o planejamento detalhado da Etapa 6 está autorizado.
 
 **Aplicação**
 
@@ -945,11 +945,11 @@ Cada nova versão deverá declarar hipótese, baseline, mudança, resultado, lim
 
 ### Agora — fechamento da Etapa 5
 
-1. decidir explicitamente `APPROVE_WITH_CONDITIONS` ou `REJECT/BLOCK` para o Gate 5;
-2. registrar a decisão e as condições no pacote/inventário;
-3. fechar a Etapa 5 apenas se a decisão for favorável;
-4. não iniciar feature ou Etapa 6 antes dessa decisão;
-5. se aprovado, autorizar somente o planejamento detalhado da Etapa 6.
+1. revisar a experiência cotidiana pretendida e a arquitetura de informação do repositório;
+2. planejar detalhadamente a Etapa 6, sem implementar;
+3. tornar visíveis contratos individuais de skills e papéis agênticos;
+4. decidir a prioridade entre prova multilíngue e primeiros fluxos API/web de uso real;
+5. preservar as condições do Gate 5 durante o planejamento.
 
 ### Em seguida — somente após Gate 5
 
@@ -1067,4 +1067,4 @@ Decisões já encerradas e registradas: nome público ASEF; licença MIT; Python
 
 ## 27. Próxima decisão
 
-Decidir explicitamente o Gate 5. A recomendação técnica é `APPROVE_WITH_CONDITIONS`, com feedback externo, jornada humana isolada, linguagem experimental e planejamento separado como condições. Alternativa: `REJECT/BLOCK`. Nenhuma decisão foi presumida e a Etapa 6 continua não autorizada.
+Planejar detalhadamente a Etapa 6 à luz da experiência cotidiana desejada: linguagem natural, skills especializadas, perfis de linguagem e adapters de execução. Antes de implementar, reconciliar a prova multilíngue prevista com as prioridades práticas de API, web e Java, e criar um mapa simples de navegação/produto. As condições do Gate 5 continuam vigentes.

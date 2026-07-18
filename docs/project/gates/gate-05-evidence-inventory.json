@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "inventory_revision": "1.5.0",
+  "inventory_revision": "1.6.0",
   "gate_id": "G5",
   "phase": "FINAL",
   "generated_on": "2026-07-18",
@@ -301,14 +301,16 @@
     }
   ],
   "decision": {
-    "status": "PENDING_HUMAN",
+    "status": "APPROVED_WITH_CONDITIONS",
     "technical_recommendation": "APPROVE_WITH_CONDITIONS",
+    "authority": "Lucas",
+    "decided_on": "2026-07-18",
     "conditions": [
       "Coletar feedback anonimizado de usuário ou QE externo quando houver adoção.",
       "Repetir a jornada instalada fora do checkout com pessoa não pertencente à autoria.",
       "Manter linguagem experimental e não aprovada para produção ou código hostil.",
       "Planejar separadamente qualquer experimento com SUT público e a Etapa 6."
     ],
-    "reason": "Candidata final e sete jobs públicos aprovados; recomendação condicional preserva a independência externa adiada e aguarda decisão explícita de Lucas."
+    "reason": "Lucas aprovou explicitamente o Gate 5 com as condições propostas; a decisão encerra a Etapa 5 e autoriza somente o planejamento detalhado da Etapa 6."
   }
 }

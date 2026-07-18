@@ -1,7 +1,7 @@
 # Incremento 5.9 — Avaliação final, livro e Gate 5
 
 - **Data do planejamento:** 2026-07-17
-- **Estado:** 5.9.1–5.9.5 concluídas; candidata local 5.9.6 pronta para commit/CI e decisão do Gate
+- **Estado:** concluído; Gate 5 aprovado com condições por Lucas em 2026-07-18
 - **Dependências:** incrementos 5.1 a 5.8 concluídos; pré-release `v0.1.0a7` publicada; postflight remoto aprovado; sete jobs verdes nas execuções `29647693611` e `29648119788`
 - **Gate relacionado:** G5-19 como lacuna principal; revalidação de G5-01 a G5-20
 - **Decisão vigente:** Lucas confirmou que não haverá participante externo neste fechamento, consentiu com a avaliação interna e com a publicação somente do resultado anonimizado, e definiu o chat como canal. A evidência externa fica adiada; a sessão interna não satisfaz independência. Correções materiais, publicação do resultado e decisão do Gate preservam checkpoints humanos. Etapa 6 continua não autorizada.

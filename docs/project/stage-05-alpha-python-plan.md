@@ -1,6 +1,6 @@
 # Etapa 5 — Plano detalhado do Alpha Python de referência
 
-- **Estado:** vigente; `v0.1.0a7` publicada e postflight remoto aprovado; 5.9.3 aguarda autorização; Gate 5 pendente
+- **Estado:** concluído; `v0.1.0a7` validada e Gate 5 aprovado com condições em 2026-07-18
 - **Planejado em:** 2026-07-13
 - **Pré-condição:** Gate 4 aprovado
 - **Decisão registrada:** plano e quatro escolhas centrais aprovados; execução incremental, começando por 5.1

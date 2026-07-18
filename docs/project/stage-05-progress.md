@@ -2,7 +2,7 @@
 
 - **Plano:** `docs/project/stage-05-alpha-python-plan.md`
 - **Gate:** `docs/project/gates/gate-05-acceptance-plan.md`
-- **Estado atual:** 5.9.1–5.9.6 tecnicamente concluídas; CI final `29654457005` verde; recomendação condicional pronta para decisão humana do Gate 5
+- **Estado atual:** Etapa 5 concluída; Gate 5 aprovado com condições por Lucas em 2026-07-18
 
 ## 5.1 — Contratos, ADRs e suíte de referência
 
@@ -448,3 +448,7 @@ Source map e proveniência passaram a incluir a autovalidação I01 e o limite d
 A regressão local aprovou 362 testes, 33 skips opt-in e branch coverage geral de 85%. Gate checker, docs checker e verificações de higiene passaram. O pacote decisório recomenda `APPROVE_WITH_CONDITIONS` somente após CI pública final, mantendo avaliação externa e instalação humana isolada como condições.
 
 O produto/package `v0.1.0a7` não mudou. Após autorização, o commit `2e7655e` foi publicado e a CI `29654457005` aprovou os sete jobs. O inventário `1.5.0` está `FINAL` com recomendação `APPROVE_WITH_CONDITIONS`; resta a decisão explícita de Lucas. Nenhuma feature ou Etapa 6 foi iniciada.
+
+### Decisão do Gate 5
+
+Lucas aprovou explicitamente o Gate 5 com as condições propostas: feedback externo posterior, repetição da jornada instalada por pessoa externa à autoria, linguagem experimental, planejamento separado para SUT público e nenhuma implementação da Etapa 6 sem plano próprio. A Etapa 5 está concluída; somente o planejamento detalhado da Etapa 6 foi autorizado.

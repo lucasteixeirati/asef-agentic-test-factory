@@ -3,7 +3,7 @@
 - **Etapa:** 5 — Alpha Python
 - **Data da auditoria local:** 2026-07-18
 - **Release avaliada:** `v0.1.0a7`
-- **Estado técnico:** pronta para decisão humana; commit e CI pública final aprovados
+- **Estado:** Gate 5 aprovado com condições por Lucas em 2026-07-18
 - **Autoridade de aprovação:** Lucas
 
 ## Parecer técnico
@@ -76,11 +76,11 @@ A avaliação externa está `DEFERRED`. A sessão interna `I01` foi publicada co
 ## Decisão humana
 
 - [ ] `APPROVE` — não recomendado sem remover o risco externo;
-- [ ] `APPROVE_WITH_CONDITIONS` — recomendação técnica vigente;
+- [x] `APPROVE_WITH_CONDITIONS` — aprovado por Lucas em 2026-07-18;
 - [ ] `REJECT/BLOCK` — devolver para correções ou exigir avaliação externa antes do Gate.
 
-**Decisão/condições de Lucas:** pendente.
+**Decisão/condições de Lucas:** Gate 5 aprovado com as cinco condições registradas neste pacote. Feedback externo e jornada humana isolada permanecem compromissos posteriores; a aprovação não altera o nível experimental.
 
-**Data:** pendente.
+**Data:** 2026-07-18.
 
 Uma decisão favorável encerra a Etapa 5 e autoriza somente o planejamento detalhado da Etapa 6. Não autoriza produção, feature nova, execução contra alvo público ou implementação multilíngue.
