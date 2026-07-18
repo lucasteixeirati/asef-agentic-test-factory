@@ -1,6 +1,6 @@
 # Gate 5 — Plano de aceite do Alpha Python
 
-- **Estado:** execução em andamento; 5.8 publicado em `v0.1.0a6`; candidata corretiva `0.1.0a7` aprovada na CI `29620941881` e aguardando decisão separada de tag/pré-release
+- **Estado:** execução em andamento; candidata corretiva publicada em `v0.1.0a7`; reauditoria dos assets remotos necessária antes de liberar a sessão
 - **Responsável pela decisão final:** Lucas
 - **Ambiente de referência:** Windows, Docker Desktop com backend WSL2 e Python 3.13 suportado pelo package
 - **Inventário mecânico:** `docs/project/gates/gate-05-evidence-inventory.json` — decisão continua pendente e humana

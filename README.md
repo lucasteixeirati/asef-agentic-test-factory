@@ -8,9 +8,9 @@ O ASEF investiga como LLMs podem propor análises e testes sem receber autoridad
 
 **Experimental — pré-alpha. Não use em produção nem contra código arbitrariamente hostil.**
 
-A última pré-release publicada é [`v0.1.0a6`](https://github.com/lucasteixeirati/asef-agentic-test-factory/releases/tag/v0.1.0a6), com os incrementos 5.1 a 5.8. Ela permanece experimental, pré-alpha e inadequada para produção ou código arbitrariamente hostil.
+A última pré-release publicada é [`v0.1.0a7`](https://github.com/lucasteixeirati/asef-agentic-test-factory/releases/tag/v0.1.0a7), com os incrementos 5.1 a 5.8 e a correção documental identificada no preflight 5.9.2. Ela permanece experimental, pré-alpha e inadequada para produção ou código arbitrariamente hostil.
 
-A versão em desenvolvimento é a candidata corretiva local `0.1.0a7`. Ela ainda não foi publicada e não substitui a `v0.1.0a6` até aprovação, tag e pré-release imutável em checkpoint separado.
+A versão atual do package é `0.1.0a7`. Use sempre código, documentação, wheel, sdist e imagem da mesma tag para preservar a identidade da evidência.
 
 Comprovado até aqui:
 

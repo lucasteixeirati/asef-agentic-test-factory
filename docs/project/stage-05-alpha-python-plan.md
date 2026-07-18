@@ -1,6 +1,6 @@
 # Etapa 5 — Plano detalhado do Alpha Python de referência
 
-- **Estado:** vigente; incrementos 5.1 a 5.8 publicados até `v0.1.0a6`; preflight 5.9.2 `NOT_READY`; candidata corretiva local `0.1.0a7` pronta para checkpoint de publicação; Gate 5 pendente
+- **Estado:** vigente; incrementos 5.1 a 5.8 e correção do preflight publicados em `v0.1.0a7`; reauditoria remota e Gate 5 pendentes
 - **Planejado em:** 2026-07-13
 - **Pré-condição:** Gate 4 aprovado
 - **Decisão registrada:** plano e quatro escolhas centrais aprovados; execução incremental, começando por 5.1

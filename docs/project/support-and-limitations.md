@@ -4,7 +4,7 @@ Este documento é a fonte canônica para suporte operacional e limitações púb
 
 ## Estado do produto
 
-ASEF é uma pré-release experimental. A última versão publicada é `0.1.0a6`, com os incrementos 5.1 a 5.8. A versão em desenvolvimento é a candidata corretiva local `0.1.0a7`, ainda não publicada; ela não altera nem substitui a release imutável. O projeto não oferece garantia de uso em produção, certificação de segurança, pentest ou isolamento de código arbitrariamente hostil.
+ASEF é uma pré-release experimental. A última versão publicada é `0.1.0a7`, com os incrementos 5.1 a 5.8 e a correção documental identificada no preflight 5.9.2. A versão atual do package também é `0.1.0a7`. O projeto não oferece garantia de uso em produção, certificação de segurança, pentest ou isolamento de código arbitrariamente hostil.
 
 ## Ambiente de referência
 
