@@ -1,8 +1,8 @@
 # Kit do participante — avaliação externa do Alpha Python
 
 - **Versão do kit:** `1.0.0`
-- **Estado:** `HOLD — NÃO DISTRIBUIR`
-- **Motivo:** o preflight encontrou divergência entre a identidade da release e três documentos congelados
+- **Estado:** `READY — distribuição depende de autorização e consentimento`
+- **Release alvo:** `v0.1.0a7`, aprovada no postflight remoto `ASEF-PF-20260718-A7`
 - **Protocolo aplicável:** `ASEF-EXT-ALPHA 1.0.0`
 
 Este material contém somente instruções destinadas ao participante. Rubrica, respostas esperadas, severidade e parecer de prontidão não pertencem ao kit.
@@ -19,13 +19,13 @@ O facilitador só altera o estado para `READY` depois que:
 
 ## Material que será entregue
 
-Quando liberado, o kit deve congelar links para:
+Links imutáveis congelados para a sessão:
 
-1. página da release alvo;
-2. README da mesma tag;
-3. quickstart da mesma tag;
-4. suporte e limitações da mesma tag;
-5. interpretação de report e troubleshooting alcançáveis pela documentação.
+1. [página da release alvo](https://github.com/lucasteixeirati/asef-agentic-test-factory/releases/tag/v0.1.0a7);
+2. [README da mesma tag](https://github.com/lucasteixeirati/asef-agentic-test-factory/blob/v0.1.0a7/README.md);
+3. [quickstart da mesma tag](https://github.com/lucasteixeirati/asef-agentic-test-factory/blob/v0.1.0a7/docs/getting-started/quickstart.md);
+4. [suporte e limitações da mesma tag](https://github.com/lucasteixeirati/asef-agentic-test-factory/blob/v0.1.0a7/docs/project/support-and-limitations.md);
+5. [interpretação de report](https://github.com/lucasteixeirati/asef-agentic-test-factory/blob/v0.1.0a7/docs/guides/report-interpretation.md) e [troubleshooting](https://github.com/lucasteixeirati/asef-agentic-test-factory/blob/v0.1.0a7/docs/guides/troubleshooting.md).
 
 Nenhum checkout, comando privado, resposta esperada ou explicação individual será fornecido.
 

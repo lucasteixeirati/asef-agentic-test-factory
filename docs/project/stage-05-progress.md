@@ -416,3 +416,9 @@ Wheel e sdist locais foram construídos e escaneados. Fora do checkout, o sdist 
 Parecer: `READY_FOR_PUBLICATION_CHECKPOINT`. Como os artifacts ainda são locais e mutáveis, `PREFLIGHT-F-001` permanece alto/aberto, kit/checklist permanecem `HOLD` e a 5.9.3 continua bloqueada. Evidência: `docs/evaluations/2026-07-17-alpha-python-candidate-a7-preflight.json`; revisão: `docs/reviews/2026-07-17-revisao-candidata-corretiva-a7.md`.
 
 O commit `58ea802` foi enviado à `main` após autorização humana. A [CI `29620941881`](https://github.com/lucasteixeirati/asef-agentic-test-factory/actions/runs/29620941881) aprovou os sete jobs, incluindo o novo Gate checker dentro de `public-experience`. A candidata está pronta para decisão separada de tag/pré-release; ainda não existe asset remoto `v0.1.0a7` para reauditar.
+
+### Publicação corretiva e postflight remoto
+
+Lucas autorizou tag e pré-release. O commit de release `79fbeb0` passou nos sete jobs da [CI `29647693611`](https://github.com/lucasteixeirati/asef-agentic-test-factory/actions/runs/29647693611). A tag anotada e a [pré-release `v0.1.0a7`](https://github.com/lucasteixeirati/asef-agentic-test-factory/releases/tag/v0.1.0a7) foram publicadas com wheel SHA-256 `f492e1ca693a307991d805f91bf5283d89c1867e52121e7eb26ed13a1c06f9ad` e sdist SHA-256 `d6b111b7b07f8029a703f4ae59e8a628406e5fe149a1cb6617937608eefa55af`.
+
+Os assets oficiais foram baixados novamente e os hashes coincidiram. O sdist passou no docs checker com 128 arquivos/109 links; o wheel instalou sem dependências como `0.1.0a7`; doctor terminou `DEGRADED/READY` 12 checks; demo `SUCCEEDED/ACCEPTED`; auditor 9/9; cleanup `DRY_RUN_COMPLETE`; scanner verde; zero containers. `PREFLIGHT-F-001` foi resolvido, kit/checklist passaram a `READY` e a 5.9.3 continua não iniciada até nova autorização.

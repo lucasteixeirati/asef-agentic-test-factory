@@ -1,17 +1,17 @@
 # Checklist do facilitador — avaliação externa do Alpha Python
 
 - **Versão:** `1.0.0`
-- **Estado atual:** `HOLD`
-- **Finding bloqueador:** `PREFLIGHT-F-001`
-- **Correção local:** candidata `0.1.0a7` aprovada tecnicamente, mas ainda não publicada nem reauditada como asset remoto imutável
+- **Estado atual:** `READY — sessão não autorizada`
+- **Finding anterior:** `PREFLIGHT-F-001 — RESOLVED`
+- **Postflight:** `ASEF-PF-20260718-A7`, assets remotos imutáveis aprovados
 
 ## Antes de recrutar ou agendar
 
-- [ ] Lucas aprovou explicitamente o protocolo.
-- [ ] O preflight está `READY`, sem crítico/alto aberto.
-- [ ] A release alvo possui documentação, wheel e sdist coerentes.
-- [ ] O kit do participante está `READY` e contém links imutáveis.
-- [ ] Nenhum contato é iniciado por Codex sem autorização/canal explícito.
+- [x] Lucas aprovou explicitamente o protocolo.
+- [x] O preflight está `READY`, sem crítico/alto aberto.
+- [x] A release alvo possui documentação, wheel e sdist coerentes.
+- [x] O kit do participante está `READY` e contém links imutáveis.
+- [x] Nenhum contato foi iniciado por Codex sem autorização/canal explícito.
 
 Enquanto qualquer item acima estiver aberto, não distribuir kit nem convidar participante.
 

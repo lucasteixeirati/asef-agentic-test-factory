@@ -1,0 +1,99 @@
+{
+  "schema_version": "1.0.0",
+  "postflight_id": "ASEF-PF-20260718-A7",
+  "status": "READY",
+  "readiness": "READY",
+  "target_release": {
+    "version": "0.1.0a7",
+    "tag": "v0.1.0a7",
+    "tagged_commit": "79fbeb0dbbef39799801b86cebd59f8b55edaa0a",
+    "published_at": "2026-07-18T14:21:13Z",
+    "url": "https://github.com/lucasteixeirati/asef-agentic-test-factory/releases/tag/v0.1.0a7",
+    "is_prerelease": true,
+    "assets_downloaded_from_github_release": true,
+    "assets": [
+      {
+        "role": "wheel",
+        "name": "asef_agentic_test_factory-0.1.0a7-py3-none-any.whl",
+        "size": 167638,
+        "digest": "sha256:f492e1ca693a307991d805f91bf5283d89c1867e52121e7eb26ed13a1c06f9ad"
+      },
+      {
+        "role": "sdist",
+        "name": "asef_agentic_test_factory-0.1.0a7.tar.gz",
+        "size": 536458,
+        "digest": "sha256:d6b111b7b07f8029a703f4ae59e8a628406e5fe149a1cb6617937608eefa55af"
+      }
+    ]
+  },
+  "release_ci": {
+    "run_id": 29647693611,
+    "head_sha": "79fbeb0dbbef39799801b86cebd59f8b55edaa0a",
+    "conclusion": "success",
+    "jobs": [
+      "core",
+      "framework-spikes",
+      "docker-security",
+      "alpha-smoke",
+      "quality-capabilities",
+      "alpha-security",
+      "public-experience"
+    ]
+  },
+  "documentation_consistency": {
+    "status": "PASS",
+    "checked_files": 128,
+    "checked_links": 109,
+    "findings": 0,
+    "latest_release_claim": "v0.1.0a7",
+    "package_version_claim": "0.1.0a7"
+  },
+  "installed_journey": {
+    "outside_checkout": true,
+    "empty_session_directory": true,
+    "installed_version": "0.1.0a7",
+    "wheel_installed_without_dependencies": true,
+    "pytest_image_built_from_published_sdist": true,
+    "openai_api_key_absent": true,
+    "doctor": {
+      "status": "DEGRADED",
+      "classification": "READY",
+      "checks": 12,
+      "exit_code": 0,
+      "stderr_bytes": 0
+    },
+    "demo": {
+      "status": "SUCCEEDED",
+      "classification": "ACCEPTED",
+      "run_id": "569734d6-6c3e-4706-b255-4214a66ad27c",
+      "exit_code": 0,
+      "stderr_bytes": 0
+    },
+    "public_experience_audit": {
+      "passed": true,
+      "passed_checks": 9,
+      "total_checks": 9,
+      "report_json_sha256": "da9cf6605363ca0ecb90d5829e3feb2d27b6b3ad89e646c0bdc1c47bdacfca72",
+      "report_markdown_sha256": "a4d5c5744464cc785ffa51922347eacda1ec986bd4017098db20961a1f0f5de4"
+    },
+    "cleanup": {
+      "status": "SUCCEEDED",
+      "classification": "DRY_RUN_COMPLETE",
+      "exit_code": 0,
+      "stderr_bytes": 0
+    },
+    "secret_scan": "PASS",
+    "managed_containers_after_run": 0
+  },
+  "finding_resolution": {
+    "finding_id": "PREFLIGHT-F-001",
+    "previous_severity": "HIGH",
+    "status": "RESOLVED",
+    "reason": "The immutable v0.1.0a7 documentation, package identity and remote assets are consistent and the installed postflight passed."
+  },
+  "scope": {
+    "external_session_started": false,
+    "participant_contacted": false,
+    "gate_5_decided": false
+  }
+}

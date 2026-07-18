@@ -396,6 +396,8 @@ Usar quando a correção ultrapassar o escopo, o participante não estiver dispo
 
 **Checkpoint público em 2026-07-17:** o commit `58ea802` foi enviado à `main` com autorização de Lucas. A CI `29620941881` aprovou os sete jobs canônicos. Tag e pré-release não foram criadas; continuam dependentes de nova decisão explícita.
 
+**Publicação e postflight em 2026-07-18:** Lucas autorizou a tag e a pré-release. O commit de release `79fbeb0` passou nos sete jobs da CI `29647693611`; `v0.1.0a7` foi publicada com wheel e sdist auditados. Os assets remotos foram baixados novamente e passaram em hashes, docs checker 128/109, instalação sem dependências, doctor 12 checks, demo, auditor 9/9, cleanup, scanner e orphan check. `PREFLIGHT-F-001` está resolvido; kit/checklist estão `READY`; nenhuma sessão ou contato externo foi iniciado.
+
 ### 5.9.3 — Sessão com QE externo
 
 **Dependência humana:** Lucas recruta/disponibiliza o participante e coordena o consentimento. Codex não contata terceiros sem nova autorização e canal explícito.
