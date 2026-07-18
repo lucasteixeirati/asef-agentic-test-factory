@@ -3,7 +3,7 @@
 - **Versão do kit:** `1.0.0`
 - **Estado:** `READY — distribuição depende de autorização e consentimento`
 - **Release alvo:** `v0.1.0a7`, aprovada no postflight remoto `ASEF-PF-20260718-A7`
-- **Protocolo aplicável:** `ASEF-EXT-ALPHA 1.0.0`
+- **Protocolo aplicável:** `ASEF-EXT-ALPHA 1.0.1`
 
 Este material contém somente instruções destinadas ao participante. Rubrica, respostas esperadas, severidade e parecer de prontidão não pertencem ao kit.
 

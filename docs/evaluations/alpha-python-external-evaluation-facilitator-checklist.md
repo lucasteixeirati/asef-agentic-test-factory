@@ -1,7 +1,7 @@
 # Checklist do facilitador — avaliação externa do Alpha Python
 
 - **Versão:** `1.0.0`
-- **Estado atual:** `READY — sessão não autorizada`
+- **Estado atual:** `READY — sessão externa adiada por indisponibilidade de participante`
 - **Finding anterior:** `PREFLIGHT-F-001 — RESOLVED`
 - **Postflight:** `ASEF-PF-20260718-A7`, assets remotos imutáveis aprovados
 

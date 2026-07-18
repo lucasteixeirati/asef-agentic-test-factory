@@ -9,6 +9,8 @@ from typing import Any
 
 
 SCHEMA_VERSION = "1.0.0"
+EXPECTED_INVENTORY_REVISION = "1.4.0"
+EXPECTED_EXTERNAL_PROTOCOL_VERSION = "1.0.1"
 EXPECTED_GATE_IDS = tuple(f"G5-{index:02d}" for index in range(1, 21))
 EXPECTED_JOBS = {
     "core",
@@ -19,18 +21,21 @@ EXPECTED_JOBS = {
     "alpha-security",
     "public-experience",
 }
-EXPECTED_TAGGED_COMMIT = "ddeeb3a0e309a8acdaba14802cbf62649b0d438c"
-EXPECTED_IMPLEMENTATION_COMMIT = "9739c1e5e524895eceefd59967abb515a78b7029"
+EXPECTED_RELEASE_VERSION = "0.1.0a7"
+EXPECTED_RELEASE_TAG = "v0.1.0a7"
+EXPECTED_PREFLIGHT_ID = "ASEF-PF-20260718-A7"
+EXPECTED_TAGGED_COMMIT = "79fbeb0dbbef39799801b86cebd59f8b55edaa0a"
+EXPECTED_IMPLEMENTATION_COMMIT = "58ea802bdc912f906e9cffcf7646424e8c66e6ed"
 EXPECTED_ASSETS = {
     "wheel": (
-        "asef_agentic_test_factory-0.1.0a6-py3-none-any.whl",
-        167571,
-        "sha256:0b40e6597acb1064c15122a7ac96934e7b1e3f62df64bf5ff1dedcd62831ff72",
+        "asef_agentic_test_factory-0.1.0a7-py3-none-any.whl",
+        167638,
+        "sha256:f492e1ca693a307991d805f91bf5283d89c1867e52121e7eb26ed13a1c06f9ad",
     ),
     "sdist": (
-        "asef_agentic_test_factory-0.1.0a6.tar.gz",
-        497111,
-        "sha256:b2963ce50ddcb4bf52080510fdc55656a9ab7cd42ff66ce3008c76fac2f46289",
+        "asef_agentic_test_factory-0.1.0a7.tar.gz",
+        536458,
+        "sha256:d6b111b7b07f8029a703f4ae59e8a628406e5fe149a1cb6617937608eefa55af",
     ),
 }
 INITIAL_GATE_STATES = {"MET", "MET_WITH_RESIDUAL_RISK", "PARTIAL", "BLOCKED", "NOT_MET"}
@@ -104,8 +109,11 @@ class Gate5EvidenceChecker:
             self._check_release(payload.get("release"))
             self._check_ci(payload.get("ci_runs"))
             self._check_protocol(payload.get("external_evaluation"))
+            self._check_internal_evaluation(payload.get("internal_evaluation"))
             self._check_criteria(payload.get("criteria"))
-            self._check_decision(payload.get("decision"), payload.get("criteria"))
+            self._check_decision(
+                payload.get("decision"), payload.get("criteria"), payload.get("external_evaluation")
+            )
         return EvidenceAudit(
             inventory=self.inventory.as_posix(),
             findings=tuple(sorted(self.findings, key=lambda item: (item.path, item.code, item.detail))),
@@ -128,17 +136,32 @@ class Gate5EvidenceChecker:
     def _check_metadata(self, payload: dict[str, Any]) -> None:
         if payload.get("schema_version") != SCHEMA_VERSION:
             self._add("SCHEMA_VERSION", "schema_version", f"expected {SCHEMA_VERSION}")
+        if payload.get("inventory_revision") != EXPECTED_INVENTORY_REVISION:
+            self._add(
+                "INVENTORY_REVISION",
+                "inventory_revision",
+                f"expected {EXPECTED_INVENTORY_REVISION}",
+            )
         if payload.get("gate_id") != "G5":
             self._add("GATE_ID", "gate_id", "expected G5")
-        if payload.get("phase") != "INVENTORY":
-            self._add("PHASE", "phase", "5.9.1 inventory must remain INVENTORY")
+        if payload.get("phase") not in {
+            "INVENTORY",
+            "PREFLIGHT_READY",
+            "INTERNAL_EVALUATED",
+            "EXTERNAL_EVALUATED",
+            "FINAL",
+        }:
+            self._add("PHASE", "phase", "unexpected Gate 5 evidence phase")
 
     def _check_release(self, release: object) -> None:
         if not isinstance(release, dict):
             self._add("RELEASE_TYPE", "release", "must be an object")
             return
-        if release.get("version") != "0.1.0a6" or release.get("tag") != "v0.1.0a6":
-            self._add("RELEASE_IDENTITY", "release", "expected frozen release v0.1.0a6")
+        if (
+            release.get("version") != EXPECTED_RELEASE_VERSION
+            or release.get("tag") != EXPECTED_RELEASE_TAG
+        ):
+            self._add("RELEASE_IDENTITY", "release", f"expected frozen release {EXPECTED_RELEASE_TAG}")
         if release.get("tagged_commit") != EXPECTED_TAGGED_COMMIT:
             self._add("RELEASE_COMMIT", "release.tagged_commit", "frozen tag commit diverged")
         if release.get("implementation_commit") != EXPECTED_IMPLEMENTATION_COMMIT:
@@ -205,10 +228,28 @@ class Gate5EvidenceChecker:
         if not isinstance(external, dict):
             self._add("EXTERNAL_TYPE", "external_evaluation", "must be an object")
             return
-        if external.get("status") != "NOT_STARTED":
-            self._add("EXTERNAL_STATUS", "external_evaluation.status", "5.9.1 must not claim a session")
-        if external.get("results") != []:
-            self._add("EXTERNAL_RESULTS", "external_evaluation.results", "must be empty in 5.9.1")
+        status = external.get("status")
+        if status not in {"NOT_STARTED", "READY_FOR_SESSION", "COMPLETED", "BLOCKED", "DEFERRED"}:
+            self._add("EXTERNAL_STATUS", "external_evaluation.status", str(status))
+        results = external.get("results")
+        if not isinstance(results, list):
+            self._add("EXTERNAL_RESULTS", "external_evaluation.results", "must be an array")
+        elif status in {"NOT_STARTED", "READY_FOR_SESSION", "DEFERRED"} and results:
+            self._add("EXTERNAL_RESULTS", "external_evaluation.results", "must be empty before a session")
+        elif status == "COMPLETED" and not results:
+            self._add("EXTERNAL_RESULTS", "external_evaluation.results", "completed session requires a result")
+        elif status in {"COMPLETED", "BLOCKED"}:
+            for index, relative in enumerate(results):
+                path = f"external_evaluation.results[{index}]"
+                resolved = self._safe_file(relative, path)
+                if resolved is None:
+                    continue
+                try:
+                    result_payload = json.loads(resolved.read_text(encoding="utf-8"))
+                except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+                    self._add("EXTERNAL_RESULT_UNREADABLE", path, type(exc).__name__)
+                    continue
+                self.findings.extend(validate_external_result_payload(result_payload))
         for field, headings in (
             (
                 "protocol",
@@ -240,7 +281,81 @@ class Gate5EvidenceChecker:
             for heading in headings:
                 if heading not in text:
                     self._add("EXTERNAL_HEADING", path, heading)
+            if field == "protocol":
+                frozen_tokens = (
+                    f"**Versão:** `{EXPECTED_EXTERNAL_PROTOCOL_VERSION}`",
+                    EXPECTED_RELEASE_TAG,
+                    EXPECTED_TAGGED_COMMIT,
+                    EXPECTED_ASSETS["wheel"][2].removeprefix("sha256:"),
+                    EXPECTED_ASSETS["sdist"][2].removeprefix("sha256:"),
+                )
+                for token in frozen_tokens:
+                    if token not in text:
+                        self._add("EXTERNAL_PROTOCOL_FROZEN", path, f"missing {token}")
+        if external.get("protocol_version") != EXPECTED_EXTERNAL_PROTOCOL_VERSION:
+            self._add(
+                "EXTERNAL_PROTOCOL_VERSION",
+                "external_evaluation.protocol_version",
+                f"expected {EXPECTED_EXTERNAL_PROTOCOL_VERSION}",
+            )
         self._check_preflight(external.get("preflight"))
+
+    def _check_internal_evaluation(self, internal: object) -> None:
+        if not isinstance(internal, dict):
+            self._add("INTERNAL_TYPE", "internal_evaluation", "must be an object")
+            return
+        status = internal.get("status")
+        if status not in {"READY_FOR_SESSION", "IN_PROGRESS", "COMPLETED", "BLOCKED"}:
+            self._add("INTERNAL_STATUS", "internal_evaluation.status", str(status))
+        if internal.get("participant_id") != "I01":
+            self._add("INTERNAL_PARTICIPANT", "internal_evaluation.participant_id", "expected I01")
+        if internal.get("participant_role") != "AUTHOR_MAINTAINER":
+            self._add("INTERNAL_ROLE", "internal_evaluation.participant_role", "must disclose author role")
+        if internal.get("consent_obtained") is not True:
+            self._add("INTERNAL_CONSENT", "internal_evaluation.consent_obtained", "must be true")
+        if internal.get("channel") != "DEVELOPMENT_CHAT":
+            self._add("INTERNAL_CHANNEL", "internal_evaluation.channel", "unexpected channel")
+        results = internal.get("results")
+        if not isinstance(results, list):
+            self._add("INTERNAL_RESULTS", "internal_evaluation.results", "must be an array")
+        elif status in {"READY_FOR_SESSION", "IN_PROGRESS"} and results:
+            self._add("INTERNAL_RESULTS", "internal_evaluation.results", "must be empty before completion")
+        elif status == "COMPLETED" and not results:
+            self._add("INTERNAL_RESULTS", "internal_evaluation.results", "completed session requires a result")
+        elif status == "COMPLETED":
+            for index, relative in enumerate(results):
+                path = f"internal_evaluation.results[{index}]"
+                result_file = self._safe_file(relative, path)
+                if result_file is None:
+                    continue
+                try:
+                    result_payload = json.loads(result_file.read_text(encoding="utf-8"))
+                except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+                    self._add("INTERNAL_RESULT_UNREADABLE", path, type(exc).__name__)
+                    continue
+                self.findings.extend(validate_internal_result_payload(result_payload))
+        resolved = self._safe_file(internal.get("protocol"), "internal_evaluation.protocol")
+        if resolved is None:
+            return
+        try:
+            text = resolved.read_text(encoding="utf-8")
+        except (OSError, UnicodeError) as exc:
+            self._add("INTERNAL_PROTOCOL_UNREADABLE", "internal_evaluation.protocol", type(exc).__name__)
+            return
+        for heading in (
+            "## Natureza e limite da evidência",
+            "## Consentimento e canal",
+            "## Escopo congelado",
+            "## Regras do facilitador",
+            "## Uso no Gate 5",
+        ):
+            if heading not in text:
+                self._add("INTERNAL_HEADING", "internal_evaluation.protocol", heading)
+        for token in (EXPECTED_RELEASE_TAG, EXPECTED_TAGGED_COMMIT, "INFORMATIVE_INTERNAL"):
+            if token not in text:
+                self._add("INTERNAL_PROTOCOL_FROZEN", "internal_evaluation.protocol", f"missing {token}")
+        if status == "COMPLETED":
+            self._safe_file(internal.get("summary"), "internal_evaluation.summary")
 
     def _check_preflight(self, relative: object) -> None:
         resolved = self._safe_file(relative, "external_evaluation.preflight")
@@ -256,7 +371,7 @@ class Gate5EvidenceChecker:
             return
         if payload.get("schema_version") != SCHEMA_VERSION:
             self._add("PREFLIGHT_SCHEMA", "preflight.schema_version", f"expected {SCHEMA_VERSION}")
-        if payload.get("preflight_id") != "ASEF-PF-20260717-592":
+        if payload.get("postflight_id", payload.get("preflight_id")) != EXPECTED_PREFLIGHT_ID:
             self._add("PREFLIGHT_ID", "preflight.preflight_id", "unexpected identifier")
         status = payload.get("status")
         readiness = payload.get("readiness")
@@ -265,8 +380,8 @@ class Gate5EvidenceChecker:
         if readiness not in {"READY", "NOT_READY"}:
             self._add("PREFLIGHT_READINESS", "preflight.readiness", str(readiness))
         target = payload.get("target_release")
-        if not isinstance(target, dict) or target.get("tag") != "v0.1.0a6":
-            self._add("PREFLIGHT_RELEASE", "preflight.target_release", "expected v0.1.0a6")
+        if not isinstance(target, dict) or target.get("tag") != EXPECTED_RELEASE_TAG:
+            self._add("PREFLIGHT_RELEASE", "preflight.target_release", f"expected {EXPECTED_RELEASE_TAG}")
         elif any(
             target.get(field) is not True
             for field in (
@@ -280,8 +395,12 @@ class Gate5EvidenceChecker:
         if not isinstance(journey, dict):
             self._add("PREFLIGHT_JOURNEY", "preflight.installed_journey", "must be an object")
         else:
-            if journey.get("installed_version") != "0.1.0a6":
-                self._add("PREFLIGHT_INSTALLED_VERSION", "preflight.installed_journey", "expected 0.1.0a6")
+            if journey.get("installed_version") != EXPECTED_RELEASE_VERSION:
+                self._add(
+                    "PREFLIGHT_INSTALLED_VERSION",
+                    "preflight.installed_journey",
+                    f"expected {EXPECTED_RELEASE_VERSION}",
+                )
             for field in (
                 "outside_checkout",
                 "empty_session_directory",
@@ -367,12 +486,12 @@ class Gate5EvidenceChecker:
                 if self._safe_file(relative, evidence_path) is not None:
                     self.checked_evidence += 1
 
-    def _check_decision(self, decision: object, criteria: object) -> None:
+    def _check_decision(self, decision: object, criteria: object, external: object) -> None:
         if not isinstance(decision, dict):
             self._add("DECISION_TYPE", "decision", "must be an object")
             return
         if decision.get("status") != "PENDING_HUMAN":
-            self._add("DECISION_STATUS", "decision.status", "must remain PENDING_HUMAN in 5.9.1")
+            self._add("DECISION_STATUS", "decision.status", "must remain PENDING_HUMAN before Gate 5")
         recommendation = decision.get("technical_recommendation")
         if recommendation != "NOT_READY":
             self._add("DECISION_RECOMMENDATION", "decision.technical_recommendation", "must remain NOT_READY")
@@ -381,6 +500,13 @@ class Gate5EvidenceChecker:
             for item in criteria
         ) and recommendation in {"APPROVE", "APPROVE_WITH_CONDITIONS"}:
             self._add("DECISION_CONTRADICTION", "decision", "open criteria cannot recommend approval")
+        external_status = external.get("status") if isinstance(external, dict) else None
+        if external_status != "COMPLETED" and recommendation in {"APPROVE", "APPROVE_WITH_CONDITIONS"}:
+            self._add(
+                "DECISION_EXTERNAL_CONTRADICTION",
+                "decision",
+                "approval recommendation requires completed external evaluation",
+            )
 
     def _safe_file(self, relative: object, path: str) -> Path | None:
         if not isinstance(relative, str) or not relative:
@@ -432,8 +558,12 @@ def validate_external_result_payload(payload: object) -> tuple[Finding, ...]:
         add("RESULT_FORBIDDEN_KEYS", "result", ", ".join(forbidden))
     if payload.get("schema_version") != SCHEMA_VERSION:
         add("RESULT_SCHEMA_VERSION", "schema_version", f"expected {SCHEMA_VERSION}")
-    if payload.get("protocol_version") != "1.0.0":
-        add("RESULT_PROTOCOL_VERSION", "protocol_version", "expected 1.0.0")
+    if payload.get("protocol_version") != EXPECTED_EXTERNAL_PROTOCOL_VERSION:
+        add(
+            "RESULT_PROTOCOL_VERSION",
+            "protocol_version",
+            f"expected {EXPECTED_EXTERNAL_PROTOCOL_VERSION}",
+        )
     if not _PARTICIPANT.fullmatch(str(payload.get("participant_id", ""))):
         add("RESULT_PARTICIPANT", "participant_id", "expected anonymized PNN identifier")
     if payload.get("consent_obtained") is not True:
@@ -499,6 +629,79 @@ def validate_external_result_payload(payload: object) -> tuple[Finding, ...]:
             for item in findings_payload
         ):
             add("RESULT_VALIDITY_FINDINGS", "findings", "VALID cannot retain open CRITICAL/HIGH findings")
+    return tuple(sorted(findings, key=lambda item: (item.path, item.code, item.detail)))
+
+
+def validate_internal_result_payload(payload: object) -> tuple[Finding, ...]:
+    findings: list[Finding] = []
+
+    def add(code: str, path: str, detail: str) -> None:
+        findings.append(Finding(code, path, detail[:300]))
+
+    if not isinstance(payload, dict):
+        return (Finding("INTERNAL_RESULT_TYPE", "internal_result", "must be an object"),)
+    forbidden = sorted(_forbidden_key_paths(payload, "internal_result"))
+    if forbidden:
+        add("INTERNAL_RESULT_FORBIDDEN_KEYS", "internal_result", ", ".join(forbidden))
+    if payload.get("schema_version") != SCHEMA_VERSION:
+        add("INTERNAL_RESULT_SCHEMA", "schema_version", f"expected {SCHEMA_VERSION}")
+    if payload.get("protocol_version") != "1.0.0":
+        add("INTERNAL_RESULT_PROTOCOL", "protocol_version", "expected 1.0.0")
+    if payload.get("result_id") != "ASEF-INT-20260718-I01":
+        add("INTERNAL_RESULT_ID", "result_id", "unexpected result identifier")
+    if payload.get("participant_id") != "I01" or payload.get("participant_role") != "AUTHOR_MAINTAINER":
+        add("INTERNAL_RESULT_PARTICIPANT", "participant_id", "author role must remain explicit")
+    if payload.get("consent_obtained") is not True:
+        add("INTERNAL_RESULT_CONSENT", "consent_obtained", "must be true")
+    if payload.get("session_status") != "INFORMATIVE_INTERNAL":
+        add("INTERNAL_RESULT_STATUS", "session_status", "must be INFORMATIVE_INTERNAL")
+    release = payload.get("release")
+    if not isinstance(release, dict) or (
+        release.get("tag") != EXPECTED_RELEASE_TAG
+        or release.get("commit") != EXPECTED_TAGGED_COMMIT
+        or release.get("wheel_digest_verified") is not True
+        or release.get("sdist_digest_verified") is not True
+    ):
+        add("INTERNAL_RESULT_RELEASE", "release", "frozen a7 identity/digests are required")
+    independence = payload.get("independence")
+    if not isinstance(independence, dict) or (
+        independence.get("external_to_authoring") is not False
+        or independence.get("unaided") is not False
+        or independence.get("external_feedback_deferred") is not True
+    ):
+        add("INTERNAL_RESULT_INDEPENDENCE", "independence", "internal bias must remain explicit")
+    assistance = payload.get("ai_assistance")
+    if not isinstance(assistance, dict) or assistance.get("used") is not True:
+        add("INTERNAL_RESULT_AI", "ai_assistance", "AI assistance must be disclosed")
+    tasks = payload.get("tasks")
+    if not isinstance(tasks, list) or tuple(
+        item.get("id") for item in tasks if isinstance(item, dict)
+    ) != TASK_IDS:
+        add("INTERNAL_RESULT_TASK_IDS", "tasks", "expected ordered EXT-01 through EXT-08")
+    elif any(
+        not isinstance(item, dict)
+        or item.get("state") not in TASK_STATES
+        or not str(item.get("summary", "")).strip()
+        for item in tasks
+    ):
+        add("INTERNAL_RESULT_TASK", "tasks", "task state and summary are required")
+    result_findings = payload.get("findings")
+    if not isinstance(result_findings, list):
+        add("INTERNAL_RESULT_FINDINGS", "findings", "must be an array")
+    else:
+        for index, item in enumerate(result_findings):
+            if not isinstance(item, dict) or item.get("severity") not in SEVERITIES:
+                add("INTERNAL_RESULT_FINDING_SEVERITY", f"findings[{index}]", "invalid severity")
+            if not isinstance(item, dict) or item.get("state") not in {
+                "OPEN",
+                "FIXED",
+                "ACCEPTED_RISK",
+                "OUT_OF_SCOPE",
+            }:
+                add("INTERNAL_RESULT_FINDING_STATE", f"findings[{index}]", "invalid state")
+    privacy = payload.get("privacy")
+    if not isinstance(privacy, dict) or any(value is not True for value in privacy.values()) or not privacy:
+        add("INTERNAL_RESULT_PRIVACY", "privacy", "all privacy assertions must be true")
     return tuple(sorted(findings, key=lambda item: (item.path, item.code, item.detail)))
 
 

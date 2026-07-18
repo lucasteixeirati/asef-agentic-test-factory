@@ -10,6 +10,7 @@ from tools.gate5_evidence_check import (
     Gate5EvidenceChecker,
     TASK_IDS,
     validate_external_result_payload,
+    validate_internal_result_payload,
 )
 
 
@@ -21,11 +22,18 @@ def _fixture_payload() -> dict[str, object]:
     payload = copy.deepcopy(json.loads(INVENTORY.read_text(encoding="utf-8")))
     external = payload["external_evaluation"]
     assert isinstance(external, dict)
+    external["protocol_version"] = "1.0.1"
     external["protocol"] = "protocol.md"
     external["template"] = "template.md"
     external.pop("participant_kit", None)
     external.pop("facilitator_checklist", None)
     external.pop("preflight", None)
+    internal = payload["internal_evaluation"]
+    assert isinstance(internal, dict)
+    internal["protocol"] = "internal-protocol.md"
+    internal["status"] = "READY_FOR_SESSION"
+    internal["results"] = []
+    internal.pop("summary", None)
     criteria = payload["criteria"]
     assert isinstance(criteria, list)
     for criterion in criteria:
@@ -40,8 +48,11 @@ def _write_fixture(root: Path, payload: dict[str, object]) -> None:
     inventory.write_text(json.dumps(payload), encoding="utf-8")
     (root / "evidence.md").write_text("# Evidence\n", encoding="utf-8")
     (root / "protocol.md").write_text(
-        "# Protocol\n\n## Escopo e versão congelada\n\n## Regras do facilitador\n\n"
-        "## Tarefas\n\n## Rubrica congelada\n",
+        "# Protocol\n\n**Versão:** `1.0.1`\n\n## Escopo e versão congelada\n\n"
+        "v0.1.0a7 79fbeb0dbbef39799801b86cebd59f8b55edaa0a "
+        "f492e1ca693a307991d805f91bf5283d89c1867e52121e7eb26ed13a1c06f9ad "
+        "d6b111b7b07f8029a703f4ae59e8a628406e5fe149a1cb6617937608eefa55af\n\n"
+        "## Regras do facilitador\n\n## Tarefas\n\n## Rubrica congelada\n",
         encoding="utf-8",
     )
     (root / "template.md").write_text(
@@ -49,12 +60,19 @@ def _write_fixture(root: Path, payload: dict[str, object]) -> None:
         "## Tarefas\n\n## Findings\n",
         encoding="utf-8",
     )
+    (root / "internal-protocol.md").write_text(
+        "# Internal\n\n## Natureza e limite da evidência\n\nINFORMATIVE_INTERNAL\n\n"
+        "## Consentimento e canal\n\n## Escopo congelado\n\nv0.1.0a7 "
+        "79fbeb0dbbef39799801b86cebd59f8b55edaa0a\n\n"
+        "## Regras do facilitador\n\n## Uso no Gate 5\n",
+        encoding="utf-8",
+    )
 
 
 def _valid_result() -> dict[str, object]:
     return {
         "schema_version": "1.0.0",
-        "protocol_version": "1.0.0",
+        "protocol_version": "1.0.1",
         "participant_id": "P01",
         "consent_obtained": True,
         "session_status": "VALID",
@@ -72,6 +90,14 @@ def _valid_result() -> dict[str, object]:
             "review_or_withdrawal_honored": True,
         },
     }
+
+
+def _valid_internal_result() -> dict[str, object]:
+    return json.loads(
+        (ROOT / "docs/evaluations/2026-07-18-alpha-python-internal-evaluation-I01.json").read_text(
+            encoding="utf-8"
+        )
+    )
 
 
 class Gate5EvidenceCheckerTests(unittest.TestCase):
@@ -96,6 +122,15 @@ class Gate5EvidenceCheckerTests(unittest.TestCase):
         codes = {item.code for item in audit.findings}
         self.assertIn("CRITERIA_IDS", codes)
         self.assertIn("EVIDENCE_PATH_UNSAFE", codes)
+
+    def test_inventory_revision_is_frozen(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            payload = _fixture_payload()
+            payload["inventory_revision"] = "1.0.0"
+            _write_fixture(root, payload)
+            audit = Gate5EvidenceChecker(root).run()
+        self.assertIn("INVENTORY_REVISION", {item.code for item in audit.findings})
 
     def test_ci_requires_exactly_the_seven_canonical_jobs(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -128,6 +163,9 @@ class Gate5EvidenceCheckerTests(unittest.TestCase):
             decision = payload["decision"]
             assert isinstance(decision, dict)
             decision["technical_recommendation"] = "APPROVE"
+            criteria = payload["criteria"]
+            assert isinstance(criteria, list) and isinstance(criteria[0], dict)
+            criteria[0]["status"] = "PARTIAL"
             _write_fixture(root, payload)
             audit = Gate5EvidenceChecker(root).run()
         self.assertIn("DECISION_CONTRADICTION", {item.code for item in audit.findings})
@@ -140,19 +178,81 @@ class Gate5EvidenceCheckerTests(unittest.TestCase):
             assert isinstance(external, dict)
             external["preflight"] = "preflight.json"
             preflight = json.loads(
-                (ROOT / "docs/evaluations/2026-07-17-alpha-python-release-preflight.json").read_text(
+                (ROOT / "docs/evaluations/2026-07-18-alpha-python-release-a7-postflight.json").read_text(
                     encoding="utf-8"
                 )
             )
             preflight["status"] = "READY"
             preflight["readiness"] = "READY"
+            preflight["documentation_consistency"]["status"] = "FAIL"
             (root / "preflight.json").write_text(json.dumps(preflight), encoding="utf-8")
             _write_fixture(root, payload)
             audit = Gate5EvidenceChecker(root).run()
         self.assertIn("PREFLIGHT_READY_CONTRADICTION", {item.code for item in audit.findings})
 
+    def test_ready_session_inventory_rejects_prefilled_result(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            payload = _fixture_payload()
+            external = payload["external_evaluation"]
+            assert isinstance(external, dict)
+            external["status"] = "READY_FOR_SESSION"
+            external["results"] = ["result.json"]
+            _write_fixture(root, payload)
+            (root / "result.json").write_text(json.dumps(_valid_result()), encoding="utf-8")
+            audit = Gate5EvidenceChecker(root).run()
+        self.assertIn("EXTERNAL_RESULTS", {item.code for item in audit.findings})
+
+    def test_completed_session_loads_and_validates_result_file(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            payload = _fixture_payload()
+            external = payload["external_evaluation"]
+            assert isinstance(external, dict)
+            external["status"] = "COMPLETED"
+            external["results"] = ["result.json"]
+            external["participant_kit"] = "kit.md"
+            external["facilitator_checklist"] = "checklist.md"
+            external["preflight"] = "preflight.json"
+            _write_fixture(root, payload)
+            (root / "result.json").write_text(json.dumps(_valid_result()), encoding="utf-8")
+            (root / "kit.md").write_text(
+                (ROOT / "docs/evaluations/alpha-python-external-evaluation-participant-kit.md").read_text(
+                    encoding="utf-8"
+                ),
+                encoding="utf-8",
+            )
+            (root / "checklist.md").write_text(
+                (
+                    ROOT
+                    / "docs/evaluations/alpha-python-external-evaluation-facilitator-checklist.md"
+                ).read_text(encoding="utf-8"),
+                encoding="utf-8",
+            )
+            (root / "preflight.json").write_text(
+                (ROOT / "docs/evaluations/2026-07-18-alpha-python-release-a7-postflight.json").read_text(
+                    encoding="utf-8"
+                ),
+                encoding="utf-8",
+            )
+            audit = Gate5EvidenceChecker(root).run()
+        self.assertTrue(audit.passed, list(audit.findings))
+
     def test_valid_external_result_contract_is_accepted(self) -> None:
         self.assertEqual(validate_external_result_payload(_valid_result()), ())
+
+    def test_valid_internal_result_contract_is_accepted(self) -> None:
+        self.assertEqual(validate_internal_result_payload(_valid_internal_result()), ())
+
+    def test_internal_result_rejects_hidden_independence_and_pii(self) -> None:
+        payload = _valid_internal_result()
+        payload["email"] = "participant@example.invalid"
+        independence = payload["independence"]
+        assert isinstance(independence, dict)
+        independence["external_to_authoring"] = True
+        codes = {item.code for item in validate_internal_result_payload(payload)}
+        self.assertIn("INTERNAL_RESULT_FORBIDDEN_KEYS", codes)
+        self.assertIn("INTERNAL_RESULT_INDEPENDENCE", codes)
 
     def test_external_result_rejects_pii_missing_consent_and_incomplete_tasks(self) -> None:
         payload = _valid_result()

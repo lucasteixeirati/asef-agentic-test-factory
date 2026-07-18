@@ -1,9 +1,9 @@
 # Protocolo de avaliação externa — Alpha Python
 
 - **ID:** `ASEF-EXT-ALPHA`
-- **Versão:** `1.0.0`
-- **Estado:** aprovado por Lucas; uso suspenso até preflight `READY`
-- **Release congelada:** `v0.1.0a6`
+- **Versão:** `1.0.1`
+- **Estado:** tecnicamente pronto; sessão externa adiada por indisponibilidade de participante
+- **Release congelada:** `v0.1.0a7`
 - **Responsável pelo protocolo:** Lucas
 - **Instrumento:** `docs/templates/external-evaluation-observation-template.md`
 
@@ -17,9 +17,9 @@ A sessão demonstra apenas o caso observado. Ela não é benchmark de usabilidad
 
 A sessão obrigatória usa:
 
-- tag `v0.1.0a6` no commit `ddeeb3a0e309a8acdaba14802cbf62649b0d438c`;
-- wheel `asef_agentic_test_factory-0.1.0a6-py3-none-any.whl`, SHA-256 `0b40e6597acb1064c15122a7ac96934e7b1e3f62df64bf5ff1dedcd62831ff72`;
-- sdist `asef_agentic_test_factory-0.1.0a6.tar.gz`, SHA-256 `b2963ce50ddcb4bf52080510fdc55656a9ab7cd42ff66ce3008c76fac2f46289`;
+- tag `v0.1.0a7` no commit `79fbeb0dbbef39799801b86cebd59f8b55edaa0a`;
+- wheel `asef_agentic_test_factory-0.1.0a7-py3-none-any.whl`, SHA-256 `f492e1ca693a307991d805f91bf5283d89c1867e52121e7eb26ed13a1c06f9ad`;
+- sdist `asef_agentic_test_factory-0.1.0a7.tar.gz`, SHA-256 `d6b111b7b07f8029a703f4ae59e8a628406e5fe149a1cb6617937608eefa55af`;
 - README, quickstart, suporte/limitações, interpretação e troubleshooting públicos;
 - Windows, PowerShell, Python 3.13 e Docker Desktop.
 

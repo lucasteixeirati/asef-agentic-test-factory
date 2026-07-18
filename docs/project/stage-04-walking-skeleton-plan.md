@@ -1,7 +1,7 @@
 # Etapa 4 — Plano executável do Walking Skeleton
 
 - **Data de início do planejamento:** 2026-07-12
-- **Status:** revisado após rejeição da ADR-007; sequência 4.R1–4.R7 vigente
+- **Status:** concluído e aprovado no Gate 4; sequência executada 4.R1–4.R8
 - **Gate de entrada:** Gate 3 aprovado
 - **Objetivo:** provar um fluxo vertical reproduzível e explicável, da entrada contextual até a execução isolada e o relatório.
 

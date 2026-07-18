@@ -11,6 +11,8 @@
     "url": "https://github.com/lucasteixeirati/asef-agentic-test-factory/releases/tag/v0.1.0a7",
     "is_prerelease": true,
     "assets_downloaded_from_github_release": true,
+    "wheel_digest_verified": true,
+    "sdist_digest_verified": true,
     "assets": [
       {
         "role": "wheel",
@@ -79,6 +81,7 @@
     "cleanup": {
       "status": "SUCCEEDED",
       "classification": "DRY_RUN_COMPLETE",
+      "mode": "DRY_RUN",
       "exit_code": 0,
       "stderr_bytes": 0
     },
@@ -91,6 +94,7 @@
     "status": "RESOLVED",
     "reason": "The immutable v0.1.0a7 documentation, package identity and remote assets are consistent and the installed postflight passed."
   },
+  "findings": [],
   "scope": {
     "external_session_started": false,
     "participant_contacted": false,

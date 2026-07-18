@@ -50,8 +50,14 @@ Toda mudança relevante deve verificar impactos em:
 | `docs/project/gates/gate-04-acceptance-plan.md` | Critérios objetivos previstos para o Gate 4 |
 | `docs/project/stage-05-alpha-python-plan.md` | Escopo, incrementos, dependências e Definition of Done da Etapa 5 |
 | `docs/project/stage-05-increment-58-plan.md` | Plano executável de relatórios e experiência pública do Alpha Python |
+| `docs/project/stage-05-increment-59-plan.md` | Plano executável da avaliação externa, fechamento do Alpha e Gate 5 |
 | `docs/project/stage-05-progress.md` | Progresso e checkpoints da implementação do Alpha Python |
 | `docs/project/gates/gate-05-acceptance-plan.md` | Critérios objetivos previstos para o Gate 5 |
+| `docs/project/gates/gate-05-evidence-inventory.json` | Inventário mecânico vigente de critérios, release, CI, avaliação externa e decisão do Gate 5 |
+| `docs/project/gates/gate-05-evidence-package.md` | Parecer técnico, riscos, condições e formulário de decisão humana do Gate 5 |
+| `docs/evaluations/` | Protocolos, templates, preflights e resultados anonimizados das avaliações externas |
+| `docs/project/release-state.json` | Separação canônica entre release pública vigente e versão em desenvolvimento |
+| `docs/releases/` | Manifestos, checklists e pareceres auditáveis de cada release |
 | `docs/project/requirements-v01.md` | Requisitos e atributos de qualidade pretendidos para v0.1 |
 | `docs/project/support-and-limitations.md` | Fonte canônica de hosts, perfis, capabilities e limitações públicas |
 | `docs/project/language-matrix.md` | Declaração implementada de perfis e capabilities por linguagem |
@@ -63,7 +69,6 @@ Toda mudança relevante deve verificar impactos em:
 | `docs/architecture/workflows/` | Topologia e estado dos workflows |
 | `docs/architecture/contracts/` | Schemas e contratos conceituais do core |
 | `docs/architecture/contracts/alpha-python-contracts.md` | Contratos concretos de datasets e métricas iniciados no 5.1 |
-| `docs/architecture/adr/` | Decisões arquiteturais aceitas |
 | `docs/architecture/evidence-model.md` | Eventos, manifests e rastreabilidade |
 | `docs/architecture/alpha-python-architecture.md` | Arquitetura real e fronteiras implementadas do Alpha Python |
 | `docs/architecture/report-publication-threat-model.md` | Conteúdo publicável, ameaças e autoridades do Alpha report |

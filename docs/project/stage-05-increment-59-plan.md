@@ -1,10 +1,10 @@
 # Incremento 5.9 — Avaliação final, livro e Gate 5
 
 - **Data do planejamento:** 2026-07-17
-- **Estado:** aprovado; 5.9.1 aprovada e 5.9.2 concluída como `NOT_READY` por finding documental alto
-- **Dependências:** incrementos 5.1 a 5.8 concluídos; pré-release `v0.1.0a6` publicada; sete jobs verdes nas execuções `29597109452`, `29597666988` e `29598190484`
+- **Estado:** 5.9.1–5.9.5 concluídas; candidata local 5.9.6 pronta para commit/CI e decisão do Gate
+- **Dependências:** incrementos 5.1 a 5.8 concluídos; pré-release `v0.1.0a7` publicada; postflight remoto aprovado; sete jobs verdes nas execuções `29647693611` e `29648119788`
 - **Gate relacionado:** G5-19 como lacuna principal; revalidação de G5-01 a G5-20
-- **Decisão vigente:** Lucas aprovou a 5.9.1 e autorizou somente a 5.9.2. O preflight bloqueou distribuição ao participante; correção/release, 5.9.3+, convite, sessão, Gate 5 e Etapa 6 não estão autorizados
+- **Decisão vigente:** Lucas confirmou que não haverá participante externo neste fechamento, consentiu com a avaliação interna e com a publicação somente do resultado anonimizado, e definiu o chat como canal. A evidência externa fica adiada; a sessão interna não satisfaz independência. Correções materiais, publicação do resultado e decisão do Gate preservam checkpoints humanos. Etapa 6 continua não autorizada.
 
 ## 1. Objetivo
 
@@ -398,13 +398,15 @@ Usar quando a correção ultrapassar o escopo, o participante não estiver dispo
 
 **Publicação e postflight em 2026-07-18:** Lucas autorizou a tag e a pré-release. O commit de release `79fbeb0` passou nos sete jobs da CI `29647693611`; `v0.1.0a7` foi publicada com wheel e sdist auditados. Os assets remotos foram baixados novamente e passaram em hashes, docs checker 128/109, instalação sem dependências, doctor 12 checks, demo, auditor 9/9, cleanup, scanner e orphan check. `PREFLIGHT-F-001` está resolvido; kit/checklist estão `READY`; nenhuma sessão ou contato externo foi iniciado.
 
-### 5.9.3 — Sessão com QE externo
+### 5.9.3 — Avaliação humana: externa adiada e interna acompanhada
 
-**Dependência humana:** Lucas recruta/disponibiliza o participante e coordena o consentimento. Codex não contata terceiros sem nova autorização e canal explícito.
+**Decisão de contingência em 2026-07-18:** nenhum QE externo está disponível. Lucas (`I01`) executará as tarefas pelo chat, com papel de autor/mantenedor declarado, consentimento confirmado e resultado `INFORMATIVE_INTERNAL`. Essa sessão não será usada para alegar independência; feedback externo permanece posterior.
 
-**Entregas:** sessão P01, resultado anonimizado, questionário de compreensão, intervenções e findings.
+**Entregas atuais:** sessão I01, resultado interno anonimizado, questionário de compreensão, intervenções e findings; ausência de resultado externo registrada separadamente.
 
-**Aceite:** participante elegível; consentimento; EXT-01 a EXT-07 tentadas; critérios de validade satisfeitos ou estado `BLOCKED` honesto; revisão de privacidade antes de versionar.
+**Aceite:** consentimento; EXT-01 a EXT-08 tentadas; autoria e conhecimento prévio explícitos; nenhuma conclusão de independência; estado `INFORMATIVE_INTERNAL` ou bloqueio honesto; revisão de privacidade antes de versionar.
+
+**Resultado em 2026-07-18:** sessão `I01` concluída como `INFORMATIVE_INTERNAL`. EXT-03 ficou `NOT_ATTEMPTED`; as demais tarefas terminaram com intervenção ou recuperação. Assistência da IA e papel autoral foram declarados. Resultado JSON/Markdown anonimizado passou à triagem sem alegação externa.
 
 ### 5.9.4 — Triagem e remediação limitada
 
@@ -412,11 +414,15 @@ Usar quando a correção ultrapassar o escopo, o participante não estiver dispo
 
 **Aceite:** nenhum crítico/alto aberto para recomendar aprovação; médios resolvidos ou convertidos em risco explícito; regressão proporcional; caminho A, B ou C escolhido por Lucas antes de avançar.
 
+**Resultado em 2026-07-18:** caminho A. `INT-F-001` HIGH e `INT-F-003` MEDIUM foram corrigidos por intervenção; `INT-F-002` MEDIUM foi aceito como risco porque a instalação humana isolada foi pulada. O postflight mitiga funcionamento técnico, não usabilidade externa. Nenhuma correção de produto, package ou release foi necessária.
+
 ### 5.9.5 — Baseline, retrospectiva, lesson e livro
 
 **Entregas:** baseline final, retrospectiva Etapa 5, Lesson 003, source map, progresso, journal e limitações reconciliadas.
 
 **Aceite:** fatos possuem fontes; estimativas estão rotuladas; voz de Lucas não é fabricada; contribuição da IA inclui sugestões aceitas, corrigidas e rejeitadas; G5-19 passa de parcial para atendido ou bloqueado com motivo.
+
+**Resultado em 2026-07-18:** baseline final pré-Gate, retrospectiva editorial, Lesson 003, nota sobre autovalidação, proveniência e source map foram reconciliados. Métricas não atualizadas permaneceram ausentes em vez de estimadas. G5-19 passou a `MET`; redação editorial continua rascunho assistido até aprovação autoral própria.
 
 ### 5.9.6 — Regressão, pacote e decisão do Gate 5
 
@@ -425,6 +431,21 @@ Usar quando a correção ultrapassar o escopo, o participante não estiver dispo
 **Aceite técnico:** checkers verdes; CI pública verde no commit auditado; artifacts/hashes registrados; recomendação coerente com findings; release condicional concluída quando o caminho B for escolhido.
 
 **Checkpoint final:** Lucas escolhe explicitamente `APPROVE`, `APPROVE_WITH_CONDITIONS` ou `REJECT/BLOCK`. Aprovação autoriza somente planejar a Etapa 6.
+
+**Candidata local em 2026-07-18:** regressão aprovou 362 testes/33 skips e branch coverage de 85%. Pacote G5 foi produzido com recomendação condicional e riscos explícitos. A fatia aguarda autorização de commit/push, sete jobs públicos verdes e decisão humana; produto e package a7 não foram alterados.
+
+### Modo acelerado autorizado para 5.9.3–5.9.6
+
+As quatro fatias formam um fluxo contínuo de fechamento, sem checkpoints artificiais entre atualizações puramente factuais ou documentais:
+
+1. executar 5.9.3 pelo chat com `I01`, consentimento confirmado e viés autoral explícito;
+2. produzir o resultado anonimizado e validar contrato, privacidade e secret scan no mesmo ciclo;
+3. triar imediatamente os findings e avançar pelo caminho A quando não houver correção material;
+4. quando houver correção material, parar no checkpoint de escopo/release, corrigir somente o autorizado e repetir as tarefas afetadas;
+5. consolidar 5.9.5 a partir dos fatos da sessão e da contribuição autoral fornecida por Lucas, sem fabricar percepção;
+6. executar 5.9.6, reconciliar o inventário final e apresentar o Gate 5 para decisão explícita.
+
+Somente quatro checkpoints humanos interrompem esse fluxo: autoridade/consentimento para a sessão; autorização de remediação material ou nova release; autorização para publicar o resultado anonimizado; decisão final do Gate 5. Commit/push do pacote final continua dependendo de autorização quando implicar publicação externa. Nenhuma atividade desse modo cria feature ou inicia a Etapa 6.
 
 ## 15. Critérios de aceite do incremento
 
@@ -495,19 +516,14 @@ Rollback preserva o resultado histórico anonimizado quando consentido, reverte 
 
 ## 18. Checkpoints humanos
 
-Exigem decisão separada:
+O plano e as fatias 5.9.1/5.9.2 já foram aprovados; `v0.1.0a7` já foi publicada e validada. Para o fluxo acelerado restante, exigem decisão separada:
 
-1. aprovação deste plano;
-2. início de cada uma das seis fatias;
-3. disponibilização do participante e consentimento;
-4. publicação do resultado externo anonimizado;
-5. aceitação da severidade e do escopo de remediação;
-6. qualquer chamada live paga;
-7. caminho A, B ou C após a triagem;
-8. commit/push e CI da candidata/pacote final;
-9. tag/pré-release `0.1.0a7`, se necessária;
-10. aprovação, aprovação condicional ou rejeição do Gate 5;
-11. planejamento da Etapa 6.
+1. disponibilização do participante, confirmação de elegibilidade, consentimento e canal da sessão;
+2. severidade/escopo quando a triagem exigir remediação material, chamada paga ou nova release;
+3. publicação do resultado externo após anonimização, revisão de privacidade e secret scan;
+4. `APPROVE`, `APPROVE_WITH_CONDITIONS` ou `REJECT/BLOCK` para o Gate 5.
+
+Commit/push que publique o pacote final e qualquer planejamento da Etapa 6 permanecem fora do fluxo automático. O caminho A, sem alteração material, pode atravessar 5.9.4 e 5.9.5 diretamente até o pacote decisório.
 
 ## 19. Definition of Done do 5.9
 

@@ -28,5 +28,8 @@ O livro trata de desenvolvimento assistido por IA. A origem de cada texto també
 | `notes/2026-07-13-do-checkout-ao-produto.md` | evidências da 4.R7 + relato explícito do autor | GPT-5.6 Sol | revisado pelo autor em 2026-07-13 |
 | `retrospectives/2026-07-13-etapa-04.md` | código, testes, ADRs, journals + relato explícito do autor | GPT-5.6 Sol | revisado pelo autor em 2026-07-13 |
 | `notes/2026-07-15-dia-06-produtividade-e-revisao.md` | relato explícito de Lucas + evidências de `v0.1.0a3` | estruturação assistida por IA | rascunho assistido |
+| `notes/2026-07-15-do-caso-negativo-a-evidencia-reproduzivel.md` | execução negativa reproduzível, artifacts e journals da Etapa 5 | estruturação assistida por IA | rascunho assistido |
+| `retrospectives/2026-07-18-etapa-05.md` | releases, testes, journals, avaliação I01 + declarações explícitas de Lucas | estruturação assistida por IA | rascunho assistido |
+| `notes/2026-07-18-o-alpha-e-o-limite-da-autovalidacao.md` | avaliação I01 + percepção explícita de Lucas sobre revisão e prova futura | estruturação assistida por IA | rascunho assistido |
 
 Uma aprovação de gate não aprova automaticamente a voz ou a redação de um capítulo.

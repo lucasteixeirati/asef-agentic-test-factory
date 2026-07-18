@@ -110,8 +110,20 @@ Na percepção de Lucas, as interações recentes exigiram mais aprimoramentos d
 | Etapa 5.4 — adapter live e budgets | Implementação/revisão | 2026-07-14 | 2026-07-15 | 2 | Concluído com hardening de contexto e budget; publicado em `v0.1.0a3` |
 | Etapa 5.5 — Smoke Dataset | Implementação/CI | 2026-07-15 | 2026-07-15 | 1 | Concluído e publicado; Smoke 20/20 no job `alpha-smoke` |
 | Etapa 5.6 — coverage e mutation do SUT | Implementação/CI | 2026-07-15 | 2026-07-15 | 1 | Concluído e publicado em `v0.1.0a4`; cinco jobs verdes |
-| Etapa 5.7 — segurança, doctor e retenção | Implementação/revisão | 2026-07-15 | 2026-07-16 | 2+ | Concluído e publicado em `v0.1.0a5`; seis jobs verdes |
+| Etapa 5.7 — segurança, doctor e retenção | Implementação/revisão | 2026-07-15 | 2026-07-16 | 2 | Concluído e publicado em `v0.1.0a5`; seis jobs verdes |
 | Etapa 5.8 — relatórios e experiência pública | Implementação/revisão | 2026-07-16 | 2026-07-17 | 2 | Concluído e publicado em `v0.1.0a6`; walkthrough/regressões e duas matrizes de sete jobs verdes |
-| Etapa 5.9 — avaliação final, livro e Gate 5 | Implementação/revisão | 2026-07-17 | — | 2+ | 5.9.1 aprovada; 5.9.2 encontrou e resolveu `PREFLIGHT-F-001` via `v0.1.0a7`; postflight remoto aprovado; sessão não iniciada |
+| Etapa 5.9 — avaliação final, livro e Gate 5 | Implementação/revisão | 2026-07-17 | — | 2+ | 5.9.1–5.9.5 concluídas; a7/postflight aprovados; avaliação interna informativa concluída; regressão/Gate pendentes |
 
 Esta baseline é retrospectiva e cobre apenas os registros disponíveis. A medição prospectiva começa após sua criação.
+
+## Fechamento factual da Etapa 5 antes do Gate
+
+- período observado da Etapa 5: 2026-07-13 a 2026-07-18, seis dias corridos inclusivos até a baseline;
+- métricas de horas e interações não foram atualizadas após a estimativa de aproximadamente 30 horas/500 interações ao fim do Dia 5;
+- custo direto novo não foi informado; permanecem R$ 10,00 em créditos adquiridos e aproximadamente R$ 0,01533 de consumo live observado;
+- regressão anterior à avaliação interna: 360 testes aprovados, 33 skips opcionais;
+- release pública final do recorte avaliado: `v0.1.0a7`, com sete jobs e postflight remoto aprovados;
+- avaliação humana: uma sessão interna assistida, sete tarefas concluídas com intervenção/recuperação e uma não tentada;
+- avaliação externa: dado ausente, explicitamente adiado;
+- contribuição da IA: implementação, testes, análise, documentação e síntese; premissas corrigidas e sugestão arquitetural rejeitada também registradas;
+- decisões humanas: escopo, checkpoints, releases, consentimento, risco aceito, adiamento externo e Gate.

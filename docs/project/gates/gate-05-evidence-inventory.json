@@ -1,38 +1,39 @@
 {
   "schema_version": "1.0.0",
+  "inventory_revision": "1.4.0",
   "gate_id": "G5",
-  "phase": "INVENTORY",
-  "generated_on": "2026-07-17",
+  "phase": "INTERNAL_EVALUATED",
+  "generated_on": "2026-07-18",
   "release": {
-    "version": "0.1.0a6",
-    "tag": "v0.1.0a6",
-    "tagged_commit": "ddeeb3a0e309a8acdaba14802cbf62649b0d438c",
-    "implementation_commit": "9739c1e5e524895eceefd59967abb515a78b7029",
-    "published_at": "2026-07-17T16:53:33Z",
-    "url": "https://github.com/lucasteixeirati/asef-agentic-test-factory/releases/tag/v0.1.0a6",
+    "version": "0.1.0a7",
+    "tag": "v0.1.0a7",
+    "tagged_commit": "79fbeb0dbbef39799801b86cebd59f8b55edaa0a",
+    "implementation_commit": "58ea802bdc912f906e9cffcf7646424e8c66e6ed",
+    "published_at": "2026-07-18T14:21:13Z",
+    "url": "https://github.com/lucasteixeirati/asef-agentic-test-factory/releases/tag/v0.1.0a7",
     "assets": [
       {
         "role": "wheel",
-        "name": "asef_agentic_test_factory-0.1.0a6-py3-none-any.whl",
-        "size": 167571,
-        "digest": "sha256:0b40e6597acb1064c15122a7ac96934e7b1e3f62df64bf5ff1dedcd62831ff72",
-        "url": "https://github.com/lucasteixeirati/asef-agentic-test-factory/releases/download/v0.1.0a6/asef_agentic_test_factory-0.1.0a6-py3-none-any.whl"
+        "name": "asef_agentic_test_factory-0.1.0a7-py3-none-any.whl",
+        "size": 167638,
+        "digest": "sha256:f492e1ca693a307991d805f91bf5283d89c1867e52121e7eb26ed13a1c06f9ad",
+        "url": "https://github.com/lucasteixeirati/asef-agentic-test-factory/releases/download/v0.1.0a7/asef_agentic_test_factory-0.1.0a7-py3-none-any.whl"
       },
       {
         "role": "sdist",
-        "name": "asef_agentic_test_factory-0.1.0a6.tar.gz",
-        "size": 497111,
-        "digest": "sha256:b2963ce50ddcb4bf52080510fdc55656a9ab7cd42ff66ce3008c76fac2f46289",
-        "url": "https://github.com/lucasteixeirati/asef-agentic-test-factory/releases/download/v0.1.0a6/asef_agentic_test_factory-0.1.0a6.tar.gz"
+        "name": "asef_agentic_test_factory-0.1.0a7.tar.gz",
+        "size": 536458,
+        "digest": "sha256:d6b111b7b07f8029a703f4ae59e8a628406e5fe149a1cb6617937608eefa55af",
+        "url": "https://github.com/lucasteixeirati/asef-agentic-test-factory/releases/download/v0.1.0a7/asef_agentic_test_factory-0.1.0a7.tar.gz"
       }
     ]
   },
   "ci_runs": [
     {
-      "id": 29597109452,
-      "head_sha": "9739c1e5e524895eceefd59967abb515a78b7029",
+      "id": 29620941881,
+      "head_sha": "58ea802bdc912f906e9cffcf7646424e8c66e6ed",
       "conclusion": "success",
-      "url": "https://github.com/lucasteixeirati/asef-agentic-test-factory/actions/runs/29597109452",
+      "url": "https://github.com/lucasteixeirati/asef-agentic-test-factory/actions/runs/29620941881",
       "jobs": [
         "core",
         "framework-spikes",
@@ -44,10 +45,10 @@
       ]
     },
     {
-      "id": 29597666988,
-      "head_sha": "ddeeb3a0e309a8acdaba14802cbf62649b0d438c",
+      "id": 29647693611,
+      "head_sha": "79fbeb0dbbef39799801b86cebd59f8b55edaa0a",
       "conclusion": "success",
-      "url": "https://github.com/lucasteixeirati/asef-agentic-test-factory/actions/runs/29597666988",
+      "url": "https://github.com/lucasteixeirati/asef-agentic-test-factory/actions/runs/29647693611",
       "jobs": [
         "core",
         "framework-spikes",
@@ -59,10 +60,10 @@
       ]
     },
     {
-      "id": 29598190484,
-      "head_sha": "8fba63d1100e19a4010aa655d0b95d2c6d38a514",
+      "id": 29648119788,
+      "head_sha": "3d74c91617caead59eeb5804f6cc89e55b7bd133",
       "conclusion": "success",
-      "url": "https://github.com/lucasteixeirati/asef-agentic-test-factory/actions/runs/29598190484",
+      "url": "https://github.com/lucasteixeirati/asef-agentic-test-factory/actions/runs/29648119788",
       "jobs": [
         "core",
         "framework-spikes",
@@ -75,22 +76,37 @@
     }
   ],
   "external_evaluation": {
-    "protocol_version": "1.0.0",
+    "protocol_version": "1.0.1",
     "protocol": "docs/evaluations/alpha-python-external-evaluation-protocol.md",
     "template": "docs/templates/external-evaluation-observation-template.md",
     "participant_kit": "docs/evaluations/alpha-python-external-evaluation-participant-kit.md",
     "facilitator_checklist": "docs/evaluations/alpha-python-external-evaluation-facilitator-checklist.md",
-    "preflight": "docs/evaluations/2026-07-17-alpha-python-release-preflight.json",
-    "status": "NOT_STARTED",
+    "preflight_history": "docs/evaluations/2026-07-17-alpha-python-release-preflight.json",
+    "preflight": "docs/evaluations/2026-07-18-alpha-python-release-a7-postflight.json",
+    "status": "DEFERRED",
+    "deferred_reason": "Nenhum QE externo está disponível no fechamento atual; feedback independente será coletado de usuários futuros.",
     "results": []
+  },
+  "internal_evaluation": {
+    "protocol_version": "1.0.0",
+    "protocol": "docs/evaluations/alpha-python-internal-author-evaluation-protocol.md",
+    "participant_id": "I01",
+    "participant_role": "AUTHOR_MAINTAINER",
+    "consent_obtained": true,
+    "channel": "DEVELOPMENT_CHAT",
+    "status": "COMPLETED",
+    "results": [
+      "docs/evaluations/2026-07-18-alpha-python-internal-evaluation-I01.json"
+    ],
+    "summary": "docs/evaluations/2026-07-18-alpha-python-internal-evaluation-I01.md"
   },
   "criteria": [
     {
       "id": "G5-01",
       "status": "MET",
-      "summary": "Wheel e sdist publicados foram auditados e o wheel executou fora do checkout.",
+      "summary": "Wheel e sdist da v0.1.0a7 foram baixados, auditados e o wheel executou fora do checkout.",
       "evidence": [
-        "docs/reviews/2026-07-17-walkthrough-frio-58.md",
+        "docs/evaluations/2026-07-18-alpha-python-release-a7-postflight.json",
         "tests/test_public_experience_audit.py"
       ]
     },
@@ -240,35 +256,37 @@
     },
     {
       "id": "G5-18",
-      "status": "BLOCKED",
-      "summary": "Main local, walkthrough e auditor estão verdes, mas a documentação congelada em v0.1.0a6 contradiz a identidade da release; PREFLIGHT-F-001 bloqueia a sessão.",
+      "status": "MET_WITH_RESIDUAL_RISK",
+      "summary": "Documentação a7 coerente e interpretação interna observada com intervenção; compreensão externa independente permanece adiada.",
       "evidence": [
         "tests/test_docs_check.py",
-        "docs/reviews/2026-07-17-walkthrough-frio-58.md"
+        "docs/evaluations/2026-07-18-alpha-python-release-a7-postflight.json",
+        "docs/evaluations/2026-07-18-alpha-python-internal-evaluation-I01.json"
       ]
     },
     {
       "id": "G5-19",
-      "status": "PARTIAL",
-      "summary": "Journals e baseline existem, mas retrospectiva final, Lesson 003 e consolidação pós-Alpha permanecem pendentes.",
+      "status": "MET",
+      "summary": "Baseline, retrospectiva, Lesson 003, decisões humanas e contribuição/correções da IA estão registradas; métricas posteriores ao Dia 5 permanecem declaradamente ausentes.",
       "evidence": [
         "docs/project/measurement-baseline.md",
-        "book/source-map.md"
+        "book/retrospectives/2026-07-18-etapa-05.md",
+        "docs/lessons/LESSON-003-etapa-05-alpha-python.md"
       ]
     },
     {
       "id": "G5-20",
       "status": "MET",
-      "summary": "Regressões do Gate 4 e sete jobs públicos permanecem verdes.",
+      "summary": "Regressões históricas e os sete jobs públicos da release e do postflight permanecem verdes.",
       "evidence": [
         ".github/workflows/ci.yml",
-        "docs/project/stage-05-progress.md"
+        "docs/reviews/2026-07-18-revisao-publicacao-a7.md"
       ]
     }
   ],
   "decision": {
     "status": "PENDING_HUMAN",
     "technical_recommendation": "NOT_READY",
-    "reason": "G5-18 está bloqueado por PREFLIGHT-F-001, G5-19 permanece parcial e a sessão externa não foi iniciada."
+    "reason": "Regressão local e pacote decisório estão prontos; commit/CI pública final e decisão humana permanecem pendentes, com independência externa adiada."
   }
 }

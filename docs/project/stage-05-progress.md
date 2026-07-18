@@ -2,7 +2,7 @@
 
 - **Plano:** `docs/project/stage-05-alpha-python-plan.md`
 - **Gate:** `docs/project/gates/gate-05-acceptance-plan.md`
-- **Estado atual:** incrementos 5.1 a 5.8 publicados até `v0.1.0a6`; 5.9.1 aprovada e preflight 5.9.2 bloqueado por divergência documental da tag; Gate 5 pendente
+- **Estado atual:** 5.9.1–5.9.5 concluídas; candidata local 5.9.6 pronta para commit/CI; recomendação Gate 5 condicional e decisão humana pendente
 
 ## 5.1 — Contratos, ADRs e suíte de referência
 
@@ -422,3 +422,29 @@ O commit `58ea802` foi enviado à `main` após autorização humana. A [CI `2962
 Lucas autorizou tag e pré-release. O commit de release `79fbeb0` passou nos sete jobs da [CI `29647693611`](https://github.com/lucasteixeirati/asef-agentic-test-factory/actions/runs/29647693611). A tag anotada e a [pré-release `v0.1.0a7`](https://github.com/lucasteixeirati/asef-agentic-test-factory/releases/tag/v0.1.0a7) foram publicadas com wheel SHA-256 `f492e1ca693a307991d805f91bf5283d89c1867e52121e7eb26ed13a1c06f9ad` e sdist SHA-256 `d6b111b7b07f8029a703f4ae59e8a628406e5fe149a1cb6617937608eefa55af`.
 
 Os assets oficiais foram baixados novamente e os hashes coincidiram. O sdist passou no docs checker com 128 arquivos/109 links; o wheel instalou sem dependências como `0.1.0a7`; doctor terminou `DEGRADED/READY` 12 checks; demo `SUCCEEDED/ACCEPTED`; auditor 9/9; cleanup `DRY_RUN_COMPLETE`; scanner verde; zero containers. `PREFLIGHT-F-001` foi resolvido, kit/checklist passaram a `READY` e a 5.9.3 continua não iniciada até nova autorização.
+
+### Reconciliação documental e autorização do fechamento acelerado
+
+Lucas autorizou reconciliar a documentação e avançar continuamente por 5.9.3–5.9.6, preservando apenas os checkpoints humanos indispensáveis. Planejamento Mestre, cabeçalhos das Etapas 4/5, plano 5.9, inventário G5, checker, critérios textuais, source map, proveniência, EXP-001 e mapa de governança foram alinhados ao estado remoto de `v0.1.0a7` e ao postflight aprovado.
+
+O inventário foi promovido inicialmente à revisão `1.1.0`, sem resultado fictício. O checker passou a congelar a revisão a7 e a validar o arquivo de resultado anonimizado quando a avaliação externa mudar para `COMPLETED` ou `BLOCKED`. Treze testes adversariais específicos, regressão completa de 360 testes com 33 skips opcionais, os 20 critérios/40 evidências e o checker documental sobre 130 arquivos/117 links passaram sem findings.
+
+A indisponibilidade de QE externo foi confirmada por Lucas. Em vez de simular independência, o inventário `1.2.0` marca a avaliação externa `DEFERRED` e abre uma avaliação interna acompanhada separada, com `I01` no papel declarado de autor/mantenedor, consentimento confirmado e chat como canal. O protocolo externo foi corrigido para `v0.1.0a7`/`1.0.1`; o protocolo interno preserva o resultado como `INFORMATIVE_INTERNAL`. Nenhuma feature ou atividade da Etapa 6 foi iniciada.
+
+### Fatias 5.9.3–5.9.4 — avaliação interna e triagem
+
+A sessão `I01` foi concluída como `INFORMATIVE_INTERNAL`, com assistência técnica da IA e revisão/decisão de Lucas declaradas. EXT-03 não foi tentada; EXT-01/02/04/05/07/08 tiveram intervenção e EXT-06 teve recuperação. O resultado anonimizado omite terminal bruto, paths e identidade civil.
+
+`INT-F-001` HIGH, sobre maturidade/segurança, e `INT-F-003` MEDIUM, sobre fail-closed no cleanup, foram corrigidos durante a sessão. `INT-F-002` MEDIUM permanece `ACCEPTED_RISK`: o participante pulou a instalação humana isolada; o postflight a7 é mitigação técnica, não evidência de usabilidade. A triagem escolheu caminho A, sem feature, correção material ou nova release. O inventário `1.3.0` passou a `INTERNAL_EVALUATED`; avaliação externa continua `DEFERRED`.
+
+### Fatia 5.9.5 — baseline, retrospectiva, Lesson 003 e livro
+
+A baseline foi fechada sem inventar horas ou interações posteriores ao Dia 5. A retrospectiva da Etapa 5 e a Lesson 003 separam fatos, percepção autoral, estruturação por IA, correções e decisões humanas. A proposta de Lucas de experimentar futuramente um sistema público foi preservada como hipótese de backlog, sem convertê-la em feature ou automação web.
+
+Source map e proveniência passaram a incluir a autovalidação I01 e o limite da independência. G5-19 tornou-se `MET`; o inventário foi promovido a `1.4.0`. A redação do livro permanece `rascunho assistido`, pois aprovação de Gate não equivale a aprovação editorial da voz.
+
+### Fatia 5.9.6 — candidata local do Gate 5
+
+A regressão local aprovou 362 testes, 33 skips opt-in e branch coverage geral de 85%. Gate checker, docs checker e verificações de higiene passaram. O pacote decisório recomenda `APPROVE_WITH_CONDITIONS` somente após CI pública final, mantendo avaliação externa e instalação humana isolada como condições.
+
+O produto/package `v0.1.0a7` não mudou. A candidata aguarda autorização de commit/push, execução dos sete jobs no commit auditado, reconciliação do inventário e decisão explícita de Lucas. Nenhuma feature ou Etapa 6 foi iniciada.

@@ -1,7 +1,7 @@
 # EXP-001 — Máquina de estados Python versus LangGraph
 
 - **Data:** 2026-07-12
-- **Status:** concluído para checkpoint, interrupção e retomada; decisão tecnológica ainda aberta
+- **Status:** concluído; decisão incorporada pela ADR-008 aceita em 2026-07-12
 - **Baseline:** Python 3.13.5, LangGraph 1.2.9, langgraph-checkpoint-sqlite 3.1.0
 
 ## Pergunta
@@ -65,12 +65,12 @@ A primeira versão persistiu `WorkflowRequest` como dataclass. LangGraph alertou
 - não houve benchmark de carga;
 - contagem de linhas não mede complexidade sozinha.
 
-## Conclusão provisória
+## Conclusão e decisão incorporada
 
-LangGraph demonstrou valor concreto em checkpoint, snapshot, interrupção humana e retomada após recriação do grafo. A retomada continuou do checkpoint sem repetir a chamada ao modelo. A dependência ainda não está aceita: falta ponderar esse benefício contra o custo de dependências, comparar responsabilidades com PydanticAI e decidir quem controla o loop principal.
+LangGraph demonstrou valor concreto em checkpoint, snapshot, interrupção humana e retomada após recriação do grafo. A retomada continuou do checkpoint sem repetir a chamada ao modelo. Lucas aceitou a ADR-008: LangGraph fica restrito ao adapter opcional de checkpoint e retomada humana; o runtime explícito e os application services ASEF continuam canônicos, sem dependência do framework no core.
 
-## Próximos passos
+## Encaminhamento realizado
 
-- comparar tratamento de retry e budget;
-- comparar responsabilidades com PydanticAI sem acoplar os dois frameworks;
-- atualizar ou criar ADR somente após essas evidências.
+- retry, budget, autorização e transições permanecem responsabilidades exclusivas do ASEF;
+- a fronteira com PydanticAI continua pela porta tipada do modelo, sem acoplar os frameworks;
+- a implementação e o rollback seguem os critérios da ADR-008.

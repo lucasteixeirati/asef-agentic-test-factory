@@ -2,7 +2,7 @@
 
 ## Status
 
-Em andamento desde 2026-07-12 sob a Opção C. ADR-007 rejeitada; 4.R1 e 4.R2 concluídos.
+Concluída e aprovada no Gate 4 em 2026-07-13. A Opção C consolidou o package único; 4.R1 a 4.R8 foram concluídos; ADR-007 foi rejeitada e ADR-008 aceita.
 
 ## Incremento 4.1 — Contratos e estado
 

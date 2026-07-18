@@ -2,7 +2,7 @@
 
 > Documento vivo para orientar a construção da aplicação, da documentação pública e do futuro livro.
 
-**Status:** vigente — 5.1 a 5.8 publicados até `v0.1.0a6`; 5.9.1 aprovada e preflight 5.9.2 bloqueado por documentação congelada divergente; decisão corretiva pendente
+**Status:** vigente — `v0.1.0a7` e postflight aprovados; 5.9.1–5.9.5 concluídas; candidata 5.9.6 local pronta; commit/CI e decisão humana do Gate 5 pendentes
 **Data de início:** 2026-07-11  
 **Responsável:** Lucas  
 **Natureza:** projeto open source, educacional, experimental e de portfólio  
@@ -746,7 +746,7 @@ As datas serão estimadas após a baseline das primeiras sessões. Os gates são
 **Plano executável:** `docs/project/stage-05-alpha-python-plan.md`
 
 **Plano de aceite:** `docs/project/gates/gate-05-acceptance-plan.md`
-**Status:** 5.1 a 5.8 concluídos e publicados até [`v0.1.0a6`](https://github.com/lucasteixeirati/asef-agentic-test-factory/releases/tag/v0.1.0a6). A 5.9.1 foi aprovada. O preflight 5.9.2 comprovou runtime/package, mas bloqueou a sessão porque os documentos dentro da tag ainda declaram `v0.1.0a5` como última release. Nenhum participante foi contatado. O Gate 5 permanece em execução.
+**Status:** 5.1 a 5.8 concluídos e `v0.1.0a7` aprovada em postflight. 5.9.1–5.9.5 concluídas; avaliação interna anonimizada e externa adiada. A candidata local 5.9.6 passou em regressão e recomenda aprovação condicional, mas ainda depende de commit/CI pública e decisão explícita de Lucas. O Gate 5 permanece em execução.
 
 **Aplicação**
 
@@ -941,36 +941,31 @@ Cada nova versão deverá declarar hipótese, baseline, mudança, resultado, lim
 - [ ] A instalação e os exemplos são estáveis?
 - [ ] Existe histórico suficiente para explicar a evolução por evidências?
 
-## 22. Backlog inicial priorizado
+## 22. Backlog priorizado vigente
 
-### Agora — Etapa 0
+### Agora — fechamento da Etapa 5
 
-1. Pacote documental revisado e aprovado.
-2. Quatro critérios do Gate 0 verificados e atendidos.
-3. Etapa 0 formalmente encerrada em 2026-07-11.
+1. autorizar commit/push da candidata documental/checker do fechamento;
+2. obter sete jobs públicos verdes no commit auditado;
+3. reconciliar a CI no inventário e congelar o pacote final;
+4. decidir explicitamente `APPROVE_WITH_CONDITIONS` ou `REJECT/BLOCK` para o Gate 5;
+5. não iniciar feature ou Etapa 6 antes dessa decisão.
 
-### Em seguida — Etapa 1
+### Em seguida — somente após Gate 5
 
-1. Criar a visão de produto em uma página.
-2. Definir personas e necessidades.
-3. Refinar mapa de capacidades.
-4. Priorizar casos de uso.
-5. Especificar o primeiro workflow vertical.
-6. Confirmar nome do projeto e terminologia pública.
-7. Definir requisitos de independência de linguagem.
-8. Selecionar os três primeiros ecossistemas por critérios explícitos.
-9. Desenhar os contratos iniciais de `LanguageProfile` e adaptadores por capacidade.
+1. planejar detalhadamente a Etapa 6;
+2. provar TypeScript end-to-end sem contaminar o core;
+3. experimentar Java e iniciar conformance multilíngue;
+4. expandir quality capabilities com evidência comparável.
 
 ### Não iniciar ainda
 
-- scaffold completo da aplicação;
-- instalação de todos os frameworks candidatos;
-- interface web;
-- extensão VS Code;
-- memória de longo prazo;
+- implementação da Etapa 6 antes da aprovação do Gate 5;
+- interface web ou extensão VS Code;
+- memória de longo prazo ou RAG;
 - integrações MCP externas;
-- suporte multi-provider;
-- adoção definitiva de LangGraph ou PydanticAI antes dos spikes;
+- suporte multi-provider sem experimento e decisão;
+- execução contra código arbitrariamente hostil;
 - capítulos apresentados como definitivos sobre acontecimentos ainda não ocorridos.
 
 ## 23. Governança de decisões
@@ -1061,21 +1056,15 @@ Stars, seguidores e visualizações serão observados, mas não serão tratados 
 
 ## 26. Questões abertas
 
-Estas questões serão decididas nas etapas indicadas, não agora:
+Questões ainda abertas:
 
-- Qual será o nome público definitivo do projeto?
-- EngineOS será um componente interno ou o nome da plataforma?
-- Qual tipo de aplicação Python será usado no primeiro alpha de referência?
-- Quais serão as três primeiras linguagens e quais níveis de suporte cada uma terá na v0.1?
-- Quais capacidades mínimas compõem um `LanguageProfile` suportado?
-- Qual provider será usado no primeiro experimento real?
-- Qual mecanismo de sandbox é viável para os ambientes suportados?
-- LangGraph agrega valor suficiente ao primeiro workflow?
-- PydanticAI reduz complexidade ou sobrepõe responsabilidades?
-- Quais informações de prompts podem ser publicadas sem risco?
-- O manuscrito ficará no mesmo repositório público ou em repositório separado?
-- Qual licença melhor atende ao objetivo educacional e comunitário?
+- EngineOS será um componente interno, um nome histórico ou parte futura da plataforma?
+- Quais partes de prompts/cassettes live podem ser publicadas sem risco ou obrigação contratual?
+- O manuscrito definitivo permanecerá neste repositório ou será separado quando amadurecer?
+- Quais critérios selecionarão um segundo workflow depois da prova multilíngue?
+
+Decisões já encerradas e registradas: nome público ASEF; licença MIT; Python como perfil de referência; TypeScript como segunda linguagem e Java experimental; `LanguageProfile` por capabilities; OpenAI Responses no primeiro live; Docker Desktop como sandbox experimental; LangGraph restrito a checkpoint humano; PydanticAI mantido como spike.
 
 ## 27. Próxima decisão
 
-Revisar o finding `PREFLIGHT-F-001` e autorizar, ajustar ou rejeitar a preparação de uma candidata corretiva imutável antes da sessão externa. A decisão não autoriza antecipadamente 5.9.3, participante, Gate 5 ou Etapa 6.
+Autorizar ou negar o commit/push da candidata 5.9.6. Se autorizada, executar os sete jobs públicos, reconciliar o SHA da CI no inventário e reapresentar o Gate 5 para decisão explícita. A recomendação técnica é `APPROVE_WITH_CONDITIONS`; nenhuma decisão foi presumida e a Etapa 6 continua não autorizada.

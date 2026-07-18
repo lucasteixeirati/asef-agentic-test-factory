@@ -6,7 +6,7 @@
 
 - **Resultado ID:** use `ASEF-EXT-YYYYMMDD-PNN`
 - **Data:** registrar em `YYYY-MM-DD`
-- **Protocolo:** `ASEF-EXT-ALPHA` versão `1.0.0`
+- **Protocolo:** `ASEF-EXT-ALPHA` versão `1.0.1`
 - **Participante:** ID anonimizado `PNN`
 - **Release/tag:** registrar tag congelada
 - **Commit:** registrar SHA completo

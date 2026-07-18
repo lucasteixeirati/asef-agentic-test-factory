@@ -1,0 +1,54 @@
+{
+  "schema_version": "1.0.0",
+  "protocol_version": "1.0.0",
+  "result_id": "ASEF-INT-20260718-I01",
+  "participant_id": "I01",
+  "participant_role": "AUTHOR_MAINTAINER",
+  "consent_obtained": true,
+  "session_status": "INFORMATIVE_INTERNAL",
+  "interpretation_correct": true,
+  "release": {
+    "tag": "v0.1.0a7",
+    "commit": "79fbeb0dbbef39799801b86cebd59f8b55edaa0a",
+    "wheel_digest_verified": true,
+    "sdist_digest_verified": true
+  },
+  "independence": {
+    "external_to_authoring": false,
+    "unaided": false,
+    "external_feedback_deferred": true
+  },
+  "ai_assistance": {
+    "used": true,
+    "role": "TECHNICAL_ANALYSIS_AND_STRUCTURING",
+    "human_role": "PERIODIC_REVIEW_DECISION_AND_APPROVAL"
+  },
+  "tasks": [
+    {"id": "EXT-01", "state": "COMPLETED_WITH_INTERVENTION", "summary": "A interpretação inicial sobre maturidade e segurança foi corrigida para o escopo experimental e limitado."},
+    {"id": "EXT-02", "state": "COMPLETED_WITH_INTERVENTION", "summary": "Wheel e sdist foram baixados; tamanho e SHA-256 conferiram com a release congelada."},
+    {"id": "EXT-03", "state": "NOT_ATTEMPTED", "summary": "O participante decidiu adiar a instalação humana em diretório vazio fora do checkout."},
+    {"id": "EXT-04", "state": "COMPLETED_WITH_INTERVENTION", "summary": "Doctor executado no ambiente de desenvolvimento: DEGRADED, READY e 12 checks."},
+    {"id": "EXT-05", "state": "COMPLETED_WITH_INTERVENTION", "summary": "Demo local terminou SUCCEEDED e ACCEPTED sem evidência de provider live."},
+    {"id": "EXT-06", "state": "COMPLETED_WITH_RECOVERY", "summary": "JSON normativo e Markdown derivado foram reconciliados para a mesma run e sem conclusão material adicional."},
+    {"id": "EXT-07", "state": "COMPLETED_WITH_INTERVENTION", "summary": "Fatos, inferência, recomendação, integridade e limitações foram interpretados corretamente com assistência de IA."},
+    {"id": "EXT-08", "state": "COMPLETED_WITH_INTERVENTION", "summary": "Cleanup dry-run terminou DRY_RUN_COMPLETE, com zero exclusões; suporte, segurança e contribuição foram localizados."}
+  ],
+  "findings": [
+    {"id": "INT-F-001", "task": "EXT-01", "severity": "HIGH", "state": "FIXED", "gate": "G5-18", "summary": "A interpretação inicial alegou estabilidade e segurança sem reconhecer o caráter experimental.", "decision": "Corrigido durante EXT-07 com limites explícitos de perfil, produção e validade."},
+    {"id": "INT-F-002", "task": "EXT-03", "severity": "MEDIUM", "state": "ACCEPTED_RISK", "gate": "G5-01", "summary": "A jornada humana isolada não foi executada; instalação, doctor e demo ocorreram no checkout.", "decision": "Risco aceito para a sessão interna; postflight remoto isolado permanece mitigação técnica, sem alegar usabilidade humana externa."},
+    {"id": "INT-F-003", "task": "EXT-08", "severity": "MEDIUM", "state": "FIXED", "gate": "G5-15", "summary": "A resposta inicial a alvo inseguro não explicitou o comportamento fail-closed.", "decision": "Corrigido por intervenção: não excluir, preservar evidência sanitizada e investigar containment ou link."}
+  ],
+  "privacy": {
+    "pii_removed": true,
+    "raw_terminal_not_versioned": true,
+    "personal_paths_removed": true,
+    "material_raw_not_versioned": true,
+    "review_or_withdrawal_honored": true
+  },
+  "limitations": [
+    "Participante pertence à autoria e conhecia o projeto.",
+    "Análise e redação técnica foram assistidas por IA.",
+    "Instalação humana fora do checkout não foi tentada.",
+    "Nenhuma compreensão independente externa foi observada."
+  ]
+}
