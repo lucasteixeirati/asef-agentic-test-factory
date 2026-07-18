@@ -32,5 +32,6 @@ O livro trata de desenvolvimento assistido por IA. A origem de cada texto també
 | `retrospectives/2026-07-18-etapa-05.md` | releases, testes, journals, avaliação I01 + declarações explícitas de Lucas | estruturação assistida por IA | rascunho assistido |
 | `notes/2026-07-18-o-alpha-e-o-limite-da-autovalidacao.md` | avaliação I01 + percepção explícita de Lucas sobre revisão e prova futura | estruturação assistida por IA | rascunho assistido |
 | `notes/2026-07-18-da-skill-ao-envelope-de-run.md` | implementação, testes e decisão de fronteira da 6.3.2 | estruturação assistida por IA | rascunho assistido |
+| `notes/2026-07-18-contrato-nao-e-autoridade-de-rede.md` | implementação, testes, política de rede e journal da 6.3.3 | estruturação assistida por IA | rascunho assistido |
 
 Uma aprovação de gate não aprova automaticamente a voz ou a redação de um capítulo.

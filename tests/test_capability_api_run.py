@@ -10,6 +10,7 @@ from asef.adapters.api_plan_agent import ApiPlanAgentAdapter
 from asef.adapters.api_report_store import ApiReportStore
 from asef.adapters.capability_run_store import CapabilityRunStore
 from asef.adapters.gateway import ModelResult
+from asef.application.ports import ProviderTransientError
 from asef.api_contracts import ApiExecutionResult, ApiScenarioResult
 from asef.application.backend_api_run import (
     ExecuteBackendApiPlanService,
@@ -212,6 +213,36 @@ class CapabilityApiRunTests(unittest.TestCase):
                 for name in ("state.json", "manifest.json")
             }
             self.assertEqual(before, after)
+
+    def test_transient_provider_failure_consumes_one_retry_and_second_model_call(self) -> None:
+        class RetryGateway:
+            def __init__(self) -> None:
+                self.calls = 0
+
+            def generate(self, **kwargs):
+                del kwargs
+                self.calls += 1
+                if self.calls == 1:
+                    raise ProviderTransientError("temporary")
+                return ModelResult(
+                    output=_model_output(), model="retry", response_id="response-2",
+                    input_tokens=30, output_tokens=20, provider="openai",
+                )
+
+        with tempfile.TemporaryDirectory(dir=".asef") as directory:
+            root = Path(directory)
+            gateway = RetryGateway()
+            store = CapabilityRunStore(root)
+            policy = BackendApiPolicy(allowed_ports=(8765,))
+            output = GenerateBackendApiPlanService(
+                ApiPlanAgentAdapter(gateway, policy), store
+            ).execute(
+                "Verify health", "http://127.0.0.1:8765",
+                CapabilityRunBudgets(max_model_calls=2, max_provider_retries=1),
+            )
+            self.assertEqual(CapabilityRunStatus.WAITING_FOR_HUMAN_REVIEW, output.state.status)
+            self.assertEqual((2, 1), (output.state.usage.model_calls, output.state.usage.provider_retries))
+            self.assertEqual(2, gateway.calls)
 
 
 if __name__ == "__main__":

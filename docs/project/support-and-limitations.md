@@ -38,7 +38,9 @@ O código ainda declara `python-pytest` como experimental com alvo futuro `refer
 
 ### Backend API em desenvolvimento
 
-`api-generate` converte uma intenção natural em plano revisável usando cassette e cria uma capability run; `api --run-id` reconcilia o plano por hash, aplica budgets e produz state, manifest, resultado e reports com evidências. A capability bloqueia hosts externos, redirects, proxies, credenciais persistidas, headers de transporte e métodos mutáveis por padrão. Requests cotidianos ainda executam no host somente contra loopback. Docker foi comprovado apenas em conformance autocontida com rede desligada. Não há provider live, OpenAPI, autenticação, POST, GraphQL, gRPC ou aprovação de produção.
+`api-generate` converte uma intenção natural em plano revisável por cassette ou provider live opt-in e cria uma capability run; `api --run-id` reconcilia o plano por hash, aplica budgets e produz state, manifest, resultado e reports com evidências. OpenAPI 3.0/3.1 é aceito somente em JSON local de até 1 MiB: referências externas, chaves duplicadas, rotas parametrizadas e operações mutáveis não entram no recorte, e `servers` nunca define o alvo. O resumo sanitizado e o hash da fonte são preservados; a fonte bruta não é copiada para a run.
+
+A capability bloqueia hosts externos, redirects, proxies, credenciais persistidas, headers de transporte e métodos mutáveis por padrão. Requests cotidianos ainda executam no host somente contra endereços literais de loopback; portanto não fazem DNS e não abrem uma superfície de rebinding. Docker foi comprovado apenas em conformance autocontida com rede desligada. Não há autenticação, POST, GraphQL, gRPC, acesso a serviço externo real ou aprovação de produção.
 
 ## Sandbox e segurança
 

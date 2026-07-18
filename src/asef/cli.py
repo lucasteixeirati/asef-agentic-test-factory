@@ -11,7 +11,7 @@ from pathlib import Path
 
 from .adapters.context_file import FileQualityContextAdapter
 from .adapters.api_plan_file import ApiPlanFileAdapter
-from .adapters.api_plan_agent import ApiPlanAgentAdapter
+from .adapters.api_plan_agent import ApiPlanAgentAdapter, ApiPlanAgentPricing
 from .adapters.api_report_store import ApiReportStore
 from .adapters.capability_run_store import CapabilityRunStore
 from .adapters.http_api_execution import LoopbackHttpApiExecutor
@@ -60,12 +60,13 @@ from .report_contracts import REPORT_SCHEMA_VERSION
 from .context import ContextValidationError
 from .contracts import ContractValidationError, SkeletonRunRequest
 from .api_contracts import ApiContractError
-from .capability_runs import CapabilityRunBudgets, CapabilityRunContractError
+from .capability_runs import CapabilityRunBudgets, CapabilityRunContractError, CapabilityRunStatus
 from .security_contracts import CleanupKind, CleanupMode, CleanupRequest
 from .application.ports import ProviderError
 from .demo import materialize_demo_assets
 from .outcomes import RunStatus, exit_code_for
 from .observability import close_operational_logging, configure_operational_logging
+from .openapi_contracts import OpenApiContractError, OpenApiJsonLoader
 from .skills.unit import UnitSkill
 from .skills.backend_api import BackendApiPolicy, BackendApiPolicyError
 from .runtime.budgets import BudgetController
@@ -173,9 +174,18 @@ def build_parser() -> argparse.ArgumentParser:
     )
     api_generate.add_argument("--requirement", required=True)
     api_generate.add_argument("--base-url", required=True)
+    api_generate.add_argument("--openapi", type=Path)
     api_generate.add_argument("--allow-port", type=int, action="append", required=True)
     api_generate.add_argument("--max-scenarios", type=int, default=20)
     api_generate.add_argument("--max-workflow-seconds", type=int, default=60)
+    api_generate.add_argument("--mode", choices=("demo", "live"), default="demo")
+    api_generate.add_argument("--model", default=os.environ.get("ASEF_OPENAI_MODEL"))
+    api_generate.add_argument("--api-budget-brl", type=float, default=0.0)
+    api_generate.add_argument("--input-cost-brl-per-million", type=float, default=0.0)
+    api_generate.add_argument("--output-cost-brl-per-million", type=float, default=0.0)
+    api_generate.add_argument("--provider-timeout-seconds", type=int, default=60)
+    api_generate.add_argument("--max-output-tokens", type=int, default=600)
+    api_generate.add_argument("--max-provider-retries", type=int, default=1)
     api_generate.add_argument("--cassette", type=Path, default=None)
     api_generate.add_argument("--output", type=Path, default=Path(".asef/api/plans/generated-plan.json"))
     api_generate.add_argument("--run-output", type=Path, default=Path(".asef/runs"))
@@ -492,50 +502,82 @@ def main(argv: list[str] | None = None) -> int:
             close_operational_logging(logger)
             return code
         if args.command == "api-generate":
+            openapi = OpenApiJsonLoader().load(args.openapi) if args.openapi else None
             cassette = args.cassette or (
                 Path(__file__).parent / "fixtures" / "backend-api-plan-demo.json"
-            )
-            budgets = BudgetController(
-                BudgetLimits(max_model_calls=1, max_input_tokens=10_000, max_output_tokens=5_000),
-                BudgetUsage(),
             )
             policy = BackendApiPolicy(
                 allowed_ports=tuple(args.allow_port),
                 max_scenarios=args.max_scenarios,
             )
+            pricing = ApiPlanAgentPricing(
+                args.input_cost_brl_per_million,
+                args.output_cost_brl_per_million,
+            )
+            if args.mode == "live":
+                pricing.validate_live()
+                if args.api_budget_brl <= 0 or not args.model:
+                    raise ContractValidationError("live API generation requires model and positive api budget")
+                gateway = OpenAIResponsesGateway(
+                    model=args.model,
+                    timeout_seconds=args.provider_timeout_seconds,
+                    api_budget_brl=args.api_budget_brl,
+                    max_output_tokens=args.max_output_tokens,
+                )
+            else:
+                budgets = BudgetController(
+                    BudgetLimits(max_model_calls=1, max_input_tokens=10_000, max_output_tokens=5_000),
+                    BudgetUsage(),
+                )
+                gateway = RecordedModelGateway(cassette, budgets)
             run_store = CapabilityRunStore(args.run_output)
             generated = GenerateBackendApiPlanService(
-                ApiPlanAgentAdapter(RecordedModelGateway(cassette, budgets), policy),
+                ApiPlanAgentAdapter(gateway, policy, pricing),
                 run_store,
             ).execute(
                 args.requirement,
                 args.base_url,
                 CapabilityRunBudgets(
-                    max_model_calls=1,
+                    max_model_calls=(args.max_provider_retries + 1 if args.mode == "live" else 1),
+                    max_provider_retries=(args.max_provider_retries if args.mode == "live" else 0),
                     max_input_tokens=10_000,
                     max_output_tokens=5_000,
                     max_requests=args.max_scenarios,
                     max_workflow_seconds=args.max_workflow_seconds,
+                    api_budget_brl=args.api_budget_brl,
                 ),
+                openapi,
             )
-            ApiPlanFileAdapter().save(args.output, generated.plan)
+            if generated.plan is not None:
+                ApiPlanFileAdapter().save(args.output, generated.plan)
+            code = 0 if generated.state.status is CapabilityRunStatus.WAITING_FOR_HUMAN_REVIEW else 6
+            generation = generated.state.facts.get("generation", {})
             payload = {
                 "run_id": generated.state.run_id,
-                "plan_id": generated.plan.plan_id,
+                "plan_id": generated.plan.plan_id if generated.plan else None,
                 "status": generated.state.status.value,
                 "classification": generated.state.classification.value,
                 "skill_id": "backend-api",
-                "provider": generated.state.facts["generation"]["provider"],
-                "model": generated.state.facts["generation"]["model"],
-                "scenarios": len(generated.plan.scenarios),
-                "plan_path": args.output.resolve().relative_to(Path.cwd().resolve()).as_posix(),
+                "provider": generation.get("provider"),
+                "model": generation.get("model"),
+                "scenarios": len(generated.plan.scenarios) if generated.plan else 0,
+                "openapi_sha256": generation.get("openapi_sha256"),
+                "estimated_cost_brl": generated.state.usage.estimated_cost_brl,
+                "plan_path": (
+                    args.output.resolve().relative_to(Path.cwd().resolve()).as_posix()
+                    if generated.plan else None
+                ),
                 "run_dir": run_store.run_dir(generated.state.run_id).relative_to(Path.cwd().resolve()).as_posix(),
-                "next_action": f"review_then_execute_with_asef_api_run_id:{generated.state.run_id}",
+                "next_action": (
+                    f"review_then_execute_with_asef_api_run_id:{generated.state.run_id}"
+                    if code == 0
+                    else None
+                ),
             }
-            _log_completion(logger, args.command, generated.state.run_id, payload, 0)
+            _log_completion(logger, args.command, generated.state.run_id, payload, code)
             print(json.dumps(payload))
             close_operational_logging(logger)
-            return 0
+            return code
         demo_assets = materialize_demo_assets()
         if hasattr(args, "context") and args.context is None:
             args.context = demo_assets.context.relative_to(Path.cwd())

@@ -27,11 +27,15 @@ Em outro terminal, gere primeiro um plano revisável a partir da intenção em l
 
 O modo atual usa uma resposta gravada e reproduzível. Ele demonstra a fronteira linguagem natural → saída tipada sem chamada externa. O resumo retorna um `run_id`. Revise `.asef/api/plans/generated-plan.json`; somente depois retome a mesma run:
 
+Para restringir a geração a operações documentadas, acrescente `--openapi caminho\openapi.json`. Somente OpenAPI 3.0/3.1 JSON local, rotas concretas read-only e respostas 2xx explícitas são aceitas. O campo `servers` é ignorado para autorização de rede.
+
 ```powershell
 .\.venv\Scripts\asef.exe api --run-id RUN_ID_RETORNADO --allow-port 8765
 ```
 
-O comando preserva state, manifest, plano, resultado e relatórios sob `.asef/runs/RUN_ID` e retorna um resumo JSON em stdout. `ACCEPTED` significa somente que as assertions do plano passaram nessa execução local. Provider live ainda não está exposto; budgets de modelo, tokens, requests e duração já fazem parte da run, mas custo live e retries ainda precisam de integração específica.
+O comando preserva state, manifest, plano, resultado e relatórios sob `.asef/runs/RUN_ID` e retorna um resumo JSON em stdout. `ACCEPTED` significa somente que as assertions do plano passaram nessa execução local.
+
+O modo `--mode live` é opt-in e exige modelo, `OPENAI_API_KEY`, budget positivo e tarifas de entrada/saída informadas pelo operador. Tokens, retries e custo estimado entram na run; preço real e câmbio não são inferidos pelo ASEF. O live muda apenas a geração do plano: não amplia a política de rede do executor.
 
 Também existe uma prova Docker autocontida em `tooling/api-fixture`: fixture e executor rodam no mesmo container com rede externa desligada. O adapter cotidiano ainda executa no host contra loopback; alcançar um serviço real a partir do container exigirá uma política de rede dedicada e será uma fatia posterior.
 

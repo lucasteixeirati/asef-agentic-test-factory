@@ -54,6 +54,7 @@ _ALLOWED_TRANSITIONS = {
         CapabilityRunStatus.WAITING_FOR_HUMAN_REVIEW,
         CapabilityRunStatus.POLICY_BLOCKED,
         CapabilityRunStatus.BUDGET_EXHAUSTED,
+        CapabilityRunStatus.FAILED,
     },
     CapabilityRunStatus.WAITING_FOR_HUMAN_REVIEW: {
         CapabilityRunStatus.EXECUTING,
@@ -70,7 +71,8 @@ _ALLOWED_TRANSITIONS = {
 
 @dataclass(slots=True, frozen=True)
 class CapabilityRunBudgets:
-    max_model_calls: int = 1
+    max_model_calls: int = 2
+    max_provider_retries: int = 1
     max_input_tokens: int = 10_000
     max_output_tokens: int = 5_000
     max_requests: int = 20
@@ -80,6 +82,7 @@ class CapabilityRunBudgets:
     def validate(self) -> None:
         for name in (
             "max_model_calls",
+            "max_provider_retries",
             "max_input_tokens",
             "max_output_tokens",
             "max_requests",
@@ -97,6 +100,7 @@ class CapabilityRunBudgets:
 @dataclass(slots=True)
 class CapabilityRunUsage:
     model_calls: int = 0
+    provider_retries: int = 0
     input_tokens: int = 0
     output_tokens: int = 0
     requests: int = 0
@@ -104,7 +108,7 @@ class CapabilityRunUsage:
     estimated_cost_brl: float = 0.0
 
     def validate(self) -> None:
-        for name in ("model_calls", "input_tokens", "output_tokens", "requests", "elapsed_ms"):
+        for name in ("model_calls", "provider_retries", "input_tokens", "output_tokens", "requests", "elapsed_ms"):
             value = getattr(self, name)
             if isinstance(value, bool) or not isinstance(value, int) or value < 0:
                 raise CapabilityRunContractError(f"{name} usage must be a non-negative integer")
@@ -192,6 +196,7 @@ class CapabilityRunState:
         self.usage.validate()
         exceeded = (
             self.usage.model_calls > self.budgets.max_model_calls
+            or self.usage.provider_retries > self.budgets.max_provider_retries
             or self.usage.input_tokens > self.budgets.max_input_tokens
             or self.usage.output_tokens > self.budgets.max_output_tokens
             or self.usage.requests > self.budgets.max_requests

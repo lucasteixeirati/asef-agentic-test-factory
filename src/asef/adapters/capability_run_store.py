@@ -9,6 +9,7 @@ from uuid import uuid4
 from ..api_contracts import ApiExecutionResult, ApiTestPlan, api_plan_from_dict
 from ..capability_runs import CapabilityRunContractError, CapabilityRunState, capability_run_from_dict
 from ..contracts import EvidenceRef
+from ..openapi_contracts import OpenApiSummary
 
 
 class CapabilityRunStore:
@@ -38,6 +39,23 @@ class CapabilityRunStore:
         ref = EvidenceRef("api_test_plan", "artifacts/api-plan.json", self._sha256(path))
         state.plan_id = plan.plan_id
         state.plan_sha256 = ref.sha256
+        state.evidence_refs.append(ref)
+        self.save_state(state)
+        return ref
+
+    def save_openapi_summary(self, state: CapabilityRunState, summary: OpenApiSummary) -> EvidenceRef:
+        summary.validate()
+        run_dir = self._run_dir(state.run_id, require_existing=True)
+        path = run_dir / "artifacts" / "openapi-summary.json"
+        value = {
+            "schema_version": summary.schema_version,
+            "source_sha256": summary.source_sha256,
+            "openapi_version": summary.openapi_version,
+            "title": summary.title,
+            "operations": summary.prompt_value(),
+        }
+        self._write_json(path, value)
+        ref = EvidenceRef("openapi_summary", "artifacts/openapi-summary.json", self._sha256(path))
         state.evidence_refs.append(ref)
         self.save_state(state)
         return ref

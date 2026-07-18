@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0.0",
+  "dataset_id": "BACKEND-API-CONFORMANCE-001",
+  "description": "Bounded static conformance cases for the experimental backend-api capability.",
+  "cases": [
+    {"case_id": "API-001", "control": "loopback_plan", "expected": "ACCEPTED"},
+    {"case_id": "API-002", "control": "external_host", "expected": "POLICY_BLOCKED"},
+    {"case_id": "API-003", "control": "mutating_method", "expected": "POLICY_BLOCKED"},
+    {"case_id": "API-004", "control": "sensitive_header", "expected": "POLICY_BLOCKED"},
+    {"case_id": "API-005", "control": "sensitive_query", "expected": "POLICY_BLOCKED"},
+    {"case_id": "API-006", "control": "openapi_read_only", "expected": "ACCEPTED"},
+    {"case_id": "API-007", "control": "openapi_external_ref", "expected": "POLICY_BLOCKED"},
+    {"case_id": "API-008", "control": "openapi_duplicate_key", "expected": "POLICY_BLOCKED"}
+  ]
+}

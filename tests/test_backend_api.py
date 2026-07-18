@@ -5,6 +5,7 @@ import io
 import threading
 import tempfile
 import unittest
+from unittest.mock import patch
 from contextlib import redirect_stderr, redirect_stdout
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -272,6 +273,31 @@ class BackendApiTests(unittest.TestCase):
             self.assertEqual("PLAN_READY_FOR_REVIEW", payload["classification"])
             self.assertEqual(f"http://127.0.0.1:{self.port}", ApiPlanFileAdapter().load(output).base_url)
 
+    def test_cli_constrains_generated_plan_with_openapi_and_records_summary(self) -> None:
+        Path(".asef").mkdir(exist_ok=True)
+        with tempfile.TemporaryDirectory(dir=".asef") as temporary:
+            root = Path(temporary)
+            openapi = root / "openapi.json"
+            openapi.write_text(json.dumps({
+                "openapi": "3.1.0",
+                "info": {"title": "Fixture", "version": "1"},
+                "paths": {"/health": {"get": {"responses": {"200": {"description": "ok"}}}}},
+            }), encoding="utf-8")
+            stdout, stderr = io.StringIO(), io.StringIO()
+            with redirect_stdout(stdout), redirect_stderr(stderr):
+                code = main([
+                    "api-generate", "--requirement", "Verify that the local API is healthy",
+                    "--base-url", f"http://127.0.0.1:{self.port}", "--allow-port", str(self.port),
+                    "--openapi", str(openapi), "--output", str(root / "plan.json"),
+                    "--run-output", str(root / "runs"),
+                ])
+            payload = json.loads(stdout.getvalue())
+            self.assertEqual(0, code, stderr.getvalue())
+            self.assertEqual(64, len(payload["openapi_sha256"]))
+            run_dir = root / "runs" / payload["run_id"]
+            self.assertTrue((run_dir / "artifacts" / "openapi-summary.json").is_file())
+            self.assertFalse((run_dir / "artifacts" / "openapi.json").exists())
+
     def test_generated_run_resumes_by_id_after_explicit_review_command(self) -> None:
         Path(".asef").mkdir(exist_ok=True)
         with tempfile.TemporaryDirectory(dir=".asef") as temporary:
@@ -312,6 +338,49 @@ class BackendApiTests(unittest.TestCase):
             self.assertEqual((0, 0), (generated_code, executed_code), stderr.getvalue())
             self.assertEqual(generated["run_id"], executed["run_id"])
             self.assertEqual("ACCEPTED", executed["classification"])
+
+    def test_live_generation_records_cost_without_real_provider_call(self) -> None:
+        class LiveGateway:
+            def generate(self, **kwargs):
+                self.call = kwargs
+                return ModelResult(
+                    output={
+                        "scenarios": [{
+                            "description": "health", "method": "GET", "path": "/health",
+                            "expected_status": 200,
+                            "expected_json_properties": [{"name": "status", "value": "ok"}],
+                        }]
+                    },
+                    model="fake-live",
+                    response_id="live-response-1",
+                    input_tokens=100,
+                    output_tokens=50,
+                    provider="openai",
+                    latency_ms=12,
+                )
+
+        Path(".asef").mkdir(exist_ok=True)
+        with tempfile.TemporaryDirectory(dir=".asef") as temporary:
+            root = Path(temporary)
+            gateway = LiveGateway()
+            stdout, stderr = io.StringIO(), io.StringIO()
+            with (
+                patch("asef.cli.OpenAIResponsesGateway", return_value=gateway),
+                redirect_stdout(stdout),
+                redirect_stderr(stderr),
+            ):
+                code = main([
+                    "api-generate", "--mode", "live", "--model", "fake-live",
+                    "--api-budget-brl", "1", "--input-cost-brl-per-million", "1",
+                    "--output-cost-brl-per-million", "1", "--requirement", "Check health",
+                    "--base-url", f"http://127.0.0.1:{self.port}", "--allow-port", str(self.port),
+                    "--output", str(root / "plan.json"), "--run-output", str(root / "runs"),
+                ])
+            payload = json.loads(stdout.getvalue())
+            self.assertEqual(0, code, stderr.getvalue())
+            self.assertEqual("openai", payload["provider"])
+            self.assertEqual(0.00015, payload["estimated_cost_brl"])
+            self.assertEqual("backend_api_plan_v1", gateway.call["schema_name"])
 
     def test_cli_accepts_relative_output_paths_shown_in_tutorial(self) -> None:
         Path(".asef").mkdir(exist_ok=True)
