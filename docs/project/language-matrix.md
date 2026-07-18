@@ -22,7 +22,7 @@ Alvo futuro não promove o nível atual. “Imagem inicia” não significa que 
 | `project-detection` | partial | `quality-context` | markers e scopes delimitados; sem detecção geral de projetos externos |
 | `coverage` | available | `python-quality-docker` / `CoverageResult` | validada na fixture de referência e budgets definidos |
 | `mutation` | available | `python-quality-docker` / `MutationResult` | validada na fixture de referência e budgets definidos |
-| `backend-api` | planned | — | sem adapter/conformance |
+| `backend-api` | partial | `loopback-http-api` / `ApiExecutionResult` | REST read-only, cassette e origem HTTP loopback; sem provider live, Docker ou alvo externo |
 | `performance` | planned | — | sem adapter/conformance |
 
 As imagens `python-pytest` e `python-quality` são pinadas/reproduzíveis, mas precisam de build local até existir decisão de distribuição por registry.

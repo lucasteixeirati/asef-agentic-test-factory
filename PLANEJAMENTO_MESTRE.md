@@ -2,7 +2,7 @@
 
 > Documento vivo para orientar a construção da aplicação, da documentação pública e do futuro livro.
 
-**Status:** vigente — Etapa 5 concluída e Gate 5 aprovado com condições em 2026-07-18; autorizado somente o planejamento detalhado da Etapa 6
+**Status:** vigente — Etapa 5 concluída e Gate 5 aprovado com condições em 2026-07-18; Etapa 6 aprovada para execução incremental em 2026-07-18
 **Data de início:** 2026-07-11  
 **Responsável:** Lucas  
 **Natureza:** projeto open source, educacional, experimental e de portfólio  
@@ -785,12 +785,17 @@ As datas serão estimadas após a baseline das primeiras sessões. Os gates são
 
 ### Etapa 6 — Alpha multilíngue e técnicas avançadas de QE
 
-**Objetivo:** provar a arquitetura com ecossistemas distintos e aprofundar a avaliação de qualidade.
+**Objetivo:** transformar a fundação do Alpha Python em uma experiência cotidiana multiskill, provar a arquitetura com ecossistemas distintos e aprofundar a avaliação de qualidade.
+
+**Status:** plano detalhado aprovado para execução incremental em 2026-07-18. A fonte operacional é `docs/project/stage-06-plan.md`.
 
 **Aplicação**
 
-- implementar o perfil TypeScript e seus adaptadores de capacidade;
-- implementar ou experimentar o perfil Java e seus adaptadores de capacidade;
+- criar mapa de produto e jornada em linguagem natural;
+- versionar contratos individuais de skills e papéis agênticos;
+- implementar primeiro a fatia cotidiana `backend-api` delimitada;
+- implementar `web-ui` com TypeScript/Playwright e consolidar o perfil TypeScript;
+- implementar o workflow unitário Java/JUnit experimental;
 - executar casos equivalentes entre linguagens;
 - expandir coverage e mutation, iniciados no perfil Python, para os adapters TypeScript/Java e comparar a normalização entre ecossistemas;
 - introduzir testes metamórficos onde houver relações válidas;
@@ -799,6 +804,8 @@ As datas serão estimadas após a baseline das primeiras sessões. Os gates são
 
 **Documentação**
 
+- mapa navegável para uso, extensão, auditoria e pesquisa;
+- contratos individuais de skills e papéis agênticos;
 - guia de criação de adaptadores;
 - matriz comparativa dos ecossistemas;
 - relatórios de conformidade entre linguagens;
@@ -813,9 +820,11 @@ As datas serão estimadas após a baseline das primeiras sessões. Os gates são
 
 **Gate 6**
 
-- [ ] O mesmo workflow funciona em Python e TypeScript?
+- [ ] A jornada em linguagem natural é compreensível e auditável?
+- [ ] `backend-api` e `web-ui` funcionam ponta a ponta em alvos fictícios autorizados?
+- [ ] O workflow unitário equivalente funciona em Python, TypeScript e Java experimental?
 - [ ] Adicionar a segunda linguagem exigiu mudanças indevidas no core?
-- [ ] A terceira linguagem possui caminho comprovado ou alpha funcional?
+- [ ] Skills e papéis agênticos permanecem limitados por contratos e checkpoints?
 - [ ] Mutation e demais técnicas produzem evidência útil, não apenas métricas decorativas?
 - [ ] Datasets distinguem regressão rápida, benchmark e segurança?
 
@@ -943,24 +952,25 @@ Cada nova versão deverá declarar hipótese, baseline, mudança, resultado, lim
 
 ## 22. Backlog priorizado vigente
 
-### Agora — fechamento da Etapa 5
+### Agora — Etapa 6 aprovada
 
-1. revisar a experiência cotidiana pretendida e a arquitetura de informação do repositório;
-2. planejar detalhadamente a Etapa 6, sem implementar;
-3. tornar visíveis contratos individuais de skills e papéis agênticos;
-4. decidir a prioridade entre prova multilíngue e primeiros fluxos API/web de uso real;
-5. preservar as condições do Gate 5 durante o planejamento.
+1. concluir 6.0–6.2: roadmap, mapa, jornada e contratos visíveis;
+2. implementar 6.3 `backend-api` como primeira fatia cotidiana;
+3. implementar 6.4 TypeScript/Playwright e `web-ui`;
+4. implementar 6.5 Java/JUnit experimental;
+5. concluir 6.6 com quality capabilities, regressão, retrospectiva e Gate 6;
+6. preservar e reconciliar as condições do Gate 5 em todas as fatias.
 
-### Em seguida — somente após Gate 5
+### Sequência aprovada
 
-1. planejar detalhadamente a Etapa 6;
-2. provar TypeScript end-to-end sem contaminar o core;
-3. experimentar Java e iniciar conformance multilíngue;
-4. expandir quality capabilities com evidência comparável.
+1. backend API REST local e autorizada;
+2. TypeScript/Playwright web local e autorizado;
+3. Java/JUnit unitário experimental;
+4. conformance multilíngue e evidência comparável.
 
 ### Não iniciar ainda
 
-- implementação da Etapa 6 antes da aprovação do Gate 5;
+- qualquer promoção de suporte sem adapter, conformance e evidência;
 - interface web ou extensão VS Code;
 - memória de longo prazo ou RAG;
 - integrações MCP externas;
@@ -1067,4 +1077,4 @@ Decisões já encerradas e registradas: nome público ASEF; licença MIT; Python
 
 ## 27. Próxima decisão
 
-Planejar detalhadamente a Etapa 6 à luz da experiência cotidiana desejada: linguagem natural, skills especializadas, perfis de linguagem e adapters de execução. Antes de implementar, reconciliar a prova multilíngue prevista com as prioridades práticas de API, web e Java, e criar um mapa simples de navegação/produto. As condições do Gate 5 continuam vigentes.
+Executar incrementalmente a Etapa 6 conforme `docs/project/stage-06-plan.md`, iniciando por 6.0–6.2 e depois `backend-api`. As condições do Gate 5 continuam vigentes e nenhum perfil ou skill é promovido apenas por documentação.

@@ -67,7 +67,7 @@ LANGUAGE_PROFILES = {
             CapabilityDeclaration("project-detection", "partial", "quality-context", None, True),
             CapabilityDeclaration("coverage", "available", "python-quality-docker", "CoverageResult", True),
             CapabilityDeclaration("mutation", "available", "python-quality-docker", "MutationResult", True),
-            CapabilityDeclaration("backend-api", "planned", None, None),
+            CapabilityDeclaration("backend-api", "partial", "loopback-http-api", "ApiExecutionResult"),
             CapabilityDeclaration("performance", "planned", None, None),
         ),
         limitations=(
@@ -75,6 +75,7 @@ LANGUAGE_PROFILES = {
             "pytest tool image must be built locally until registry distribution is decided",
             "quality tool image must be built locally until registry distribution is decided",
             "coverage and mutation are validated for the bounded reference profile; external projects require explicit scope and budgets",
+            "backend-api is an under-development loopback-only host adapter; live provider, Docker isolation and external targets are unavailable",
         ),
     ),
     "node-typescript": LanguageProfile(

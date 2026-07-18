@@ -22,7 +22,7 @@ A CI executa testes do core e provas delimitadas em Linux x86-64, incluindo Secu
 
 | Perfil | Nível atual | Capabilities comprovadas | Limites |
 |---|---|---|---|
-| `python-pytest` | experimental | `unit` parcial; detecção de projeto parcial; coverage e mutation disponíveis no recorte de referência | imagem pytest precisa de build local para a demo; quality é opcional; projetos externos exigem scope/budgets e não têm compatibilidade geral prometida |
+| `python-pytest` | experimental | `unit` parcial; `backend-api` parcial em loopback; detecção de projeto parcial; coverage e mutation disponíveis no recorte de referência | API ainda executa no host somente contra loopback; imagem pytest precisa de build local; projetos externos não têm compatibilidade geral prometida |
 | `node-typescript` | planejado | inicialização histórica de container Node 22 por digest | sem detecção, build, test runner, normalização ou quality end-to-end |
 | `java-junit` | planejado | inicialização histórica de container Java 21 por digest | sem detecção, build, test runner, normalização ou quality end-to-end |
 | Go / .NET | planejado | nenhuma capability executável | seleção de tooling e conformance futuras |
@@ -35,6 +35,10 @@ Níveis significam:
 - **planned:** intenção ou spike, sem suporte de uso.
 
 O código ainda declara `python-pytest` como experimental com alvo futuro `reference`; alvo não é estado atual.
+
+### Backend API em desenvolvimento
+
+`api-generate` converte uma intenção natural em plano revisável usando cassette; `api` executa o plano contra endereço HTTP literal de loopback e produz relatórios próprios. A capability bloqueia hosts externos, redirects, proxies, credenciais persistidas, headers de transporte e métodos mutáveis por padrão. Esta primeira subfatia executa requests no host, não no sandbox Docker, e não oferece provider live, OpenAPI, autenticação, POST, GraphQL, gRPC ou aprovação de produção.
 
 ## Sandbox e segurança
 

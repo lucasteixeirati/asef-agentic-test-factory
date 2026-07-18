@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0.0",
+  "plan_id": "API-HEALTH-001",
+  "base_url": "http://127.0.0.1:8765",
+  "scenarios": [
+    {
+      "scenario_id": "SCN-001",
+      "description": "The local fixture reports a healthy status",
+      "method": "GET",
+      "path": "/health",
+      "assertion": {
+        "expected_status": 200,
+        "expected_json_subset": {
+          "status": "ok"
+        }
+      }
+    }
+  ]
+}

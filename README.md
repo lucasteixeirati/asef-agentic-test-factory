@@ -23,6 +23,7 @@ Comprovado até aqui:
 - checkpoints humanos opcionais com LangGraph;
 - coverage/mutation experimentais e datasets Smoke/Security offline;
 - doctor, logs estruturados, retention e cleanup conservador.
+- primeira subfatia `backend-api`: intenção natural por cassette, plano revisável, REST loopback read-only e relatório próprio.
 
 Ainda não comprovado:
 
@@ -78,17 +79,21 @@ O fluxo público linear não usa o oracle curado combinado do incremento 5.3. `A
 
 ## Mapa da documentação
 
-Comece por:
+Comece pelo [mapa do produto](docs/PROJECT_MAP.md), que separa uso cotidiano, extensão, auditoria e pesquisa.
+
+Para usar o Alpha atual:
 
 - [quickstart instalado](docs/getting-started/quickstart.md) — instalação, doctor, run, validação e cleanup;
 - [tutorial WF-001 demo](docs/tutorials/wf-001-demo.md) — requisito, análise, artifact, execução e report;
 - [interpretação do report](docs/guides/report-interpretation.md) — classificações, quality e evidence integrity;
 - [troubleshooting](docs/guides/troubleshooting.md) — exits e ações seguras;
 - [tutorial live](docs/tutorials/wf-001-live.md) — provider opt-in, secret no host e budget explícito.
+- [tutorial backend API local](docs/tutorials/backend-api-local.md) — primeira subfatia experimental da Etapa 6, ainda sem geração em linguagem natural.
 
 Referências técnicas atuais:
 
 - [QualityContext](docs/context/README.md);
+- [skills ASEF](docs/skills/README.md) e [papéis agênticos](docs/agents/README.md);
 - [contratos do Alpha](docs/architecture/contracts/alpha-python-contracts.md);
 - [threat model de publicação](docs/architecture/report-publication-threat-model.md);
 - [observabilidade](docs/architecture/observability.md);
@@ -111,6 +116,8 @@ asef doctor     diagnóstico read-only do ambiente
 asef smoke      dataset funcional offline
 asef security   dataset de controles offline
 asef cleanup    planejamento/aplicação conservadora sob .asef
+asef api-generate intenção natural para plano REST revisável por cassette (6.3 em desenvolvimento)
+asef api        plano REST declarativo contra fixture loopback autorizada (6.3 em desenvolvimento)
 ```
 
 Exit codes: `0` sucesso, `2` input/contexto, `3` espera humana, `4` falha funcional, `5` policy, `6` budget, `7` provider/infraestrutura e `130` cancelamento.
@@ -123,13 +130,15 @@ Checkpoint humano requer o extra opcional:
 
 ## Suporte e limitações
 
-O único caminho completo atual usa a skill `unit`, o perfil experimental `python-pytest`, o SUT fictício calculator e Docker Desktop local. Node/TypeScript e Java possuem apenas baselines anteriores e continuam planejados como perfis do produto. A [matriz canônica](docs/project/support-and-limitations.md) distingue capability comprovada de alvo futuro.
+O único workflow completo continua sendo `unit` no perfil experimental `python-pytest`, com o SUT fictício calculator e Docker Desktop local. `backend-api` agora é parcial: somente cassette, plano revisável e REST read-only contra loopback no host. Node/TypeScript e Java possuem apenas baselines anteriores e continuam planejados. A [matriz canônica](docs/project/support-and-limitations.md) distingue capability comprovada de alvo futuro.
 
 O modo live exige provider/modelo disponível, tarifas atuais informadas pelo operador e budget positivo. Disponibilidade, preço e câmbio não são congelados no repositório. Nunca coloque chave real em arquivo, argumento, contexto, cassette, report ou issue.
 
 Quality capabilities enriquecem evidência, mas não mudam a classificação funcional e não aplicam threshold universal.
 
 ## Estrutura do repositório
+
+O [mapa do produto](docs/PROJECT_MAP.md) explica a árvore completa e indica quais pastas um usuário cotidiano pode ignorar.
 
 - `src/asef/` — contratos, application services, runtime e adapters;
 - `tests/` — testes unitários, adversariais e integrações opcionais;
@@ -145,8 +154,8 @@ Quality capabilities enriquecem evidência, mas não mudam a classificação fun
 2. walking skeleton e hardening — concluídos;
 3. Alpha Python 5.1 a 5.7 — concluído;
 4. relatórios e experiência pública 5.8 — publicado em `v0.1.0a6`;
-5. avaliação externa/fechamento 5.9 — protocolo aprovado; preflight bloqueou sessão por divergência documental da tag;
-6. perfis TypeScript/Java e developer preview — futuros.
+5. avaliação interna/fechamento 5.9 e Gate 5 — concluídos com condições registradas;
+6. experiência multiskill — jornada cotidiana, API, TypeScript/Playwright, Java/JUnit e técnicas avançadas, conforme o [plano da Etapa 6](docs/project/stage-06-plan.md).
 
 Veja o [planejamento mestre](PLANEJAMENTO_MESTRE.md) para gates, dependências e critérios completos.
 

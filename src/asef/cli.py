@@ -10,13 +10,17 @@ from importlib import metadata
 from pathlib import Path
 
 from .adapters.context_file import FileQualityContextAdapter
+from .adapters.api_plan_file import ApiPlanFileAdapter
+from .adapters.api_plan_agent import ApiPlanAgentAdapter
+from .adapters.api_report_store import ApiReportStore
+from .adapters.http_api_execution import LoopbackHttpApiExecutor
 from .adapters.cleanup_executor import CleanupExecutor
 from .adapters.cleanup_report_store import CleanupReportStore
 from .adapters.doctor_check_executor import DoctorCheckExecutor
 from .adapters.doctor_report_store import DoctorReportStore
 from .adapters.docker_execution import DockerUnitTestAdapter
 from .adapters.recorded_agent import RecordedAgentAdapter, RecordedAgentError
-from .adapters.gateway import GatewayError, OpenAIResponsesGateway
+from .adapters.gateway import GatewayError, OpenAIResponsesGateway, RecordedModelGateway
 from .adapters.live_agent import LiveAgentAdapter, LiveAgentConfig
 from .adapters.run_store import JsonRunStore
 from .adapters.smoke_case_executor import SmokeCaseExecutorAdapter
@@ -49,12 +53,16 @@ from .application.security_runner import (
 from .report_contracts import REPORT_SCHEMA_VERSION
 from .context import ContextValidationError
 from .contracts import ContractValidationError, SkeletonRunRequest
+from .api_contracts import ApiContractError
 from .security_contracts import CleanupKind, CleanupMode, CleanupRequest
 from .application.ports import ProviderError
 from .demo import materialize_demo_assets
 from .outcomes import RunStatus, exit_code_for
 from .observability import close_operational_logging, configure_operational_logging
 from .skills.unit import UnitSkill
+from .skills.backend_api import BackendApiPolicy, BackendApiPolicyError
+from .runtime.budgets import BudgetController
+from .legacy.domain import BudgetLimits, BudgetUsage
 
 
 def _environment_float(name: str) -> float:
@@ -139,6 +147,26 @@ def build_parser() -> argparse.ArgumentParser:
     cleanup.add_argument("--apply", action="store_true")
     cleanup.set_defaults(output=Path(".asef/maintenance/cleanup"))
     _logging_argument(cleanup)
+    api = subparsers.add_parser(
+        "api", help="execute a bounded backend-api plan against an authorized loopback target"
+    )
+    api.add_argument("--plan", type=Path, required=True)
+    api.add_argument("--allow-port", type=int, action="append", required=True)
+    api.add_argument("--allow-method", action="append", default=["GET", "HEAD", "OPTIONS"])
+    api.add_argument("--timeout-seconds", type=float, default=5.0)
+    api.add_argument("--max-response-bytes", type=int, default=1_048_576)
+    api.add_argument("--output", type=Path, default=Path(".asef/api"))
+    _logging_argument(api)
+    api_generate = subparsers.add_parser(
+        "api-generate", help="turn a natural-language API requirement into a reviewable bounded plan"
+    )
+    api_generate.add_argument("--requirement", required=True)
+    api_generate.add_argument("--base-url", required=True)
+    api_generate.add_argument("--allow-port", type=int, action="append", required=True)
+    api_generate.add_argument("--max-scenarios", type=int, default=20)
+    api_generate.add_argument("--cassette", type=Path, default=None)
+    api_generate.add_argument("--output", type=Path, default=Path(".asef/api/plans/generated-plan.json"))
+    _logging_argument(api_generate)
     return parser
 
 
@@ -394,6 +422,70 @@ def main(argv: list[str] | None = None) -> int:
             print(json.dumps(payload))
             close_operational_logging(logger)
             return code
+        if args.command == "api":
+            policy = BackendApiPolicy(
+                allowed_ports=tuple(args.allow_port),
+                allowed_methods=tuple(dict.fromkeys(args.allow_method)),
+                timeout_seconds=args.timeout_seconds,
+                max_response_bytes=args.max_response_bytes,
+            )
+            plan = ApiPlanFileAdapter().load(args.plan)
+            result = LoopbackHttpApiExecutor(policy).execute(plan)
+            paths = ApiReportStore().save(args.output, result, asef_version=_package_version())
+            code = 0 if result.status == "PASSED" else (4 if result.status == "FAILED" else 7)
+            payload = {
+                "report_id": paths.report_id,
+                "status": "SUCCEEDED" if result.status == "PASSED" else "FAILED",
+                "classification": (
+                    "ACCEPTED"
+                    if result.status == "PASSED"
+                    else ("FUNCTIONAL_FAILURE" if result.status == "FAILED" else "INFRASTRUCTURE_ERROR")
+                ),
+                "skill_id": "backend-api",
+                "support_level": "experimental-under-development",
+                "tests": result.tests,
+                "passed": result.passed,
+                "failed": result.failed,
+                "errors": result.errors,
+                "report_json": paths.report_json.resolve().relative_to(Path.cwd().resolve()).as_posix(),
+                "report_markdown": paths.report_markdown.resolve().relative_to(Path.cwd().resolve()).as_posix(),
+            }
+            _log_completion(logger, args.command, paths.report_id, payload, code)
+            print(json.dumps(payload))
+            close_operational_logging(logger)
+            return code
+        if args.command == "api-generate":
+            cassette = args.cassette or (
+                Path(__file__).parent / "fixtures" / "backend-api-plan-demo.json"
+            )
+            budgets = BudgetController(
+                BudgetLimits(max_model_calls=1, max_input_tokens=10_000, max_output_tokens=5_000),
+                BudgetUsage(),
+            )
+            policy = BackendApiPolicy(
+                allowed_ports=tuple(args.allow_port),
+                max_scenarios=args.max_scenarios,
+            )
+            generated = ApiPlanAgentAdapter(
+                RecordedModelGateway(cassette, budgets),
+                policy,
+            ).generate(args.requirement, args.base_url)
+            ApiPlanFileAdapter().save(args.output, generated.plan)
+            payload = {
+                "plan_id": generated.plan.plan_id,
+                "status": "SUCCEEDED",
+                "classification": "PLAN_READY_FOR_REVIEW",
+                "skill_id": "backend-api",
+                "provider": generated.provider,
+                "model": generated.model,
+                "scenarios": len(generated.plan.scenarios),
+                "plan_path": args.output.resolve().relative_to(Path.cwd().resolve()).as_posix(),
+                "next_action": "review_then_execute_with_asef_api",
+            }
+            _log_completion(logger, args.command, generated.plan.plan_id, payload, 0)
+            print(json.dumps(payload))
+            close_operational_logging(logger)
+            return 0
         demo_assets = materialize_demo_assets()
         if hasattr(args, "context") and args.context is None:
             args.context = demo_assets.context.relative_to(Path.cwd())
@@ -629,6 +721,8 @@ def main(argv: list[str] | None = None) -> int:
         return 7
     except (
         ContractValidationError,
+        ApiContractError,
+        BackendApiPolicyError,
         ContextValidationError,
         RecordedAgentError,
         GatewayError,

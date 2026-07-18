@@ -1,0 +1,25 @@
+{
+  "schema_name": "backend_api_plan_v1",
+  "model": "recorded-demo",
+  "response_id": "api-plan-demo-001",
+  "usage": {
+    "input_tokens": 82,
+    "output_tokens": 58
+  },
+  "output": {
+    "scenarios": [
+      {
+        "description": "The local fixture reports a healthy status",
+        "method": "GET",
+        "path": "/health",
+        "expected_status": 200,
+        "expected_json_properties": [
+          {
+            "name": "status",
+            "value": "ok"
+          }
+        ]
+      }
+    ]
+  }
+}

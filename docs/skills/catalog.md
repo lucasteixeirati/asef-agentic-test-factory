@@ -1,6 +1,8 @@
-# Catálogo inicial de skills ASEF
+# Catálogo de skills ASEF
 
 Skills ASEF são capacidades de Quality Engineering invocadas pelo runtime. Elas não são equivalentes às skills locais de uma ferramenta de desenvolvimento e não recebem autoridade automática sobre MCPs ou ambientes.
+
+Contratos individuais e o template normativo estão em `docs/skills/README.md`. Uma entrada no catálogo não implica implementação; a fonte do suporte real é a matriz de linguagens reconciliada com o código e a conformance.
 
 | Skill | Sistemas | Saídas principais | Ferramentas futuras | Aprovações típicas |
 |---|---|---|---|---|
@@ -11,7 +13,7 @@ Skills ASEF são capacidades de Quality Engineering invocadas pelo runtime. Elas
 | `mutation` | código com suíte existente | configuração, mutants e relatório | mutmut, PIT, Stryker | budget de duração |
 | `performance` | APIs, UI, eventos, batch | workload, thresholds e relatórios | k6, JMeter, Gatling | ambiente e carga autorizados |
 
-## Contrato mínimo futuro de uma skill
+## Contrato mínimo de uma skill
 
 - identificador e versão;
 - capability e sistemas aplicáveis;
@@ -30,10 +32,10 @@ Skills ASEF são capacidades de Quality Engineering invocadas pelo runtime. Elas
 
 Um workflow pode compor várias skills, mas cada uma mantém contrato e evidências próprios. Mutation não gera automaticamente testes; performance não reutiliza credenciais de backend sem política; mobile não ganha acesso ao device farm apenas porque o sistema é classificado como aplicativo.
 
-## Evolução planejada
+## Evolução aprovada para a Etapa 6
 
-1. detalhar `unit` e `backend-api` no alpha Python;
-2. detalhar `web-ui` com TypeScript/Playwright;
-3. experimentar `mobile` com Java/Android e adaptadores externos;
-4. habilitar mutation somente quando houver suíte determinística executável;
-5. habilitar performance apenas com ambiente e thresholds aprovados.
+1. manter `unit` como referência e implementar a fatia `backend-api` delimitada;
+2. implementar `web-ui` com TypeScript/Playwright em alvo fictício;
+3. provar `unit` com Java/JUnit experimental antes de expandir Java para API/mobile;
+4. comparar mutation e coverage somente onde houver suíte determinística executável;
+5. manter performance planejada até existir ambiente, thresholds e autorização específicos.
