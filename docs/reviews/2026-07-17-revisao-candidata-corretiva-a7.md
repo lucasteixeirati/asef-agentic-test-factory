@@ -1,7 +1,7 @@
 # Revisão — candidata corretiva local `0.1.0a7`
 
 - **Data:** 2026-07-17
-- **Escopo autorizado:** preparar e auditar a candidata; sem commit, push, tag, pré-release ou 5.9.3
+- **Escopo autorizado:** preparar, auditar, criar commit, enviar e validar a candidata em CI; sem tag, pré-release ou 5.9.3
 - **Parecer:** `READY_FOR_PUBLICATION_CHECKPOINT`
 - **Gate 5:** permanece bloqueado
 
@@ -22,6 +22,10 @@ O sdist contém os três documentos canônicos, `release-state.json` e o checker
 
 Doctor terminou `DEGRADED/READY` com 12 checks. A demo keyless terminou `SUCCEEDED/ACCEPTED`; o auditor passou 9/9; cleanup retornou `DRY_RUN_COMPLETE`; scanner passou e nenhum container gerenciado permaneceu. A regressão aprovou 357 testes, manteve 33 skips opcionais e branch coverage de 85%. Gate checker 10/10, inventário 20 critérios/40 evidências, docs checker, secret scan e `git diff --check` ficaram verdes.
 
+## Checkpoint público
+
+O conjunto foi consolidado no commit `58ea802` e enviado à `main` após autorização explícita. A [CI pública `29620941881`](https://github.com/lucasteixeirati/asef-agentic-test-factory/actions/runs/29620941881) aprovou os sete jobs: `core`, `framework-spikes`, `docker-security`, `alpha-smoke`, `quality-capabilities`, `alpha-security` e `public-experience`. O job público reconstruiu os artifacts, instalou o wheel fora do checkout, executou doctor/demo, auditor, scanners e orphan check com sucesso.
+
 ## Limite do parecer
 
-Os hashes acima identificam artefatos locais de uma worktree, não uma release imutável. Portanto `PREFLIGHT-F-001` permanece `HIGH/OPEN`, o kit continua `HOLD` e a 5.9.3 não pode começar. O próximo checkpoint possível é humano e separado: autorizar ou rejeitar commit/push/CI e, depois de seus resultados, decidir sobre tag/pré-release. Somente assets remotos publicados e baixados novamente podem encerrar o finding.
+Os hashes acima identificam artefatos locais de uma worktree, não uma release imutável. Portanto `PREFLIGHT-F-001` permanece `HIGH/OPEN`, o kit continua `HOLD` e a 5.9.3 não pode começar. O próximo checkpoint possível é humano e separado: decidir sobre tag e pré-release. Somente assets remotos publicados e baixados novamente podem encerrar o finding.

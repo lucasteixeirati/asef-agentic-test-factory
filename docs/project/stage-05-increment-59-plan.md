@@ -394,6 +394,8 @@ Usar quando a correção ultrapassar o escopo, o participante não estiver dispo
 
 **Decisão corretiva em 2026-07-17:** Lucas autorizou somente a preparação da candidata `0.1.0a7`. A separação canônica entre release publicada e versão em desenvolvimento foi implementada e protegida pelo docs checker. Wheel/sdist locais passaram em build, scanner e ensaio fora do checkout: metadata `0.1.0a7`, doctor `DEGRADED/READY` 12 checks, demo `SUCCEEDED/ACCEPTED`, auditor 9/9, cleanup `DRY_RUN_COMPLETE` e zero containers. Regressão: 357 testes/33 skips, coverage 85%. Parecer `READY_FOR_PUBLICATION_CHECKPOINT`; sem publicação imutável, `PREFLIGHT-F-001` continua aberto, kit em `HOLD` e 5.9.3 bloqueada.
 
+**Checkpoint público em 2026-07-17:** o commit `58ea802` foi enviado à `main` com autorização de Lucas. A CI `29620941881` aprovou os sete jobs canônicos. Tag e pré-release não foram criadas; continuam dependentes de nova decisão explícita.
+
 ### 5.9.3 — Sessão com QE externo
 
 **Dependência humana:** Lucas recruta/disponibiliza o participante e coordena o consentimento. Codex não contata terceiros sem nova autorização e canal explícito.

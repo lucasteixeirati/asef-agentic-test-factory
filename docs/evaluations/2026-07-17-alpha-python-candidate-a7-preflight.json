@@ -7,6 +7,11 @@
     "build_origin": "WORKTREE",
     "immutable": false
   },
+  "source_control": {
+    "candidate_commit": "58ea802bdc912f906e9cffcf7646424e8c66e6ed",
+    "branch": "main",
+    "pushed": true
+  },
   "release_state": {
     "latest_published_version": "0.1.0a6",
     "latest_published_tag": "v0.1.0a6",
@@ -82,6 +87,20 @@
       "criteria": 20,
       "evidence_references": 40,
       "findings": 0
+    },
+    "continuous_integration": {
+      "run_id": 29620941881,
+      "url": "https://github.com/lucasteixeirati/asef-agentic-test-factory/actions/runs/29620941881",
+      "conclusion": "SUCCESS",
+      "jobs": [
+        "core",
+        "framework-spikes",
+        "docker-security",
+        "alpha-smoke",
+        "quality-capabilities",
+        "alpha-security",
+        "public-experience"
+      ]
     }
   },
   "decision": {
