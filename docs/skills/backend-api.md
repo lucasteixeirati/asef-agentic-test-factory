@@ -6,11 +6,11 @@
 - **Escopo inicial:** HTTP/REST e OpenAPI opcional contra alvo fictício/local.
 - **Fora do escopo inicial:** GraphQL, gRPC, eventos, carga, exploração de vulnerabilidades e alvos sem autorização.
 - **Contexto obrigatório:** objetivo, base URL/servidor local, hosts e métodos permitidos, política de dados, autenticação por referência e efeitos tolerados.
-- **Entradas atuais:** intenção natural para cassette ou plano JSON revisado, origem loopback e porta autorizada.
-- **Saídas atuais:** cenários declarativos, assertions, execução normalizada e relatórios JSON/Markdown sem corpo de resposta.
+- **Entradas atuais:** intenção natural para cassette ou plano JSON revisado, origem loopback, porta autorizada e budgets.
+- **Saídas atuais:** capability run, plano por hash, cenários, assertions, execução normalizada, manifest e relatórios JSON/Markdown sem corpo de resposta.
 - **Técnicas:** particionamento, boundary values, schema/contract testing, idempotência quando aplicável, autenticação/autorização delimitadas e negative testing seguro.
 - **Permissões:** rede desligada por padrão; allowlist explícita de host, porta, método e redirects; secrets nunca persistidos.
 - **Budgets:** requests, duração, payload e retries limitados; carga não é implícita.
 - **Checkpoints humanos:** habilitar rede, usar credencial, chamar método mutável, acessar dado privado e exportar código.
-- **Conformance atual:** host permitido/proibido, redirect, limite de resposta, headers, campos sensíveis, métodos mutáveis e divergência de status/JSON. Timeout, OpenAPI e sandbox ainda serão ampliados.
-- **Limitações:** execução atual ocorre no host somente contra loopback; provider live não está exposto; acessibilidade pública não constitui autorização; aceite funcional não certifica segurança ou correção universal da API.
+- **Conformance atual:** host permitido/proibido, redirect, resposta, headers, campos sensíveis, métodos mutáveis, divergência de status/JSON, adulteração, budget, persistência transacional e Docker networkless autocontido.
+- **Limitações:** execução cotidiana ocorre no host somente contra loopback; Docker cobre apenas fixture interna; provider live não está exposto; acessibilidade pública não constitui autorização; aceite funcional não certifica segurança ou correção universal da API.

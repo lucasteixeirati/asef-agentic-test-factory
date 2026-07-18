@@ -13,6 +13,7 @@ from .adapters.context_file import FileQualityContextAdapter
 from .adapters.api_plan_file import ApiPlanFileAdapter
 from .adapters.api_plan_agent import ApiPlanAgentAdapter
 from .adapters.api_report_store import ApiReportStore
+from .adapters.capability_run_store import CapabilityRunStore
 from .adapters.http_api_execution import LoopbackHttpApiExecutor
 from .adapters.cleanup_executor import CleanupExecutor
 from .adapters.cleanup_report_store import CleanupReportStore
@@ -38,6 +39,11 @@ from .adapters.langgraph_checkpoint import (
 from .application.generate_unit import GenerateUnitTestService
 from .application.complete_workflow import CompleteWorkflowService
 from .application.cleanup_runner import CleanupInfrastructureError, CleanupRunner
+from .application.backend_api_run import (
+    ExecuteBackendApiPlanService,
+    GenerateBackendApiPlanService,
+    RegisterBackendApiPlanService,
+)
 from .application.doctor_runner import (
     DoctorInfrastructureError,
     DoctorRequest,
@@ -54,6 +60,7 @@ from .report_contracts import REPORT_SCHEMA_VERSION
 from .context import ContextValidationError
 from .contracts import ContractValidationError, SkeletonRunRequest
 from .api_contracts import ApiContractError
+from .capability_runs import CapabilityRunBudgets, CapabilityRunContractError
 from .security_contracts import CleanupKind, CleanupMode, CleanupRequest
 from .application.ports import ProviderError
 from .demo import materialize_demo_assets
@@ -150,12 +157,16 @@ def build_parser() -> argparse.ArgumentParser:
     api = subparsers.add_parser(
         "api", help="execute a bounded backend-api plan against an authorized loopback target"
     )
-    api.add_argument("--plan", type=Path, required=True)
+    api_source = api.add_mutually_exclusive_group(required=True)
+    api_source.add_argument("--plan", type=Path)
+    api_source.add_argument("--run-id")
     api.add_argument("--allow-port", type=int, action="append", required=True)
     api.add_argument("--allow-method", action="append", default=["GET", "HEAD", "OPTIONS"])
     api.add_argument("--timeout-seconds", type=float, default=5.0)
     api.add_argument("--max-response-bytes", type=int, default=1_048_576)
-    api.add_argument("--output", type=Path, default=Path(".asef/api"))
+    api.add_argument("--max-requests", type=int, default=20)
+    api.add_argument("--max-workflow-seconds", type=int, default=60)
+    api.add_argument("--output", type=Path, default=Path(".asef/runs"))
     _logging_argument(api)
     api_generate = subparsers.add_parser(
         "api-generate", help="turn a natural-language API requirement into a reviewable bounded plan"
@@ -164,8 +175,10 @@ def build_parser() -> argparse.ArgumentParser:
     api_generate.add_argument("--base-url", required=True)
     api_generate.add_argument("--allow-port", type=int, action="append", required=True)
     api_generate.add_argument("--max-scenarios", type=int, default=20)
+    api_generate.add_argument("--max-workflow-seconds", type=int, default=60)
     api_generate.add_argument("--cassette", type=Path, default=None)
     api_generate.add_argument("--output", type=Path, default=Path(".asef/api/plans/generated-plan.json"))
+    api_generate.add_argument("--run-output", type=Path, default=Path(".asef/runs"))
     _logging_argument(api_generate)
     return parser
 
@@ -257,6 +270,8 @@ def main(argv: list[str] | None = None) -> int:
         resolved_output = args.output.resolve()
         if not resolved_output.is_relative_to(allowed_output_root):
             raise ContractValidationError("output must remain inside the .asef directory")
+        if hasattr(args, "run_output") and not args.run_output.resolve().is_relative_to(allowed_output_root):
+            raise ContractValidationError("run output must remain inside the .asef directory")
         if args.command == "smoke":
             if args.timeout_seconds < 1 or args.timeout_seconds > 300:
                 raise ContractValidationError("smoke timeout must be between 1 and 300 seconds")
@@ -429,28 +444,50 @@ def main(argv: list[str] | None = None) -> int:
                 timeout_seconds=args.timeout_seconds,
                 max_response_bytes=args.max_response_bytes,
             )
-            plan = ApiPlanFileAdapter().load(args.plan)
-            result = LoopbackHttpApiExecutor(policy).execute(plan)
-            paths = ApiReportStore().save(args.output, result, asef_version=_package_version())
-            code = 0 if result.status == "PASSED" else (4 if result.status == "FAILED" else 7)
+            store = CapabilityRunStore(args.output)
+            executor = LoopbackHttpApiExecutor(policy)
+            if args.run_id:
+                run_id = args.run_id
+            else:
+                plan = ApiPlanFileAdapter().load(args.plan)
+                registered = RegisterBackendApiPlanService(
+                    executor.skill,
+                    store,
+                ).execute(
+                    plan,
+                    CapabilityRunBudgets(
+                        max_model_calls=0,
+                        max_requests=args.max_requests,
+                        max_workflow_seconds=args.max_workflow_seconds,
+                    ),
+                )
+                run_id = registered.state.run_id
+            completed = ExecuteBackendApiPlanService(
+                executor,
+                store,
+                ApiReportStore(),
+                asef_version=_package_version(),
+            ).execute(run_id)
+            result = completed.result
+            if result is None:
+                code = 6
+            else:
+                code = 0 if result.status == "PASSED" else (4 if result.status == "FAILED" else 7)
             payload = {
-                "report_id": paths.report_id,
-                "status": "SUCCEEDED" if result.status == "PASSED" else "FAILED",
-                "classification": (
-                    "ACCEPTED"
-                    if result.status == "PASSED"
-                    else ("FUNCTIONAL_FAILURE" if result.status == "FAILED" else "INFRASTRUCTURE_ERROR")
-                ),
+                "run_id": completed.state.run_id,
+                "status": completed.state.status.value,
+                "classification": completed.state.classification.value,
                 "skill_id": "backend-api",
                 "support_level": "experimental-under-development",
-                "tests": result.tests,
-                "passed": result.passed,
-                "failed": result.failed,
-                "errors": result.errors,
-                "report_json": paths.report_json.resolve().relative_to(Path.cwd().resolve()).as_posix(),
-                "report_markdown": paths.report_markdown.resolve().relative_to(Path.cwd().resolve()).as_posix(),
+                "tests": result.tests if result else 0,
+                "passed": result.passed if result else 0,
+                "failed": result.failed if result else 0,
+                "errors": result.errors if result else 0,
+                "run_dir": store.run_dir(completed.state.run_id).relative_to(Path.cwd().resolve()).as_posix(),
+                "report_json": completed.reports.report_json.resolve().relative_to(Path.cwd().resolve()).as_posix() if completed.reports else None,
+                "report_markdown": completed.reports.report_markdown.resolve().relative_to(Path.cwd().resolve()).as_posix() if completed.reports else None,
             }
-            _log_completion(logger, args.command, paths.report_id, payload, code)
+            _log_completion(logger, args.command, completed.state.run_id, payload, code)
             print(json.dumps(payload))
             close_operational_logging(logger)
             return code
@@ -466,23 +503,36 @@ def main(argv: list[str] | None = None) -> int:
                 allowed_ports=tuple(args.allow_port),
                 max_scenarios=args.max_scenarios,
             )
-            generated = ApiPlanAgentAdapter(
-                RecordedModelGateway(cassette, budgets),
-                policy,
-            ).generate(args.requirement, args.base_url)
+            run_store = CapabilityRunStore(args.run_output)
+            generated = GenerateBackendApiPlanService(
+                ApiPlanAgentAdapter(RecordedModelGateway(cassette, budgets), policy),
+                run_store,
+            ).execute(
+                args.requirement,
+                args.base_url,
+                CapabilityRunBudgets(
+                    max_model_calls=1,
+                    max_input_tokens=10_000,
+                    max_output_tokens=5_000,
+                    max_requests=args.max_scenarios,
+                    max_workflow_seconds=args.max_workflow_seconds,
+                ),
+            )
             ApiPlanFileAdapter().save(args.output, generated.plan)
             payload = {
+                "run_id": generated.state.run_id,
                 "plan_id": generated.plan.plan_id,
-                "status": "SUCCEEDED",
-                "classification": "PLAN_READY_FOR_REVIEW",
+                "status": generated.state.status.value,
+                "classification": generated.state.classification.value,
                 "skill_id": "backend-api",
-                "provider": generated.provider,
-                "model": generated.model,
+                "provider": generated.state.facts["generation"]["provider"],
+                "model": generated.state.facts["generation"]["model"],
                 "scenarios": len(generated.plan.scenarios),
                 "plan_path": args.output.resolve().relative_to(Path.cwd().resolve()).as_posix(),
-                "next_action": "review_then_execute_with_asef_api",
+                "run_dir": run_store.run_dir(generated.state.run_id).relative_to(Path.cwd().resolve()).as_posix(),
+                "next_action": f"review_then_execute_with_asef_api_run_id:{generated.state.run_id}",
             }
-            _log_completion(logger, args.command, generated.plan.plan_id, payload, 0)
+            _log_completion(logger, args.command, generated.state.run_id, payload, 0)
             print(json.dumps(payload))
             close_operational_logging(logger)
             return 0
@@ -723,6 +773,7 @@ def main(argv: list[str] | None = None) -> int:
         ContractValidationError,
         ApiContractError,
         BackendApiPolicyError,
+        CapabilityRunContractError,
         ContextValidationError,
         RecordedAgentError,
         GatewayError,

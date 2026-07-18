@@ -119,6 +119,17 @@ class BackendApiTests(unittest.TestCase):
         with self.assertRaisesRegex(BackendApiPolicyError, "sensitive JSON fields"):
             BackendApiSkill(policy).validate(plan)
 
+    def test_plan_file_rejects_duplicate_json_keys(self) -> None:
+        Path(".asef").mkdir(exist_ok=True)
+        with tempfile.TemporaryDirectory(dir=".asef") as temporary:
+            path = Path(temporary) / "duplicate.json"
+            path.write_text(
+                '{"schema_version":"1.0.0","plan_id":"A","plan_id":"B","base_url":"http://127.0.0.1:8765","scenarios":[]}',
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(ValueError, "duplicate JSON key"):
+                ApiPlanFileAdapter().load(path)
+
     def test_does_not_follow_redirect(self) -> None:
         result = LoopbackHttpApiExecutor().execute(self.plan("/redirect", 200))
         self.assertEqual("FAILED", result.status)
@@ -252,12 +263,55 @@ class BackendApiTests(unittest.TestCase):
                         str(self.port),
                         "--output",
                         str(output),
+                        "--run-output",
+                        str(Path(temporary) / "runs"),
                     ]
                 )
             payload = json.loads(stdout.getvalue())
             self.assertEqual(0, code, stderr.getvalue())
             self.assertEqual("PLAN_READY_FOR_REVIEW", payload["classification"])
             self.assertEqual(f"http://127.0.0.1:{self.port}", ApiPlanFileAdapter().load(output).base_url)
+
+    def test_generated_run_resumes_by_id_after_explicit_review_command(self) -> None:
+        Path(".asef").mkdir(exist_ok=True)
+        with tempfile.TemporaryDirectory(dir=".asef") as temporary:
+            root = Path(temporary)
+            plan_path = root / "review-plan.json"
+            run_root = root / "runs"
+            generated_stdout, executed_stdout, stderr = io.StringIO(), io.StringIO(), io.StringIO()
+            with redirect_stdout(generated_stdout), redirect_stderr(stderr):
+                generated_code = main(
+                    [
+                        "api-generate",
+                        "--requirement",
+                        "Verify that the local API is healthy",
+                        "--base-url",
+                        f"http://127.0.0.1:{self.port}",
+                        "--allow-port",
+                        str(self.port),
+                        "--output",
+                        str(plan_path),
+                        "--run-output",
+                        str(run_root),
+                    ]
+                )
+            generated = json.loads(generated_stdout.getvalue())
+            with redirect_stdout(executed_stdout), redirect_stderr(stderr):
+                executed_code = main(
+                    [
+                        "api",
+                        "--run-id",
+                        generated["run_id"],
+                        "--allow-port",
+                        str(self.port),
+                        "--output",
+                        str(run_root),
+                    ]
+                )
+            executed = json.loads(executed_stdout.getvalue())
+            self.assertEqual((0, 0), (generated_code, executed_code), stderr.getvalue())
+            self.assertEqual(generated["run_id"], executed["run_id"])
+            self.assertEqual("ACCEPTED", executed["classification"])
 
     def test_cli_accepts_relative_output_paths_shown_in_tutorial(self) -> None:
         Path(".asef").mkdir(exist_ok=True)

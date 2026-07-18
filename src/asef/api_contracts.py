@@ -151,6 +151,18 @@ class ApiScenarioResult:
     response_bytes: int
     diagnostic_code: str | None = None
 
+    def validate(self) -> None:
+        if not self.scenario_id.startswith("SCN-") or self.status not in {"PASSED", "FAILED", "ERROR"}:
+            raise ApiContractError("invalid API scenario result identity or status")
+        if self.observed_status is not None and not 100 <= self.observed_status <= 599:
+            raise ApiContractError("observed_status must be a valid HTTP status or null")
+        if self.duration_ms < 0 or self.response_bytes < 0:
+            raise ApiContractError("API scenario metrics cannot be negative")
+        if self.status == "PASSED" and self.diagnostic_code is not None:
+            raise ApiContractError("passed API scenario cannot contain a diagnostic")
+        if self.status != "PASSED" and not self.diagnostic_code:
+            raise ApiContractError("non-passing API scenario requires a diagnostic")
+
 
 @dataclass(slots=True, frozen=True)
 class ApiExecutionResult:
@@ -170,6 +182,23 @@ class ApiExecutionResult:
             raise ApiContractError("API execution counts cannot be negative")
         if self.tests != len(self.scenarios) or self.tests != self.passed + self.failed + self.errors:
             raise ApiContractError("API execution counts do not reconcile")
+        if not self.plan_id.strip() or not self.scenarios:
+            raise ApiContractError("API execution requires plan identity and scenarios")
+        for scenario in self.scenarios:
+            scenario.validate()
+        ids = [item.scenario_id for item in self.scenarios]
+        if len(ids) != len(set(ids)):
+            raise ApiContractError("API execution scenario ids must be unique")
+        observed_counts = (
+            sum(item.status == "PASSED" for item in self.scenarios),
+            sum(item.status == "FAILED" for item in self.scenarios),
+            sum(item.status == "ERROR" for item in self.scenarios),
+        )
+        if observed_counts != (self.passed, self.failed, self.errors):
+            raise ApiContractError("API execution counters do not match scenario statuses")
+        expected_status = "ERROR" if self.errors else ("FAILED" if self.failed else "PASSED")
+        if self.status != expected_status:
+            raise ApiContractError("API execution status does not match counters")
 
     def to_dict(self) -> dict[str, Any]:
         self.validate()
@@ -253,3 +282,47 @@ def api_plan_from_dict(raw: Any) -> ApiTestPlan:
     )
     plan.validate()
     return plan
+
+
+def api_execution_result_from_dict(raw: Any) -> ApiExecutionResult:
+    if not isinstance(raw, dict):
+        raise ApiContractError("API execution result must be an object")
+    expected = {"schema_version", "plan_id", "status", "tests", "passed", "failed", "errors", "scenarios"}
+    if set(raw) != expected or not isinstance(raw["scenarios"], list):
+        raise ApiContractError("API execution result fields do not match schema 1.0.0")
+    counters = (raw["tests"], raw["passed"], raw["failed"], raw["errors"])
+    if any(isinstance(value, bool) or not isinstance(value, int) for value in counters):
+        raise ApiContractError("API execution counters must be integers")
+    scenarios: list[ApiScenarioResult] = []
+    scenario_fields = {"scenario_id", "status", "observed_status", "duration_ms", "response_bytes", "diagnostic_code"}
+    for item in raw["scenarios"]:
+        if not isinstance(item, dict) or set(item) != scenario_fields:
+            raise ApiContractError("API scenario result fields do not match schema 1.0.0")
+        if not isinstance(item["scenario_id"], str) or item["status"] not in {"PASSED", "FAILED", "ERROR"}:
+            raise ApiContractError("API scenario result identity or status is invalid")
+        if item["observed_status"] is not None and (
+            isinstance(item["observed_status"], bool) or not isinstance(item["observed_status"], int)
+        ):
+            raise ApiContractError("observed_status must be an integer or null")
+        if any(
+            isinstance(item[name], bool) or not isinstance(item[name], int) or item[name] < 0
+            for name in ("duration_ms", "response_bytes")
+        ):
+            raise ApiContractError("API scenario metrics must be non-negative integers")
+        if item["diagnostic_code"] is not None and not isinstance(item["diagnostic_code"], str):
+            raise ApiContractError("diagnostic_code must be a string or null")
+        scenarios.append(ApiScenarioResult(**item))
+    if not all(isinstance(raw[name], str) for name in ("schema_version", "plan_id", "status")):
+        raise ApiContractError("API execution result header fields must be strings")
+    result = ApiExecutionResult(
+        schema_version=raw["schema_version"],
+        plan_id=raw["plan_id"],
+        status=raw["status"],
+        tests=raw["tests"],
+        passed=raw["passed"],
+        failed=raw["failed"],
+        errors=raw["errors"],
+        scenarios=tuple(scenarios),
+    )
+    result.validate()
+    return result

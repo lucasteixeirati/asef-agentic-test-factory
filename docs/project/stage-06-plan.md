@@ -37,7 +37,7 @@ Transformar a fundação do Alpha Python em uma experiência cotidiana verificá
 
 ### 6.3 — primeira fatia cotidiana: backend API
 
-**Progresso:** 6.3.1 concluída localmente: intenção natural por cassette, plano JSON revisável, política loopback/read-only, adapter HTTP no host, CLI, fixture, relatórios e testes. Permanecem integração ao contrato geral de run/budgets, sandbox Docker, provider live, OpenAPI e dataset de conformance dedicado.
+**Progresso:** 6.3.1 e 6.3.2 concluídas localmente. Intenção natural por cassette, revisão por `run_id`, envelope genérico, budgets de modelo/tokens/requests/duração, plano por hash, evidências, bundle state/manifest, adapter loopback no host e conformance Docker networkless estão implementados. Permanecem provider live/custo, OpenAPI, rede isolada para serviço real e dataset dedicado.
 
 **Escopo inicial:** HTTP/REST, contrato OpenAPI opcional, ambiente local/fictício e operações não destrutivas. GraphQL, gRPC, eventos e alvos públicos externos permanecem fora da primeira fatia.
 

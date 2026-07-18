@@ -13,10 +13,19 @@ class ApiPlanFileAdapter:
         if path.stat().st_size > 1_048_576:
             raise ApiContractError("API plan exceeds the 1 MiB file limit")
         try:
-            raw = json.loads(path.read_text(encoding="utf-8"))
+            raw = json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=self._object)
         except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
             raise ApiContractError("API plan is not valid UTF-8 JSON") from exc
         return api_plan_from_dict(raw)
+
+    @staticmethod
+    def _object(pairs):
+        value = {}
+        for key, item in pairs:
+            if key in value:
+                raise ApiContractError(f"duplicate JSON key in API plan: {key}")
+            value[key] = item
+        return value
 
     def save(self, path: Path, plan: ApiTestPlan) -> Path:
         plan.validate()
@@ -26,4 +35,3 @@ class ApiPlanFileAdapter:
             encoding="utf-8",
         )
         return path
-
