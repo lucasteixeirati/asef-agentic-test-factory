@@ -1,6 +1,6 @@
 # Plano detalhado do incremento 6.4 — TypeScript, Playwright e Web UI
 
-**Status:** 6.4.2 aprovada por Lucas em 2026-07-19; 6.4.3 implementada localmente como candidata a revisão.
+**Status:** 6.4.2 aprovada por Lucas em 2026-07-19; 6.4.3 concluída e 6.4.4 implementada localmente como candidata. Nenhuma chamada live foi realizada.
 
 ## Objetivo
 
@@ -108,6 +108,16 @@ provider live Web UI continuam pertencendo à 6.4.4.
 **Aceite:** fluxo positivo e mutação reversível passam; assertion incorreta é `FAILED`; erro de browser é `ERROR`; timeout é explícito; artifact não pode escapar do workspace nem alterar a fixture fonte.
 
 ### 6.4.4 — linguagem natural, run e revisão humana
+
+**Progresso:** candidata local concluída. O caminho determinístico por cassette
+passou ponta a ponta.
+`web-generate` cria a run antes do gateway, injeta origem e IDs, contabiliza tokens,
+persiste o plano por hash e termina em `WAITING_FOR_HUMAN_REVIEW`. `web --run-id`
+reconcilia o hash, compila e executa somente após a revisão operacional, preservando
+resultado, manifest e identidade do artifact. O modo live é opt-in, exige modelo,
+budget e tarifas positivas e contabiliza custo/retry; sua integração foi coberta
+com gateway falso, sem usar chave ou fazer chamada. Uma chamada live real continua
+dependente do checkpoint próprio.
 
 **Entrega:** `web-generate` por cassette, saída estruturada, budgets, persistência no envelope genérico e `web --run-id` após revisão; provider live opt-in integrado somente após o cassette passar.
 

@@ -64,6 +64,7 @@ _ALLOWED_TRANSITIONS = {
     CapabilityRunStatus.EXECUTING: {
         CapabilityRunStatus.SUCCEEDED,
         CapabilityRunStatus.FAILED,
+        CapabilityRunStatus.POLICY_BLOCKED,
         CapabilityRunStatus.BUDGET_EXHAUSTED,
     },
 }

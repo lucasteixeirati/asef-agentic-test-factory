@@ -10,6 +10,7 @@ from ..api_contracts import ApiExecutionResult, ApiTestPlan, api_plan_from_dict
 from ..capability_runs import CapabilityRunContractError, CapabilityRunState, capability_run_from_dict
 from ..contracts import EvidenceRef
 from ..openapi_contracts import OpenApiSummary
+from ..web_ui_contracts import WebUiExecutionResult, WebUiTestPlan, web_ui_plan_from_dict
 
 
 class CapabilityRunStore:
@@ -76,6 +77,36 @@ class CapabilityRunStore:
         path = self._run_dir(state.run_id, require_existing=True) / "results" / "api-result.json"
         self._write_json(path, result.to_dict())
         ref = EvidenceRef("api_execution_result", "results/api-result.json", self._sha256(path))
+        state.evidence_refs.append(ref)
+        self.save_state(state)
+        return ref
+
+    def save_web_plan(self, state: CapabilityRunState, plan: WebUiTestPlan) -> EvidenceRef:
+        plan.validate()
+        path = self._run_dir(state.run_id, require_existing=True) / "artifacts" / "web-ui-plan.json"
+        self._write_json(path, plan.to_dict())
+        ref = EvidenceRef("web_ui_test_plan", "artifacts/web-ui-plan.json", self._sha256(path))
+        state.plan_id, state.plan_sha256 = plan.plan_id, ref.sha256
+        state.evidence_refs.append(ref)
+        self.save_state(state)
+        return ref
+
+    def load_web_plan(self, state: CapabilityRunState) -> WebUiTestPlan:
+        if state.plan_sha256 is None:
+            raise CapabilityRunContractError("capability run has no Web UI plan")
+        path = self._run_dir(state.run_id, require_existing=True) / "artifacts" / "web-ui-plan.json"
+        if not path.is_file() or self._sha256(path) != state.plan_sha256:
+            raise CapabilityRunContractError("persisted Web UI plan integrity mismatch")
+        plan = web_ui_plan_from_dict(self._read_json(path))
+        if plan.plan_id != state.plan_id:
+            raise CapabilityRunContractError("persisted Web UI plan identity mismatch")
+        return plan
+
+    def save_web_result(self, state: CapabilityRunState, result: WebUiExecutionResult) -> EvidenceRef:
+        result.validate()
+        path = self._run_dir(state.run_id, require_existing=True) / "results" / "web-ui-result.json"
+        self._write_json(path, result.to_dict())
+        ref = EvidenceRef("web_ui_execution_result", "results/web-ui-result.json", self._sha256(path))
         state.evidence_refs.append(ref)
         self.save_state(state)
         return ref

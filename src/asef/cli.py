@@ -15,6 +15,8 @@ from .adapters.api_plan_agent import ApiPlanAgentAdapter, ApiPlanAgentPricing
 from .adapters.api_report_store import ApiReportStore
 from .adapters.capability_run_store import CapabilityRunStore
 from .adapters.http_api_execution import LoopbackHttpApiExecutor
+from .adapters.web_ui_plan_agent import WebUiPlanAgentAdapter, WebUiPlanAgentPricing
+from .adapters.web_ui_plan_file import WebUiPlanFileAdapter
 from .adapters.cleanup_executor import CleanupExecutor
 from .adapters.cleanup_report_store import CleanupReportStore
 from .adapters.doctor_check_executor import DoctorCheckExecutor
@@ -44,6 +46,7 @@ from .application.backend_api_run import (
     GenerateBackendApiPlanService,
     RegisterBackendApiPlanService,
 )
+from .application.web_ui_run import ExecuteWebUiPlanService, GenerateWebUiPlanService
 from .application.doctor_runner import (
     DoctorInfrastructureError,
     DoctorRequest,
@@ -69,6 +72,7 @@ from .observability import close_operational_logging, configure_operational_logg
 from .openapi_contracts import OpenApiContractError, OpenApiJsonLoader
 from .skills.unit import UnitSkill
 from .skills.backend_api import BackendApiPolicy, BackendApiPolicyError
+from .skills.web_ui import WebUiPolicy, WebUiPolicyError
 from .runtime.budgets import BudgetController
 from .legacy.domain import BudgetLimits, BudgetUsage
 
@@ -190,6 +194,32 @@ def build_parser() -> argparse.ArgumentParser:
     api_generate.add_argument("--output", type=Path, default=Path(".asef/api/plans/generated-plan.json"))
     api_generate.add_argument("--run-output", type=Path, default=Path(".asef/runs"))
     _logging_argument(api_generate)
+    web_generate = subparsers.add_parser(
+        "web-generate", help="turn a natural-language fixture requirement into a reviewable Web UI plan"
+    )
+    web_generate.add_argument("--requirement", required=True)
+    web_generate.add_argument("--base-url", default="http://127.0.0.1:4173")
+    web_generate.add_argument("--allow-port", type=int, action="append", default=[4173])
+    web_generate.add_argument("--max-scenarios", type=int, default=20)
+    web_generate.add_argument("--max-workflow-seconds", type=int, default=90)
+    web_generate.add_argument("--mode", choices=("demo", "live"), default="demo")
+    web_generate.add_argument("--model", default=os.environ.get("ASEF_OPENAI_MODEL"))
+    web_generate.add_argument("--api-budget-brl", type=float, default=0.0)
+    web_generate.add_argument("--input-cost-brl-per-million", type=float, default=0.0)
+    web_generate.add_argument("--output-cost-brl-per-million", type=float, default=0.0)
+    web_generate.add_argument("--provider-timeout-seconds", type=int, default=60)
+    web_generate.add_argument("--max-output-tokens", type=int, default=1200)
+    web_generate.add_argument("--max-provider-retries", type=int, default=1)
+    web_generate.add_argument("--cassette", type=Path, default=None)
+    web_generate.add_argument("--output", type=Path, default=Path(".asef/web/plans/generated-plan.json"))
+    web_generate.add_argument("--run-output", type=Path, default=Path(".asef/runs"))
+    _logging_argument(web_generate)
+    web = subparsers.add_parser(
+        "web", help="execute a reviewed Web UI capability run against the local fixture"
+    )
+    web.add_argument("--run-id", required=True)
+    web.add_argument("--output", type=Path, default=Path(".asef/runs"))
+    _logging_argument(web)
     return parser
 
 
@@ -578,6 +608,85 @@ def main(argv: list[str] | None = None) -> int:
             print(json.dumps(payload))
             close_operational_logging(logger)
             return code
+        if args.command == "web-generate":
+            cassette = args.cassette or (Path(__file__).parent / "fixtures" / "web-ui-plan-demo.json")
+            pricing = WebUiPlanAgentPricing(
+                args.input_cost_brl_per_million, args.output_cost_brl_per_million
+            )
+            if args.mode == "live":
+                pricing.validate_live()
+                if args.api_budget_brl <= 0 or not args.model:
+                    raise ContractValidationError("live Web UI generation requires model and positive api budget")
+                gateway = OpenAIResponsesGateway(
+                    model=args.model, timeout_seconds=args.provider_timeout_seconds,
+                    api_budget_brl=args.api_budget_brl, max_output_tokens=args.max_output_tokens,
+                )
+            else:
+                gateway = RecordedModelGateway(
+                    cassette,
+                    BudgetController(
+                        BudgetLimits(max_model_calls=1, max_input_tokens=10_000, max_output_tokens=5_000),
+                        BudgetUsage(),
+                    ),
+                )
+            store = CapabilityRunStore(args.run_output)
+            generated = GenerateWebUiPlanService(
+                WebUiPlanAgentAdapter(
+                    gateway, WebUiPolicy(allowed_hosts=("127.0.0.1",), allowed_ports=tuple(args.allow_port), max_scenarios=args.max_scenarios), pricing,
+                ),
+                store,
+            ).execute(
+                args.requirement,
+                args.base_url,
+                CapabilityRunBudgets(
+                    max_model_calls=(args.max_provider_retries + 1 if args.mode == "live" else 1),
+                    max_provider_retries=(args.max_provider_retries if args.mode == "live" else 0),
+                    max_input_tokens=10_000, max_output_tokens=5_000,
+                    max_requests=args.max_scenarios,
+                    max_workflow_seconds=args.max_workflow_seconds,
+                    api_budget_brl=args.api_budget_brl,
+                ),
+            )
+            if generated.plan:
+                WebUiPlanFileAdapter().save(args.output, generated.plan)
+            code = 0 if generated.state.status is CapabilityRunStatus.WAITING_FOR_HUMAN_REVIEW else 6
+            payload = {
+                "run_id": generated.state.run_id,
+                "plan_id": generated.plan.plan_id if generated.plan else None,
+                "status": generated.state.status.value,
+                "classification": generated.state.classification.value,
+                "skill_id": "web-ui", "provider": generated.state.facts.get("generation", {}).get("provider"),
+                "model": generated.state.facts.get("generation", {}).get("model"),
+                "estimated_cost_brl": generated.state.usage.estimated_cost_brl,
+                "scenarios": len(generated.plan.scenarios) if generated.plan else 0,
+                "plan_path": args.output.resolve().relative_to(Path.cwd().resolve()).as_posix() if generated.plan else None,
+                "run_dir": store.run_dir(generated.state.run_id).relative_to(Path.cwd().resolve()).as_posix(),
+                "next_action": f"review_then_execute_with_asef_web_run_id:{generated.state.run_id}" if code == 0 else None,
+            }
+            _log_completion(logger, args.command, generated.state.run_id, payload, code)
+            print(json.dumps(payload))
+            close_operational_logging(logger)
+            return code
+        if args.command == "web":
+            store = CapabilityRunStore(args.output)
+            completed = ExecuteWebUiPlanService(store).execute(args.run_id)
+            result = completed.result
+            code = 6 if result is None else (0 if result.status == "PASSED" else (4 if result.status == "FAILED" else 7))
+            payload = {
+                "run_id": completed.state.run_id,
+                "status": completed.state.status.value,
+                "classification": completed.state.classification.value,
+                "skill_id": "web-ui", "support_level": "planned-under-development",
+                "tests": result.tests if result else 0,
+                "passed": result.passed if result else 0,
+                "failed": result.failed if result else 0,
+                "errors": result.errors if result else 0,
+                "run_dir": store.run_dir(completed.state.run_id).relative_to(Path.cwd().resolve()).as_posix(),
+            }
+            _log_completion(logger, args.command, completed.state.run_id, payload, code)
+            print(json.dumps(payload))
+            close_operational_logging(logger)
+            return code
         demo_assets = materialize_demo_assets()
         if hasattr(args, "context") and args.context is None:
             args.context = demo_assets.context.relative_to(Path.cwd())
@@ -815,6 +924,7 @@ def main(argv: list[str] | None = None) -> int:
         ContractValidationError,
         ApiContractError,
         BackendApiPolicyError,
+        WebUiPolicyError,
         CapabilityRunContractError,
         ContextValidationError,
         RecordedAgentError,

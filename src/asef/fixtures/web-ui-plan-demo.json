@@ -1,0 +1,18 @@
+{
+  "schema_name": "web_ui_plan_v1",
+  "model": "recorded-demo",
+  "response_id": "web-ui-plan-demo-001",
+  "usage": {"input_tokens": 96, "output_tokens": 84},
+  "output": {
+    "scenarios": [{
+      "description": "Complete one item in the local quality checklist",
+      "actions": [
+        {"kind": "goto", "path": "/"},
+        {"kind": "check", "locator": {"kind": "test_id", "value": "requirements-check"}}
+      ],
+      "assertions": [
+        {"kind": "checked", "expected": true, "locator": {"kind": "test_id", "value": "requirements-check"}}
+      ]
+    }]
+  }
+}

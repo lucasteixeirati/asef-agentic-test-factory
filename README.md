@@ -118,6 +118,8 @@ asef security   dataset de controles offline
 asef cleanup    planejamento/aplicação conservadora sob .asef
 asef api-generate intenção natural para plano REST revisável por cassette (6.3 em desenvolvimento)
 asef api        plano REST declarativo contra fixture loopback autorizada (6.3 em desenvolvimento)
+asef web-generate intenção natural gravada para plano Web UI revisável (6.4 em desenvolvimento)
+asef web        retoma por run-id e executa a fixture Web UI isolada após revisão
 ```
 
 Exit codes: `0` sucesso, `2` input/contexto, `3` espera humana, `4` falha funcional, `5` policy, `6` budget, `7` provider/infraestrutura e `130` cancelamento.

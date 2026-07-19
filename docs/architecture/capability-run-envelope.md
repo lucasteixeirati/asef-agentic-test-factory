@@ -2,7 +2,7 @@
 
 ## Motivação
 
-O estado do WF-001 nasceu para teste unitário e contém pressupostos de artifact, correção e execução específicos. Reutilizá-lo diretamente em API espalharia condicionais de skill pelo core. A Etapa 6.3.2 introduz um envelope menor e neutro, inicialmente consumido por `backend-api` e candidato a reutilização por `web-ui` e outros workflows.
+O estado do WF-001 nasceu para teste unitário e contém pressupostos de artifact, correção e execução específicos. Reutilizá-lo diretamente em API espalharia condicionais de skill pelo core. A Etapa 6.3.2 introduziu um envelope menor e neutro para `backend-api`; a 6.4.4 comprovou sua reutilização por `web-ui` sem adicionar Playwright ao contrato genérico.
 
 ## Conteúdo
 
@@ -29,6 +29,15 @@ RECEIVED
 ```
 
 Política pode bloquear antes da execução. `api-generate` persiste a run antes da chamada gravada ou live opt-in, registra usage e custo estimado e salva o plano por hash. `api --run-id` é a aprovação operacional explícita; a retomada reconcilia o hash antes de qualquer request. OpenAPI JSON opcional restringe as operações propostas e somente seu hash e resumo sanitizado entram na run.
+
+## Workflow Web UI gravado
+
+`web-generate` cria `WF-WEB-001` antes do gateway gravado, contabiliza tokens e
+persiste `WebUiTestPlan` com identidade e SHA-256. `web --run-id` exige o estado de
+revisão, relê e reconcilia o plano, registra o hash do TypeScript compilado e executa
+a fixture no container. O envelope registra fatos neutros; contrato, Docker e
+Playwright permanecem nos módulos Web UI. O caminho live ainda não integra esta
+fatia e nenhum comando faz chamada externa implicitamente.
 
 ## Persistência
 
