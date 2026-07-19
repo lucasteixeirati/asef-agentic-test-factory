@@ -24,7 +24,7 @@ contra a fixture local. O probe continua carregando apenas HTML constante em
 `WebUiPlanCompiler` traduz o contrato validado para um módulo TypeScript data-only
 determinístico. O adapter compara bytes e SHA-256 desse artifact com uma nova
 compilação do plano persistido antes de iniciar Docker. O driver importa o módulo,
-reconcilia seu conteúdo com `plan.json`, serve os três assets allowlisted da fixture
+reconcilia seu conteúdo com `plan.json`, serve os quatro assets allowlisted da fixture
 em `127.0.0.1:4173` e interpreta somente ações, locators e assertions fechados.
 
 Cada cenário usa contexto novo com service workers bloqueados. Routing aborta
@@ -36,6 +36,12 @@ fica sob output contido e permanece privada e não publicável.
 A imagem oficial inclui browsers e dependências do sistema, mas não o package npm.
 O build instala o package de versão idêntica com scripts e download de browser
 desabilitados. Dependências nunca são instaladas durante a run.
+
+Os assets públicos em `examples/web-ui` possuem cópia idêntica sob
+`asef/fixtures/web_ui` para entrar no wheel e no sdist. Um teste compara os bytes
+dos dois conjuntos; o executor usa somente a cópia empacotada, inclusive fora do
+checkout. `conformance.html` é servido apenas quando um plano adversarial explícito
+o solicita e não é referenciado pela página cotidiana.
 
 ## Política observada
 

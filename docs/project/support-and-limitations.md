@@ -23,7 +23,7 @@ A CI executa testes do core e provas delimitadas em Linux x86-64, incluindo Secu
 | Perfil | Nível atual | Capabilities comprovadas | Limites |
 |---|---|---|---|
 | `python-pytest` | experimental | `unit` parcial; `backend-api` parcial em loopback; detecção de projeto parcial; coverage e mutation disponíveis no recorte de referência | API ainda executa no host somente contra loopback; imagem pytest precisa de build local; projetos externos não têm compatibilidade geral prometida |
-| `node-typescript` | planejado | contrato, toolchain, execução funcional, jornada gravada e integração live opt-in coberta sem chamada real | sem conformance end-to-end; live exige autorização, budget, tarifas e chave somente no host |
+| `node-typescript` | planejado, candidato a parcial | `web-ui` com contrato, toolchain, execução, jornada gravada, conformance adversarial e fixture empacotada | somente Chromium e fixture local; promoção depende da revisão final; live exige autorização, budget, tarifas e chave somente no host |
 | `java-junit` | planejado | inicialização histórica de container Java 21 por digest | sem detecção, build, test runner, normalização ou quality end-to-end |
 | Go / .NET | planejado | nenhuma capability executável | seleção de tooling e conformance futuras |
 
@@ -41,6 +41,20 @@ O código ainda declara `python-pytest` como experimental com alvo futuro `refer
 `api-generate` converte uma intenção natural em plano revisável por cassette ou provider live opt-in e cria uma capability run; `api --run-id` reconcilia o plano por hash, aplica budgets e produz state, manifest, resultado e reports com evidências. OpenAPI 3.0/3.1 é aceito somente em JSON local de até 1 MiB: referências externas, chaves duplicadas, rotas parametrizadas e operações mutáveis não entram no recorte, e `servers` nunca define o alvo. O resumo sanitizado e o hash da fonte são preservados; a fonte bruta não é copiada para a run.
 
 A capability bloqueia hosts externos, redirects, proxies, credenciais persistidas, headers de transporte e métodos mutáveis por padrão. Requests cotidianos ainda executam no host somente contra endereços literais de loopback; portanto não fazem DNS e não abrem uma superfície de rebinding. Docker foi comprovado apenas em conformance autocontida com rede desligada. Não há autenticação, POST, GraphQL, gRPC, acesso a serviço externo real ou aprovação de produção.
+
+### Web UI candidata local
+
+`web-generate` transforma uma intenção em plano declarativo por cassette ou provider
+live opt-in. O plano persistido por hash precisa ser revisado antes de `web --run-id`.
+A execução usa Chromium dentro do mesmo container que serve a fixture empacotada,
+com `--network none`, origem literal `127.0.0.1:4173`, workspace read-only e output
+separado. Requests externos, popups, dialogs e downloads são bloqueados; screenshot
+surge somente em falha e permanece privado.
+
+A conformance cobre 14 controles e executou os nove casos de browser duas vezes com
+fingerprint funcional estável. Isso não autoriza sites externos, login, upload,
+pagamento, múltiplos browsers, visual regression, auditoria completa de acessibilidade
+ou compatibilidade geral com projetos TypeScript.
 
 ## Sandbox e segurança
 

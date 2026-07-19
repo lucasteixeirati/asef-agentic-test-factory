@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ASEF Web UI Fixture</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main>
+    <h1>Quality checklist</h1>
+    <p id="summary" role="status" aria-live="polite">0 of 2 checks complete</p>
+    <form id="checklist">
+      <label><input type="checkbox" data-testid="requirements-check"> Requirements reviewed</label>
+      <label><input type="checkbox" data-testid="evidence-check"> Evidence preserved</label>
+      <label for="review-note">Review note</label>
+      <input id="review-note" name="review-note" maxlength="80" autocomplete="off">
+      <button type="submit">Save review</button>
+      <button type="button" id="reset">Reset fixture</button>
+    </form>
+    <p id="result" role="status" aria-live="polite">No review saved</p>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

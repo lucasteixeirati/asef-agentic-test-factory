@@ -7,7 +7,7 @@ Esta matriz descreve implementação, não intenção de roadmap. Definições p
 | Perfil | Ecossistema | Nível atual | Alvo declarado | Evidência |
 |---|---|---|---|---|
 | `python-pytest` | Python 3.13 / pytest | experimental | reference | WF-001, Smoke, adapter pytest, coverage/mutation delimitados |
-| `node-typescript` | Node 24.16 | planned | supported | contrato, toolchain, execução, jornada gravada e live opt-in não chamado; sem conformance |
+| `node-typescript` | Node 24.16 | planned (partial candidate) | supported | `web-ui` local completo, conformance 18/18 e fixture empacotada; promoção pendente |
 | `java-junit` | Java 21 | planned | experimental | somente inicialização histórica de imagem por digest |
 | Go | Go | planned | não declarado no código | nenhuma capability executável |
 | .NET | .NET | planned | não declarado no código | nenhuma capability executável |
@@ -29,7 +29,7 @@ As imagens `python-pytest` e `python-quality` são pinadas/reproduzíveis, mas p
 
 ## Perfis planejados
 
-Node declara `unit`, `web-ui`, `backend-api`, `coverage`, `mutation` e `performance` como planned. `web-ui` possui contrato, política, compilador, execução isolada e jornada gravada revisável; como ainda não possui conformance, não muda de nível. Java declara `unit`, `backend-api`, `coverage`, `mutation`, `performance` e `mobile` como planned e ainda não possui adapter ou contrato ativo.
+Node declara `unit`, `web-ui`, `backend-api`, `coverage`, `mutation` e `performance` como planned. `web-ui` possui contrato, política, compilador, execução isolada, jornada gravada revisável e conformance adversarial repetida; é candidata a `partial`, mas o perfil não muda de nível antes da revisão final. Java declara `unit`, `backend-api`, `coverage`, `mutation`, `performance` e `mobile` como planned e ainda não possui adapter ou contrato ativo.
 
 Ferramentas como Vitest/Jest, Maven/Gradle, JaCoCo, PIT ou Stryker continuam escolhas futuras; não são dependências suportadas por esta matriz.
 

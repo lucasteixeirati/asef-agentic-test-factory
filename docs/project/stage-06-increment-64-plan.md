@@ -1,6 +1,6 @@
 # Plano detalhado do incremento 6.4 — TypeScript, Playwright e Web UI
 
-**Status:** 6.4.2 aprovada por Lucas em 2026-07-19; 6.4.3 concluída e 6.4.4 implementada localmente como candidata. Nenhuma chamada live foi realizada.
+**Status:** 6.4.1–6.4.6 concluídas localmente como candidata técnica. Nenhuma chamada live foi realizada e a promoção documental permanece reservada à validação final da Etapa 6.
 
 ## Objetivo
 
@@ -140,6 +140,12 @@ há finding alto ou crítico aberto nesta fatia.
 **Aceite:** casos esperados reconciliam; duas repetições determinísticas mantêm fingerprint funcional; nenhum caso acessa rede externa; findings altos/críticos bloqueiam promoção.
 
 ### 6.4.6 — documentação, experiência instalada e revisão
+
+**Progresso:** concluída localmente. Fixture cotidiana e página adversarial integram
+wheel/sdist com igualdade byte a byte em relação aos exemplos públicos. Tutorial,
+mapa, arquitetura, skill e matrizes estão reconciliados como candidata. A jornada
+instalada fora do checkout passou em Docker sem rede; regressão, cobertura, docs,
+scanner e pacote de revisão estão verdes. O perfil não foi promovido.
 
 **Entrega:** tutorial diário, mapa do projeto, matriz de linguagem, suporte/limitações, arquitetura, journal, livro/source map/proveniência, wheel/sdist e pacote de revisão da 6.4.
 

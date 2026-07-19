@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>ASEF Web UI adversarial conformance</title></head>
+<body>
+  <main>
+    <h1>Adversarial browser controls</h1>
+    <button id="external" type="button">Request external resource</button>
+    <button id="popup" type="button">Open popup</button>
+    <button id="dialog" type="button">Open dialog</button>
+    <a id="download" href="data:text/plain,ASEF" download="asef.txt">Start download</a>
+  </main>
+  <script>
+    document.querySelector("#external").addEventListener("click", () => fetch("http://192.0.2.1/asef-conformance"));
+    document.querySelector("#popup").addEventListener("click", () => window.open("/", "_blank"));
+    document.querySelector("#dialog").addEventListener("click", () => alert("ASEF conformance dialog"));
+  </script>
+</body>
+</html>

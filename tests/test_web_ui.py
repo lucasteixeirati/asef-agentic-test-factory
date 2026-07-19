@@ -298,6 +298,12 @@ class WebUiFixtureTests(unittest.TestCase):
         for forbidden in ("fetch(", "XMLHttpRequest", "WebSocket", "localStorage", "sessionStorage", "document.cookie"):
             self.assertNotIn(forbidden, javascript)
 
+    def test_public_and_packaged_fixture_assets_are_identical(self) -> None:
+        public = ROOT / "examples" / "web-ui"
+        packaged = ROOT / "src" / "asef" / "fixtures" / "web_ui"
+        for name in ("index.html", "app.js", "styles.css", "conformance.html"):
+            self.assertEqual((public / name).read_bytes(), (packaged / name).read_bytes(), name)
+
 
 if __name__ == "__main__":
     unittest.main()

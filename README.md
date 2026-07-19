@@ -89,6 +89,7 @@ Para usar o Alpha atual:
 - [troubleshooting](docs/guides/troubleshooting.md) — exits e ações seguras;
 - [tutorial live](docs/tutorials/wf-001-live.md) — provider opt-in, secret no host e budget explícito.
 - [tutorial backend API local](docs/tutorials/backend-api-local.md) — intenção natural gravada, revisão por run, execução loopback e evidências da Etapa 6.
+- [tutorial Web UI local](docs/tutorials/web-ui-local.md) — geração gravada, revisão do plano e Chromium isolado contra fixture fictícia.
 
 Referências técnicas atuais:
 
@@ -132,7 +133,7 @@ Checkpoint humano requer o extra opcional:
 
 ## Suporte e limitações
 
-O único workflow completo continua sendo `unit` no perfil experimental `python-pytest`, com o SUT fictício calculator e Docker Desktop local. `backend-api` é parcial: cassette, plano revisável, retomada por run, budgets/evidências e REST read-only contra loopback no host; Docker cobre somente conformance autocontida. Node/TypeScript e Java continuam planejados. A [matriz canônica](docs/project/support-and-limitations.md) distingue capability comprovada de alvo futuro.
+O único workflow promovido continua sendo `unit` no perfil experimental `python-pytest`, com o SUT fictício calculator e Docker Desktop local. `backend-api` é parcial: cassette, plano revisável, retomada por run, budgets/evidências e REST read-only contra loopback no host. `web-ui` possui candidata local completa contra fixture fictícia, incluindo conformance adversarial, mas `node-typescript` permanece planejado até a revisão final da Etapa 6. Java continua planejado. A [matriz canônica](docs/project/support-and-limitations.md) distingue capability comprovada de alvo futuro.
 
 O modo live exige provider/modelo disponível, tarifas atuais informadas pelo operador e budget positivo. Disponibilidade, preço e câmbio não são congelados no repositório. Nunca coloque chave real em arquivo, argumento, contexto, cassette, report ou issue.
 

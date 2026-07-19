@@ -54,7 +54,7 @@ class DockerWebUiExecutor:
         generated.mkdir(parents=True, exist_ok=False)
         fixture.mkdir(parents=True, exist_ok=False)
         screenshots.mkdir(parents=True, exist_ok=False)
-        source_fixture = Path(__file__).resolve().parents[3] / "examples" / "web-ui"
+        source_fixture = Path(__file__).resolve().parents[1] / "fixtures" / "web_ui"
         for name in ("index.html", "app.js", "styles.css", "conformance.html"):
             source = source_fixture / name
             if not source.is_file():

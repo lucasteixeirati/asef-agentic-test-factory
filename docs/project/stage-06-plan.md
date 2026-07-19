@@ -47,7 +47,7 @@ Transformar a fundação do Alpha Python em uma experiência cotidiana verificá
 
 ### 6.4 — TypeScript/Playwright e web UI
 
-**Progresso:** 6.4.3 e 6.4.4 concluídas localmente como candidatas: caminho cassette ponta a ponta, capability run/revisão por hash e live opt-in coberto sem chamada real. Dataset de conformance continua pendente.
+**Progresso:** 6.4.1–6.4.6 concluídas localmente como candidata técnica. O caminho cassette, capability run/revisão por hash, execução Chromium, live opt-in sem chamada real, dataset adversarial repetido e experiência instalada fora do checkout estão comprovados. A promoção pública permanece pendente da validação final da Etapa 6.
 
 **Escopo inicial:** aplicação web fictícia local, fluxos de leitura e mutações delimitadas, Chromium no container e TypeScript.
 

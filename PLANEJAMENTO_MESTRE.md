@@ -2,7 +2,7 @@
 
 > Documento vivo para orientar a construção da aplicação, da documentação pública e do futuro livro.
 
-**Status:** vigente — Etapa 5 concluída e Gate 5 aprovado com condições em 2026-07-18; Etapa 6 em execução, com 6.0–6.3 concluídos e 6.4.1–6.4.5 concluídos localmente em 2026-07-19
+**Status:** vigente — Etapa 5 concluída e Gate 5 aprovado com condições em 2026-07-18; Etapa 6 em execução, com 6.0–6.4 concluídos localmente e 6.5 Java/JUnit como próxima fatia
 **Data de início:** 2026-07-11  
 **Responsável:** Lucas  
 **Natureza:** projeto open source, educacional, experimental e de portfólio  
@@ -787,11 +787,10 @@ As datas serão estimadas após a baseline das primeiras sessões. Os gates são
 
 **Objetivo:** transformar a fundação do Alpha Python em uma experiência cotidiana multiskill, provar a arquitetura com ecossistemas distintos e aprofundar a avaliação de qualidade.
 
-**Status:** em execução. 6.0–6.3 estão concluídos; a capacidade `web-ui` concluiu
-localmente contratos, toolchain pinada, compilação/execução, jornada por cassette e
-run revisável, além de conformance adversarial em duas repetições. A próxima fatia é
-6.4.6, responsável por documentação, experiência instalada e revisão antes de
-qualquer promoção documental. A fonte operacional é `docs/project/stage-06-plan.md`.
+**Status:** em execução. 6.0–6.4 estão concluídos localmente; `web-ui` possui
+candidata técnica completa, experiência instalada e conformance repetida, sem
+promoção documental antecipada. A próxima fatia é 6.5 Java/JUnit experimental. A
+fonte operacional é `docs/project/stage-06-plan.md`.
 
 **Aplicação**
 
@@ -960,8 +959,8 @@ Cada nova versão deverá declarar hipótese, baseline, mudança, resultado, lim
 
 1. 6.0–6.2 concluídos: roadmap, mapa, jornada e contratos visíveis;
 2. 6.3 `backend-api` concluído como primeira fatia cotidiana;
-3. concluir 6.4.6: documentação, experiência instalada e revisão final de TypeScript/Playwright e `web-ui`;
-4. implementar 6.5 Java/JUnit experimental;
+3. 6.4 concluído localmente: TypeScript/Playwright e `web-ui` candidatos à revisão final;
+4. implementar agora 6.5 Java/JUnit experimental;
 5. concluir 6.6 com quality capabilities, regressão, retrospectiva e Gate 6;
 6. preservar e reconciliar as condições do Gate 5 em todas as fatias.
 
@@ -1081,8 +1080,6 @@ Decisões já encerradas e registradas: nome público ASEF; licença MIT; Python
 
 ## 27. Próxima decisão
 
-Concluir 6.4.6 conforme `docs/project/stage-06-increment-64-plan.md`, produzir a
-experiência instalada e submeter a candidata Web UI à revisão humana antes de
-qualquer promoção documental. Depois, prosseguir para 6.5 Java/JUnit experimental.
-As condições do Gate 5 continuam vigentes e nenhum perfil ou skill é promovido
-apenas por documentação.
+Executar 6.5 Java/JUnit experimental conforme o escopo aprovado da Etapa 6, sem
+promover antecipadamente a candidata Web UI. As condições do Gate 5 continuam
+vigentes e nenhum perfil ou skill é promovido apenas por documentação.
