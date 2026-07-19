@@ -3,7 +3,6 @@ __pycache__/
 .venv/
 .env
 .env.*
-!.env.example
 .coverage
 htmlcov/
 .pytest_cache/
