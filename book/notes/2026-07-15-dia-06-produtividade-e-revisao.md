@@ -2,7 +2,7 @@
 
 - **Data da matéria-prima:** 2026-07-15
 - **Origem:** relato explícito de Lucas + evidências até `v0.1.0a3`
-- **Estado editorial:** rascunho assistido; requer revisão autoral
+- **Estado editorial:** revisado e aprovado pelo autor em 2026-07-19
 
 ## A ideia cresce junto com a compreensão
 

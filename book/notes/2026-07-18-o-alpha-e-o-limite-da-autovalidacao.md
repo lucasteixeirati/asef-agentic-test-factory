@@ -2,7 +2,7 @@
 
 - **Data da matéria-prima:** 2026-07-18
 - **Origem:** avaliação interna I01 + declaração explícita de Lucas
-- **Estado editorial:** rascunho assistido; requer revisão autoral
+- **Estado editorial:** revisado e aprovado pelo autor em 2026-07-19
 
 O Alpha passou por centenas de testes, múltiplas releases e checkers especializados. Ainda assim, quando o próprio autor foi convidado a descrever maturidade e segurança, a primeira resposta foi mais confiante que os documentos e o report permitiam. O episódio não invalida o trabalho técnico; demonstra por que evidência e interpretação precisam ser separadas.
 

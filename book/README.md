@@ -4,6 +4,10 @@
 
 > Como aplicar Quality Engineering à construção de sistemas de software baseados em IA que não se comportam de forma totalmente determinística.
 
+O leitor principal é o engenheiro de qualidade de software que trabalha, ou deseja
+trabalhar, com desenvolvimento assistido por IA, agentes e skills. A forma combina
+diário técnico pessoal, livro prático de engenharia e estudo de caso do ASEF.
+
 ## Método
 
 O livro emergirá da construção. Journals, ADRs, experimentos, commits, releases, revisões e retrospectivas formarão a base factual. O índice é provisório e não obrigará o projeto a produzir acontecimentos imaginados antecipadamente.

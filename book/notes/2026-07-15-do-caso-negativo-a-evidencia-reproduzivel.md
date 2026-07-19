@@ -1,5 +1,7 @@
 # Do caso negativo à evidência reproduzível
 
+- **Estado editorial:** revisado e aprovado pelo autor em 2026-07-19
+
 O incremento 5.5 tornou concreta uma distinção importante: sucesso da suíte não significa que todas as runs terminam em sucesso funcional. Um requisito ambíguo deve esperar; um SUT defeituoso deve pedir revisão; um budget esgotado deve parar; uma operação proibida deve ser bloqueada. Quando esses fatos coincidem com expectativas curadas, o comportamento do sistema está correto.
 
 Essa separação exigiu dois níveis de contrato. `case.json` descreve a intenção semântica e protege o oracle; `demo.json` descreve a fixture determinística, os contadores e o terminal esperado. O runner compara fatos estáveis e exclui identidade operacional do fingerprint. Assim, repetir não significa reproduzir timestamps e IDs, mas reproduzir decisões observáveis.

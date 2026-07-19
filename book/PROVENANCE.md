@@ -27,11 +27,12 @@ O livro trata de desenvolvimento assistido por IA. A origem de cada texto també
 | `notes/2026-07-12-o-contexto-do-qa-como-parte-do-produto.md` | percepção explícita do autor | GPT-5.6 Sol | matéria-prima |
 | `notes/2026-07-13-do-checkout-ao-produto.md` | evidências da 4.R7 + relato explícito do autor | GPT-5.6 Sol | revisado pelo autor em 2026-07-13 |
 | `retrospectives/2026-07-13-etapa-04.md` | código, testes, ADRs, journals + relato explícito do autor | GPT-5.6 Sol | revisado pelo autor em 2026-07-13 |
-| `notes/2026-07-15-dia-06-produtividade-e-revisao.md` | relato explícito de Lucas + evidências de `v0.1.0a3` | estruturação assistida por IA | rascunho assistido |
-| `notes/2026-07-15-do-caso-negativo-a-evidencia-reproduzivel.md` | execução negativa reproduzível, artifacts e journals da Etapa 5 | estruturação assistida por IA | rascunho assistido |
-| `retrospectives/2026-07-18-etapa-05.md` | releases, testes, journals, avaliação I01 + declarações explícitas de Lucas | estruturação assistida por IA | rascunho assistido |
-| `notes/2026-07-18-o-alpha-e-o-limite-da-autovalidacao.md` | avaliação I01 + percepção explícita de Lucas sobre revisão e prova futura | estruturação assistida por IA | rascunho assistido |
-| `notes/2026-07-18-da-skill-ao-envelope-de-run.md` | implementação, testes e decisão de fronteira da 6.3.2 | estruturação assistida por IA | rascunho assistido |
-| `notes/2026-07-18-contrato-nao-e-autoridade-de-rede.md` | implementação, testes, política de rede e journal da 6.3.3 | estruturação assistida por IA | rascunho assistido |
+| `notes/2026-07-15-dia-06-produtividade-e-revisao.md` | relato explícito de Lucas + evidências de `v0.1.0a3` | estruturação assistida por IA | revisado pelo autor em 2026-07-19 |
+| `notes/2026-07-15-do-caso-negativo-a-evidencia-reproduzivel.md` | execução negativa reproduzível, artifacts e journals da Etapa 5 | estruturação assistida por IA | revisado pelo autor em 2026-07-19 |
+| `retrospectives/2026-07-18-etapa-05.md` | releases, testes, journals, avaliação I01 + declarações explícitas de Lucas | estruturação assistida por IA | revisado pelo autor em 2026-07-19 |
+| `notes/2026-07-18-o-alpha-e-o-limite-da-autovalidacao.md` | avaliação I01 + percepção explícita de Lucas sobre revisão e prova futura | estruturação assistida por IA | revisado pelo autor em 2026-07-19 |
+| `notes/2026-07-18-da-skill-ao-envelope-de-run.md` | implementação, testes e decisão de fronteira da 6.3.2 | estruturação assistida por IA | revisado pelo autor em 2026-07-19 |
+| `notes/2026-07-18-contrato-nao-e-autoridade-de-rede.md` | implementação, testes, política de rede e journal da 6.3.3 | estruturação assistida por IA | revisado pelo autor em 2026-07-19 |
+| `notes/2026-07-19-dia-09-autonomia-confianca-e-produto.md` | relato explícito de Lucas + evidências Web UI 6.4.5 | estruturação assistida por IA | revisado pelo autor em 2026-07-19 |
 
 Uma aprovação de gate não aprova automaticamente a voz ou a redação de um capítulo.
