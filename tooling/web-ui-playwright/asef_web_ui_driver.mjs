@@ -111,6 +111,7 @@ function fixtureServer() {
     ["/index.html", ["index.html", "text/html; charset=utf-8"]],
     ["/app.js", ["app.js", "text/javascript; charset=utf-8"]],
     ["/styles.css", ["styles.css", "text/css; charset=utf-8"]],
+    ["/conformance.html", ["conformance.html", "text/html; charset=utf-8"]],
   ]);
   return http.createServer((request, response) => {
     const path = new URL(request.url, allowedOrigin).pathname;
@@ -186,6 +187,9 @@ async function runScenario(browser, plan, scenario) {
     for (const action of scenario.actions) {
       failedStep = action.action_id;
       await executeStep(page, action, 3000);
+      // Popup, download and route events can be delivered just after click resolves.
+      // Drain that bounded browser event turn before accepting the action.
+      if (action.kind === "click") await page.waitForTimeout(100);
       if (policyViolation) throw new Error(`POLICY:${policyViolation}`);
     }
     for (const assertion of scenario.assertions) {

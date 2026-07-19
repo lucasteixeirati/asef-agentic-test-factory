@@ -55,7 +55,7 @@ class DockerWebUiExecutor:
         fixture.mkdir(parents=True, exist_ok=False)
         screenshots.mkdir(parents=True, exist_ok=False)
         source_fixture = Path(__file__).resolve().parents[3] / "examples" / "web-ui"
-        for name in ("index.html", "app.js", "styles.css"):
+        for name in ("index.html", "app.js", "styles.css", "conformance.html"):
             source = source_fixture / name
             if not source.is_file():
                 raise OSError(f"packaged Web UI fixture asset is unavailable: {name}")
@@ -188,3 +188,33 @@ def _strict_object(pairs):
             raise ValueError(f"duplicate JSON key in Web UI execution input: {key}")
         value[key] = item
     return value
+
+
+def web_ui_functional_fingerprint(result: WebUiExecutionResult) -> str:
+    """Return a stable oracle fingerprint, excluding timing and private file names."""
+    result.validate()
+    functional = {
+        "schema_version": result.schema_version,
+        "plan_id": result.plan_id,
+        "status": result.status,
+        "counters": {
+            "tests": result.tests,
+            "passed": result.passed,
+            "failed": result.failed,
+            "errors": result.errors,
+            "timeouts": result.timeouts,
+            "policy_blocked": result.policy_blocked,
+        },
+        "scenarios": [
+            {
+                "scenario_id": item.scenario_id,
+                "status": item.status,
+                "diagnostic_code": item.diagnostic_code,
+                "failed_step_id": item.failed_step_id,
+                "has_private_screenshot": item.screenshot_ref is not None,
+            }
+            for item in result.scenarios
+        ],
+    }
+    encoded = json.dumps(functional, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(encoded.encode("utf-8")).hexdigest()

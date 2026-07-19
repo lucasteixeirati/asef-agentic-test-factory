@@ -125,6 +125,14 @@ dependente do checkpoint próprio.
 
 ### 6.4.5 — dataset de conformance e hardening
 
+**Progresso:** candidata local concluída. O dataset versionado cobre 14 controles,
+com nove casos em Chromium real repetidos duas vezes sob Docker `--network none`.
+Os fingerprints funcionais reconciliaram nas duas repetições. A primeira passagem
+detectou uma corrida pós-click na observação de popup; o driver foi endurecido e a
+matriz completa passou novamente. Navegação externa, secret, adulteração e budget
+são bloqueados antes do browser/container, screenshots permanecem privados e não
+há finding alto ou crítico aberto nesta fatia.
+
 **Entrega:** dataset versionado com casos positivos, negativos e adversariais; repetição para observar flakiness; prova Docker real.
 
 **Matriz mínima:** leitura, mutação resetável, seletor semântico, assertion divergente, timeout, navegação externa, request externo, popup/dialog, download, secret, adulteração, screenshot não publicável e budget.

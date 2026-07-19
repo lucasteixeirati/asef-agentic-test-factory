@@ -284,6 +284,7 @@ class WebUiFixtureTests(unittest.TestCase):
         self.assertEqual([], manifest["external_dependencies"])
         self.assertEqual("in-memory-resettable", manifest["state_model"])
         self.assertEqual("index.html", manifest["entrypoint"])
+        self.assertEqual("conformance.html", manifest["conformance_only_asset"])
         for name in ("index.html", "app.js", "styles.css"):
             self.assertTrue((root / name).is_file(), name)
 

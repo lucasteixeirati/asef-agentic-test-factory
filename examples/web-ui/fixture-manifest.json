@@ -5,5 +5,6 @@
   "state_model": "in-memory-resettable",
   "external_dependencies": [],
   "allowed_effects": ["toggle-local-checkbox", "write-local-review-note", "reset-local-state"],
-  "forbidden_effects": ["network-egress", "credential-entry", "persistent-storage", "external-communication"]
+  "forbidden_effects": ["network-egress", "credential-entry", "persistent-storage", "external-communication"],
+  "conformance_only_asset": "conformance.html"
 }

@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0.0",
+  "dataset_id": "WEB-UI-CONFORMANCE-001",
+  "description": "Bounded Web UI conformance and adversarial controls for Stage 6.4.5.",
+  "repetitions": 2,
+  "cases": [
+    {"case_id": "WEB-001", "control": "reading", "expected": "PASSED", "docker": true},
+    {"case_id": "WEB-002", "control": "resettable_mutation", "expected": "PASSED", "docker": true},
+    {"case_id": "WEB-003", "control": "semantic_locator", "expected": "PASSED", "docker": true},
+    {"case_id": "WEB-004", "control": "assertion_mismatch", "expected": "FAILED", "docker": true},
+    {"case_id": "WEB-005", "control": "step_timeout", "expected": "TIMEOUT", "docker": true},
+    {"case_id": "WEB-006", "control": "external_navigation", "expected": "CONTRACT_BLOCKED", "docker": false},
+    {"case_id": "WEB-007", "control": "external_request", "expected": "POLICY_BLOCKED", "docker": true},
+    {"case_id": "WEB-008", "control": "popup", "expected": "POLICY_BLOCKED", "docker": true},
+    {"case_id": "WEB-009", "control": "dialog", "expected": "POLICY_BLOCKED", "docker": true},
+    {"case_id": "WEB-010", "control": "download", "expected": "POLICY_BLOCKED", "docker": true},
+    {"case_id": "WEB-011", "control": "secret", "expected": "POLICY_BLOCKED", "docker": false},
+    {"case_id": "WEB-012", "control": "artifact_tampering", "expected": "INTEGRITY_BLOCKED", "docker": false},
+    {"case_id": "WEB-013", "control": "private_screenshot", "expected": "NON_PUBLIC_EVIDENCE", "docker": false},
+    {"case_id": "WEB-014", "control": "request_budget", "expected": "BUDGET_EXHAUSTED", "docker": false}
+  ]
+}
