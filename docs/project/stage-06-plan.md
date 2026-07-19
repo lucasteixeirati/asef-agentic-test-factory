@@ -47,7 +47,7 @@ Transformar a fundação do Alpha Python em uma experiência cotidiana verificá
 
 ### 6.4 — TypeScript/Playwright e web UI
 
-**Planejamento:** detalhado em [`stage-06-increment-64-plan.md`](stage-06-increment-64-plan.md). A implementação deve começar somente pela 6.4.1 após aprovação explícita.
+**Progresso:** 6.4.2 aprovada e 6.4.3 concluída localmente como candidata a revisão. Contrato, política, fixture, threat model, toolchain e primeira execução funcional Chromium/Playwright isolada existem; linguagem natural, capability run e dataset de conformance continuam pendentes.
 
 **Escopo inicial:** aplicação web fictícia local, fluxos de leitura e mutações delimitadas, Chromium no container e TypeScript.
 

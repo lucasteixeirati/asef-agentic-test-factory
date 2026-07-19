@@ -1,6 +1,6 @@
 # Plano detalhado do incremento 6.4 — TypeScript, Playwright e Web UI
 
-**Status:** proposto após aprovação da 6.3 em 2026-07-18; implementação aguarda aprovação explícita deste plano.
+**Status:** 6.4.2 aprovada por Lucas em 2026-07-19; 6.4.3 implementada localmente como candidata a revisão.
 
 ## Objetivo
 
@@ -11,9 +11,9 @@ O incremento comprovará somente uma aplicação fictícia local e autorizada. N
 ## Estado de partida
 
 - `node-typescript` está `planned`; a imagem Node por digest comprovou apenas `node --version`;
-- `web-ui` possui contrato documental planejado, sem implementação;
+- `web-ui` partiu de contrato apenas documental; a 6.4.1 agora possui contrato executável, parser, política e fixture, sem browser ou adapter;
 - o envelope genérico de capability run pode ser reutilizado sem incorporar lógica Playwright ao core;
-- não existem tool image Playwright, fixture web, adapter, resultado normalizado ou dataset Web UI;
+- o ponto de partida não possuía tool image, adapter ou resultado Web UI; 6.4.1 e 6.4.2 já materializaram contratos, fixture e toolchain, sem execução de plano ou dataset;
 - a política Docker comum já oferece usuário não privilegiado, rootfs/workspace read-only, limites e rede desligada.
 
 ## Decisões de escopo
@@ -72,17 +72,36 @@ O resultado normalizado deverá distinguir `PASSED`, `FAILED`, `ERROR`, `TIMEOUT
 
 ### 6.4.1 — contratos, threat model e fixture
 
+**Progresso:** candidata local concluída. Contratos de plano e resultado, parsers
+estritos, política fail-closed por host/porta, loader JSON com chaves duplicadas
+negadas, fixture resetável, testes adversariais e threat model foram materializados.
+Isso não executa browser nem promove o perfil Node.
+
 **Entrega:** `WebUiTestPlan`, cenários, ações, localizadores, assertions e resultado; parser estrito; política `web-ui`; fixture local pequena com estado resetável; threat model de browser e evidência visual.
 
 **Aceite:** contratos rejeitam campos desconhecidos, hosts, comandos, scripts, secrets, seletores CSS/XPath livres, ações fora do vocabulário e budgets inválidos. A fixture funciona sem rede e não contém dados privados.
 
 ### 6.4.2 — toolchain TypeScript/Playwright reproduzível
 
+**Progresso:** candidata local concluída. A imagem usa Playwright 1.61.0 Noble por
+digest, Node 24.16.0, Chromium 149.0.7827.55 e package npm 1.61.0 por lockfile. Um
+driver de comandos fechados e um adapter que resolve a tag para image ID comprovam
+Chromium headless como UID/GID 65534, rede desligada, rootfs/workspace read-only,
+output separado e budgets de CPU, memória, PIDs e tempo. Nenhum plano é compilado.
+
 **Entrega:** imagem dedicada por digest, Chromium/Playwright/Node pinados, lockfile, driver controlado e adapter de execução; nenhum `npm install` durante a run.
 
 **Aceite:** build reproduzível; browser inicia como usuário não privilegiado; rootfs read-only; workspace de entrada read-only; output separado; limites de CPU, memória, PIDs e duração; rede externa desligada.
 
 ### 6.4.3 — compilador de plano e primeira execução determinística
+
+**Progresso:** candidata local concluída em 2026-07-19. O compilador produz um
+módulo TypeScript determinístico e data-only, reconciliado byte a byte com o plano
+revisado antes do Docker. O driver serve a fixture em `127.0.0.1:4173` e executa o
+vocabulário fechado no Chromium dentro do mesmo container sem rede. Jornada
+positiva, falha funcional com PNG privado, anti-tamper, identidade de resultado e
+falhas de infraestrutura foram cobertas. Linguagem natural, capability run e
+provider live Web UI continuam pertencendo à 6.4.4.
 
 **Entrega:** compilação do plano declarativo para TypeScript, execução contra fixture, parser de resultado e evidências de falha; abstração de página somente se repetição observada justificar.
 

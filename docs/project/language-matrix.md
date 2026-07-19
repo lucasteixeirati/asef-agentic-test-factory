@@ -7,7 +7,7 @@ Esta matriz descreve implementação, não intenção de roadmap. Definições p
 | Perfil | Ecossistema | Nível atual | Alvo declarado | Evidência |
 |---|---|---|---|---|
 | `python-pytest` | Python 3.13 / pytest | experimental | reference | WF-001, Smoke, adapter pytest, coverage/mutation delimitados |
-| `node-typescript` | Node 22 | planned | supported | somente inicialização histórica de imagem por digest |
+| `node-typescript` | Node 24.16 | planned | supported | contrato/fixture 6.4.1, toolchain 6.4.2 e execução delimitada de plano 6.4.3; sem jornada natural/conformance |
 | `java-junit` | Java 21 | planned | experimental | somente inicialização histórica de imagem por digest |
 | Go | Go | planned | não declarado no código | nenhuma capability executável |
 | .NET | .NET | planned | não declarado no código | nenhuma capability executável |
@@ -29,7 +29,7 @@ As imagens `python-pytest` e `python-quality` são pinadas/reproduzíveis, mas p
 
 ## Perfis planejados
 
-Node declara `unit`, `web-ui`, `backend-api`, `coverage`, `mutation` e `performance` como planned. Java declara `unit`, `backend-api`, `coverage`, `mutation`, `performance` e `mobile` como planned. Nenhuma delas possui adapter ou contrato de resultado ativo no Alpha.
+Node declara `unit`, `web-ui`, `backend-api`, `coverage`, `mutation` e `performance` como planned. `web-ui` possui contrato, política, compilador data-only e execução de fixture isolada; como ainda não possui jornada em linguagem natural nem conformance, não muda de nível. Java declara `unit`, `backend-api`, `coverage`, `mutation`, `performance` e `mobile` como planned e ainda não possui adapter ou contrato ativo.
 
 Ferramentas como Vitest/Jest, Maven/Gradle, JaCoCo, PIT ou Stryker continuam escolhas futuras; não são dependências suportadas por esta matriz.
 

@@ -39,6 +39,7 @@ Não adicione uma dependência opcional ao caminho core por conveniência.
 | Workflow LangGraph | testes de checkpoint/workflow com o extra instalado |
 | Adapter pytest/Docker | build de `tooling/python-pytest` e integrações com `ASEF_RUN_DOCKER_TESTS=1` |
 | Coverage/mutation container | build de `tooling/python-quality` e `ASEF_RUN_QUALITY_DOCKER_TESTS=1` |
+| Toolchain Web UI | build de `tooling/web-ui-playwright` e `ASEF_RUN_WEB_UI_DOCKER_TESTS=1` |
 | Live provider | somente smoke manual autorizado; nunca obrigatório em PR |
 | Dataset/segurança | runner correspondente, fingerprints/reports e ausência de containers gerenciados |
 

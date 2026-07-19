@@ -75,13 +75,13 @@ LANGUAGE_PROFILES = {
             "pytest tool image must be built locally until registry distribution is decided",
             "quality tool image must be built locally until registry distribution is decided",
             "coverage and mutation are validated for the bounded reference profile; external projects require explicit scope and budgets",
-            "backend-api is an under-development loopback-only host adapter; live provider, Docker isolation and external targets are unavailable",
+            "backend-api uses a loopback-only host executor; live planning is opt-in, Docker covers only self-contained conformance, and external targets are unavailable",
         ),
     ),
     "node-typescript": LanguageProfile(
         id="node-typescript",
         ecosystem="node",
-        image="node@sha256:16e22a550f3863206a3f701448c45f7912c6896a62de43add43bb9c86130c3e2",
+        image="mcr.microsoft.com/playwright@sha256:57b65fdc9ceabe0ef613124c7bbe2babcf9362c4d85e382fe3b03604e84b428a",
         version_command=("node", "--version"),
         current_support_level="planned",
         target_support_level="supported",
@@ -90,7 +90,9 @@ LANGUAGE_PROFILES = {
             CapabilityDeclaration(capability, "planned", None, None)
             for capability in ("unit", "web-ui", "backend-api", "coverage", "mutation", "performance")
         ),
-        limitations=("container startup only; end-to-end profile pending Stage 6",),
+        limitations=(
+            "Web UI contracts, local fixture, compilation and a bounded Playwright execution exist, but natural-language runs and end-to-end conformance are pending Stage 6.4",
+        ),
     ),
     "java-junit": LanguageProfile(
         id="java-junit",

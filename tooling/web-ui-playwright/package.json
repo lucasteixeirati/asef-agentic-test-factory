@@ -1,0 +1,12 @@
+{
+  "name": "asef-web-ui-playwright-toolchain",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "24.16.0"
+  },
+  "dependencies": {
+    "@playwright/test": "1.61.0"
+  }
+}

@@ -178,6 +178,7 @@ class CoreImportBoundaryTests(unittest.TestCase):
             ROOT / "src/asef/contracts.py",
             ROOT / "src/asef/evaluation_contracts.py",
             ROOT / "src/asef/security_contracts.py",
+            ROOT / "src/asef/web_ui_contracts.py",
             ROOT / "src/asef/outcomes.py",
             ROOT / "src/asef/languages.py",
         )

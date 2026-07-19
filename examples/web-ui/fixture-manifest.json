@@ -1,0 +1,9 @@
+{
+  "schema_version": "1.0.0",
+  "fixture_id": "WEB-UI-FIXTURE-001",
+  "entrypoint": "index.html",
+  "state_model": "in-memory-resettable",
+  "external_dependencies": [],
+  "allowed_effects": ["toggle-local-checkbox", "write-local-review-note", "reset-local-state"],
+  "forbidden_effects": ["network-egress", "credential-entry", "persistent-storage", "external-communication"]
+}

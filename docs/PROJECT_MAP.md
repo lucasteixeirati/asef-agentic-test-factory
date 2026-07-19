@@ -9,8 +9,8 @@ O fluxo público pretendido é: descrever a necessidade em linguagem natural, fo
 | Necessidade | Entrada principal | Skill | Perfil | Estado atual |
 |---|---|---|---|---|
 | teste unitário Python | requisito e SUT Python delimitado | `unit` | `python-pytest` | experimental |
-| teste de API | requisito, contrato e endpoint autorizado | `backend-api` | a definir por fatia | planejado para 6.3 |
-| teste de site | fluxos, URL e ambiente autorizado | `web-ui` | `node-typescript` | planejado para 6.4 |
+| teste de API | requisito, contrato e endpoint autorizado | `backend-api` | `python-pytest` no adapter atual | parcial em loopback |
+| teste de site | fluxos, URL e ambiente autorizado | `web-ui` | `node-typescript` | contrato/toolchain 6.4.2; execução planejada |
 | teste de código Java | requisito e projeto Maven/Gradle autorizado | `unit` | `java-junit` | planejado para 6.5 |
 
 O Alpha atual não deve ser usado como aprovação de produção nem contra código arbitrariamente hostil. Um alvo publicamente acessível não implica autorização para automatizá-lo.
@@ -66,4 +66,3 @@ Uma skill documentada não está automaticamente implementada. O nível real de 
 - `book/`: evolução editorial;
 - `concepcao/`: material de concepção;
 - `spikes/`: experimentos que não representam suporte do produto.
-
