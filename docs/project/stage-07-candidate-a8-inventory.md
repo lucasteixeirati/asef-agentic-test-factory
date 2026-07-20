@@ -2,8 +2,7 @@
 
 **Fatia:** 7.1 — baseline e candidata do Developer Preview
 
-**Estado:** `READY_FOR_COMMIT_CHECKPOINT`; sem commit de candidata, push, tag ou
-release.
+**Estado:** `REMOTE_CI_APPROVED`; candidata commitada e enviada, sem tag ou release.
 
 ## Identidade anterior
 
@@ -64,10 +63,11 @@ remota, tag, release, distribuição do kit ou contato com participante.
 ## Snapshot de auditoria local
 
 - metadata instalada: `0.1.0a8`;
-- wheel: 237.533 bytes, SHA-256
+- commit funcional: `b830c3856ffde3b6cb623bcbed21753663f357f8`;
+- wheel reconstruído desse commit: 237.533 bytes, SHA-256
   `658f4da0b9acd9678d465ee26c7377db7e83e3c9743b467520d3f850c0121d89`;
-- sdist: 693.503 bytes, SHA-256
-  `5b15770e967aa0f32b31ad317a8454ad48ed302a69d34321496eb6b48c2e4d4e`;
+- sdist reconstruído desse commit: 695.664 bytes, SHA-256
+  `148143f8cf8273dcbfc5bc39b86709562adc72da1e15c3dd01a4a52856e5780d`;
 - regressão: 497 testes, 41 skips condicionais, coverage global 85%;
 - Docker: 28 testes, 25 aprovados e três skips condicionais do host Windows;
 - Smoke `smoke-20260720T165200Z-2c188d81`: 20/20;
@@ -80,7 +80,16 @@ remota, tag, release, distribuição do kit ou contato com participante.
 - scans de source, artifacts e evidência instalada sem findings;
 - zero containers ASEF gerenciados residuais.
 
-Os hashes identificam a árvore de trabalho auditada antes dos documentos de
-fechamento. Eles não são artifacts imutáveis nem hashes de release. Após autorização
-de commit, a candidata deve ser reconstruída do commit exato e revalidada antes de
-qualquer proposta de push/CI.
+## CI pública da candidata
+
+- run: [`29772323987`](https://github.com/lucasteixeirati/asef-agentic-test-factory/actions/runs/29772323987);
+- commit: `b830c3856ffde3b6cb623bcbed21753663f357f8`;
+- resultado: sete de sete jobs aprovados;
+- jobs: `core`, `framework-spikes`, `docker-security`, `alpha-smoke`,
+  `quality-capabilities`, `alpha-security` e `public-experience`;
+- `docker-security` construiu pytest, Web UI e Java e executou as integrações com
+  `ASEF_RUN_JAVA_DOCKER_TESTS=1`.
+
+Os hashes identificam artifacts locais reconstruídos do commit funcional exato. Eles
+não são assets de release e não autorizam publicação. Tag, pré-release e postflight
+remoto permanecem checkpoints separados.

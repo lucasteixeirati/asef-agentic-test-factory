@@ -15,3 +15,9 @@ A CI preparada para uma futura execução remota passou a incluir explicitamente
 imagem e as integrações Java. A candidata permanece local e mutável, pronta somente
 para decisão de commit. Nenhum push, tag, release, provider live, alvo externo ou
 participante foi autorizado ou usado.
+
+Após autorização separada, o commit funcional
+`b830c3856ffde3b6cb623bcbed21753663f357f8` foi enviado à `main`. A CI pública
+`29772323987` aprovou os sete jobs; `docker-security` comprovou também a integração
+Java recém-habilitada. A candidata passou a `REMOTE_CI_APPROVED`, ainda sem tag,
+pré-release, postflight ou autorização para a 7.2.

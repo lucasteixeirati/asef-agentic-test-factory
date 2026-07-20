@@ -839,9 +839,10 @@ fonte operacional é `docs/project/stage-06-plan.md`.
 **Plano executável:** `docs/project/stage-07-developer-preview-plan.md`
 
 **Plano de aceite:** `docs/project/gates/gate-07-acceptance-plan.md`
-**Status:** planejamento detalhado aprovado em 2026-07-20. A 7.1 foi executada
-localmente e a candidata `0.1.0a8` está pronta para checkpoint de commit; push, CI,
-tag, release e contato com participantes aguardam decisões explícitas próprias.
+**Status:** planejamento detalhado aprovado em 2026-07-20. A 7.1 foi aprovada
+localmente e na CI pública `29772323987`; a candidata `0.1.0a8` ainda não possui tag
+ou release. 7.2, publicação e contato com participantes aguardam decisões explícitas
+próprias.
 
 **Aplicação**
 
@@ -971,7 +972,7 @@ Cada nova versão deverá declarar hipótese, baseline, mudança, resultado, lim
 ### Agora — planejamento da Etapa 7
 
 1. plano executável e Gate 7 aprovados em 2026-07-20;
-2. candidata local `0.1.0a8` preparada e auditada; decidir o checkpoint de commit;
+2. candidata `0.1.0a8` commitada, enviada e aprovada em CI; decidir o próximo checkpoint;
 3. congelar protocolo, kit, rubrica, consentimento e instrumentos antes das sessões;
 4. executar ensaio interno e preflight sem contá-los como evidência externa;
 5. decidir separadamente publicação, recrutamento e cada ação externa;

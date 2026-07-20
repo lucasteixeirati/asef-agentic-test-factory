@@ -2,7 +2,7 @@
 
 **Fatia:** 7.1 — baseline e candidata do Developer Preview
 
-**Parecer:** `READY_FOR_COMMIT_CHECKPOINT`
+**Parecer final da 7.1:** `REMOTE_CI_APPROVED`
 
 **Limite:** nenhum push, CI remota, tag, release, kit ou participante autorizado.
 
@@ -29,12 +29,12 @@ produto e preserva uma prova negativa útil do comportamento fail-closed.
 | Artifact | Tamanho | SHA-256 |
 |---|---:|---|
 | `asef_agentic_test_factory-0.1.0a8-py3-none-any.whl` | 237.533 bytes | `658f4da0b9acd9678d465ee26c7377db7e83e3c9743b467520d3f850c0121d89` |
-| `asef_agentic_test_factory-0.1.0a8.tar.gz` | 693.503 bytes | `5b15770e967aa0f32b31ad317a8454ad48ed302a69d34321496eb6b48c2e4d4e` |
+| `asef_agentic_test_factory-0.1.0a8.tar.gz` | 695.664 bytes | `148143f8cf8273dcbfc5bc39b86709562adc72da1e15c3dd01a4a52856e5780d` |
 
-Wheel e sdist passaram no secret scan. O wheel contém contratos e fixtures
+Estes artifacts foram reconstruídos do commit funcional
+`b830c3856ffde3b6cb623bcbed21753663f357f8` e passaram no secret scan. O wheel contém contratos e fixtures
 empacotadas de API, Web UI e Java; o sdist contém tooling, exemplos, datasets e
-planejamento. Os hashes são locais e mutáveis: após um commit autorizado, os
-artifacts precisam ser reconstruídos e auditados a partir do SHA exato.
+planejamento. Os hashes continuam locais e não representam assets publicados.
 
 ## Validação técnica
 
@@ -51,6 +51,9 @@ artifacts precisam ser reconstruídos e auditados a partir do SHA exato.
 
 ## Parecer
 
-A 7.1 atende tecnicamente ao recorte local e pode avançar ao checkpoint humano de
-commit. Este parecer não transforma a árvore em candidata imutável e não autoriza
-push, CI, tag, release, distribuição ou recrutamento. A 7.2 ainda não foi iniciada.
+A 7.1 atende ao recorte técnico local e remoto. O commit funcional foi enviado à
+`main` e a CI pública
+[`29772323987`](https://github.com/lucasteixeirati/asef-agentic-test-factory/actions/runs/29772323987)
+aprovou sete de sete jobs, incluindo Java no `docker-security`. O próximo checkpoint
+não é automático: tag/pré-release, início da 7.2, distribuição ou recrutamento
+continuam sem autorização implícita.
