@@ -94,6 +94,13 @@ rootfs e workspace estão fechados; output e budgets são delimitados.
 
 ### 6.5.3 — compilador e execução normalizada
 
+**Status em 19/07/2026:** concluída localmente. O compilador produz uma classe JUnit
+determinística reconciliada por bytes e SHA-256; staging reconcilia fixture/manifest;
+o executor resolve a imagem para ID e aceita somente um XML Surefire allowlisted. A
+prova Docker classificou corretamente sucesso e falha de assertion, enquanto testes
+adversariais cobrem erro de teste/toolchain, timeout, ausência, XML ativo e tamper de
+identidade.
+
 **Entrega:** Java determinístico, staging, Surefire XML, resultado neutro e integridade.
 
 **Aceite:** positivo passa; assertion falha funcionalmente; compilação/infraestrutura,
