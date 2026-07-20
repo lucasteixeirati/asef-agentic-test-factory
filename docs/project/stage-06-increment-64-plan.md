@@ -1,6 +1,6 @@
 # Plano detalhado do incremento 6.4 — TypeScript, Playwright e Web UI
 
-**Status:** 6.4.1–6.4.6 concluídas localmente como candidata técnica. Nenhuma chamada live foi realizada e a promoção documental permanece reservada à validação final da Etapa 6.
+**Status:** 6.4.1–6.4.6 concluídas; Gate 6 aprovado em 20/07/2026. Nenhuma chamada live foi realizada. `unit` e `web-ui` são parciais no perfil experimental `node-typescript`.
 
 ## Objetivo
 

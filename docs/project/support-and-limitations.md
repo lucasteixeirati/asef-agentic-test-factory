@@ -23,8 +23,8 @@ A CI executa testes do core e provas delimitadas em Linux x86-64, incluindo Secu
 | Perfil | Nível atual | Capabilities comprovadas | Limites |
 |---|---|---|---|
 | `python-pytest` | experimental | `unit` parcial; `backend-api` parcial em loopback; detecção de projeto parcial; coverage e mutation disponíveis no recorte de referência | API ainda executa no host somente contra loopback; imagem pytest precisa de build local; projetos externos não têm compatibilidade geral prometida |
-| `node-typescript` | planejado, candidato a parcial | `web-ui` completa no recorte e unit aritmético de conformance com Node test/TAP | somente Chromium/fixtures locais; unit não possui CLI própria; promoção depende da revisão final; live exige autorização, budget e chave somente no host |
-| `java-junit` | planejado, candidato a experimental | `unit` com contrato, detector Maven, compilador JUnit, toolchain offline, run revisável, Surefire e conformance repetida | somente fixture Calculator empacotada; promoção depende da revisão final; sem projetos externos, Gradle, Kotlin, Spring, API, coverage ou mutation Java |
+| `node-typescript` | experimental | `web-ui` parcial e `unit` parcial no recorte aritmético de conformance com Node test/TAP | somente Chromium/fixtures locais; unit não possui CLI própria; live exige autorização, budget e chave somente no host; demais capabilities planejadas |
+| `java-junit` | experimental | `unit` parcial com contrato, detector Maven, compilador JUnit, toolchain offline, run revisável, Surefire e conformance repetida | somente fixture Calculator empacotada; sem projetos externos, Gradle, Kotlin, Spring, API, coverage ou mutation Java |
 | Go / .NET | planejado | nenhuma capability executável | seleção de tooling e conformance futuras |
 
 Níveis significam:
@@ -42,7 +42,7 @@ O código ainda declara `python-pytest` como experimental com alvo futuro `refer
 
 A capability bloqueia hosts externos, redirects, proxies, credenciais persistidas, headers de transporte e métodos mutáveis por padrão. Requests cotidianos ainda executam no host somente contra endereços literais de loopback; portanto não fazem DNS e não abrem uma superfície de rebinding. Docker foi comprovado apenas em conformance autocontida com rede desligada. Não há autenticação, POST, GraphQL, gRPC, acesso a serviço externo real ou aprovação de produção.
 
-### Web UI candidata local
+### Web UI experimental no recorte local
 
 `web-generate` transforma uma intenção em plano declarativo por cassette ou provider
 live opt-in. O plano persistido por hash precisa ser revisado antes de `web --run-id`.
@@ -56,7 +56,7 @@ fingerprint funcional estável. Isso não autoriza sites externos, login, upload
 pagamento, múltiplos browsers, visual regression, auditoria completa de acessibilidade
 ou compatibilidade geral com projetos TypeScript.
 
-### Java/JUnit candidato local
+### Java/JUnit experimental no recorte local
 
 `java-generate` transforma uma intenção pública em operações declarativas da fixture
 Calculator usando cassette por padrão. O plano é persistido por hash e precisa ser

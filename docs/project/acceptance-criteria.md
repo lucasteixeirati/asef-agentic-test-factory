@@ -33,14 +33,14 @@ Os critérios abaixo foram detalhados na matriz executável `docs/project/gates/
 - manifest e relatório completos;
 - instalação limpa no ambiente de referência.
 
-## Alpha multilíngue — Gate 6 futuro
+## Alpha multilíngue — Gate 6 aprovado em 20/07/2026
 
-- Python referência e TypeScript suportado end-to-end;
+- Python, TypeScript e Java experimentais nos recortes declarados;
 - Java experimental executável;
 - Language Conformance Dataset aprovado conforme o nível;
 - nenhuma regra de domínio alterada apenas para adicionar TypeScript;
 - capabilities e ausências publicadas;
-- coverage e mutation testing operacionais nos perfis suportados;
+- coverage e mutation operacionais no recorte Python e ausências explícitas nos demais;
 - testes metamórficos aplicados onde houver relação válida;
 - Eval Dataset estratificado e relatório de limitações.
 

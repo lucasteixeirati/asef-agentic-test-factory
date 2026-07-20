@@ -17,3 +17,12 @@ class LanguageProfileTests(unittest.TestCase):
     def test_unknown_profile_is_explicit(self) -> None:
         with self.assertRaisesRegex(ValueError, "unknown language profile"):
             get_language_profile("unknown")
+
+    def test_gate_6_promotes_only_observed_node_and_java_capabilities(self) -> None:
+        node = get_language_profile("node-typescript")
+        java = get_language_profile("java-junit")
+        self.assertEqual((node.current_support_level, java.current_support_level), ("experimental", "experimental"))
+        node_status = {item.capability_id: item.implementation_status for item in node.capabilities}
+        java_status = {item.capability_id: item.implementation_status for item in java.capabilities}
+        self.assertEqual((node_status["unit"], node_status["web-ui"], java_status["unit"]), ("partial", "partial", "partial"))
+        self.assertEqual((node_status["coverage"], java_status["mutation"]), ("planned", "planned"))

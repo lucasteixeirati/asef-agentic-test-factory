@@ -1,6 +1,6 @@
 # Plano detalhado da Etapa 6 — experiência multiskill
 
-**Status:** aprovado para execução por Lucas em 2026-07-18.
+**Status:** concluído; Gate 6 aprovado por Lucas em 2026-07-20.
 
 ## Objetivo
 
@@ -47,7 +47,7 @@ Transformar a fundação do Alpha Python em uma experiência cotidiana verificá
 
 ### 6.4 — TypeScript/Playwright e web UI
 
-**Progresso:** 6.4.1–6.4.6 concluídas localmente como candidata técnica. O caminho cassette, capability run/revisão por hash, execução Chromium, live opt-in sem chamada real, dataset adversarial repetido e experiência instalada fora do checkout estão comprovados. A promoção pública permanece pendente da validação final da Etapa 6.
+**Progresso:** 6.4.1–6.4.6 concluídas localmente. O caminho cassette, capability run/revisão por hash, execução Chromium, live opt-in sem chamada real, dataset adversarial repetido e experiência instalada fora do checkout estão comprovados. O Gate 6 promoveu somente `unit` e `web-ui` a partial no perfil experimental `node-typescript`.
 
 **Escopo inicial:** aplicação web fictícia local, fluxos de leitura e mutações delimitadas, Chromium no container e TypeScript.
 
@@ -57,14 +57,11 @@ Transformar a fundação do Alpha Python em uma experiência cotidiana verificá
 
 ### 6.5 — Java/JUnit experimental
 
-**Progresso:** 6.5.1–6.5.6 concluídas localmente como candidata técnica. Contratos,
+**Progresso:** 6.5.1–6.5.6 concluídas localmente. Contratos,
 fixture empacotada, toolchain Maven offline, compilação JUnit determinística, run
 revisável, Surefire normalizado, conformance repetida e experiência instalada estão
-comprovados. O perfil continua planned até a validação final da Etapa 6.
-
-**Progresso:** plano executável detalhado em
-`docs/project/stage-06-increment-65-plan.md`; implementação iniciará por contrato,
-fixture e threat model, sem promoção antecipada.
+comprovados. O Gate 6 promoveu somente `unit` a partial no perfil experimental
+`java-junit`.
 
 **Escopo inicial:** projeto Maven fictício e testes JUnit 5; Gradle, Spring completo e API Java ficam como expansão condicionada.
 
@@ -79,7 +76,7 @@ materializado sobre a mesma intenção aritmética revisada do Java, com compila
 determinística, Node test/TAP nativo e sandbox comum. Coverage/mutation foram
 reconciliados por aplicabilidade (disponíveis em Python; indisponibilidade explícita
 nos demais), relações metamórficas válidas foram versionadas e o pacote Gate 6 foi
-preparado. Falta somente a validação humana final.
+preparado e aprovado pela validação humana final.
 
 **Entrega:** coverage e mutation aplicáveis por perfil, relações metamórficas justificadas, datasets estratificados, regressão de segurança, matriz comparativa, retrospectiva, livro e pacote do Gate 6.
 
@@ -95,11 +92,11 @@ Cada fatia segue: contrato → threat model → implementação mínima → test
 - [x] `backend-api` funciona ponta a ponta em alvo fictício autorizado?
 - [x] `web-ui` funciona ponta a ponta com TypeScript/Playwright?
 - [x] O workflow unitário equivalente funciona em Python, TypeScript e Java experimental no recorte aritmético?
-- [x] Adicionar perfis e skills não contaminou o core com lógica de tooling?
+- [x] O core permaneceu livre de lógica específica de tooling ao adicionar perfis e skills?
 - [x] Agentes permanecem limitados a saídas tipadas, sem autoridade operacional implícita?
 - [x] Coverage, mutation e relações metamórficas produzem evidência útil ou ausência explícita?
 - [x] Datasets distinguem regressão, conformance, benchmark e segurança?
 - [x] Condições herdadas do Gate 5 permanecem explicitamente abertas onde não resolvidas?
 
-O checklist técnico não é a decisão do Gate. A candidata aguarda a validação humana
-única definida em `gates/gate-06-acceptance-plan.md`.
+O checklist técnico foi seguido pela decisão humana registrada em
+`gates/gate-06-acceptance-plan.md`: Gate 6 aprovado em 20/07/2026.

@@ -10,8 +10,8 @@ O fluxo público pretendido é: descrever a necessidade em linguagem natural, fo
 |---|---|---|---|---|
 | teste unitário Python | requisito e SUT Python delimitado | `unit` | `python-pytest` | experimental |
 | teste de API | requisito, contrato e endpoint autorizado | `backend-api` | `python-pytest` no adapter atual | parcial em loopback |
-| teste de site | fluxos, URL e ambiente autorizado | `web-ui` | `node-typescript` | candidata local completa em fixture; promoção pendente |
-| teste de código Java | requisito e fixture Maven autorizada | `unit` | `java-junit` | candidata local completa na fixture Calculator; promoção pendente |
+| teste de site | fluxos, URL e ambiente autorizado | `web-ui` | `node-typescript` | experimental e parcial na fixture local Chromium |
+| teste de código Java | requisito e fixture Maven autorizada | `unit` | `java-junit` | experimental e parcial na fixture Calculator |
 
 O Alpha atual não deve ser usado como aprovação de produção nem contra código arbitrariamente hostil. Um alvo publicamente acessível não implica autorização para automatizá-lo.
 

@@ -1,7 +1,7 @@
 # Plano detalhado do incremento 6.5 — Java 21, Maven e JUnit 5
 
 **Status:** aprovado por delegação para execução local dentro da Etapa 6; promoção
-documental permanece reservada à validação humana final do Gate 6.
+documental foi decidida pela aprovação humana do Gate 6 em 20/07/2026.
 
 ## Objetivo
 
@@ -149,8 +149,8 @@ com material público; regressão, cobertura >=85%, docs, scanner e Docker passa
 
 ## Critério de promoção
 
-Somente `unit` poderá tornar-se `partial` dentro de `java-junit`, e o perfil poderá
-tornar-se `experimental`, após todas as provas e a validação humana final do Gate 6.
+Somente `unit` tornou-se `partial` dentro de `java-junit`, e o perfil tornou-se
+`experimental` após todas as provas e a validação humana final do Gate 6.
 Isso não cria suporte geral a Maven, Java, Kotlin, Spring, Gradle ou projetos reais.
 
 ## Bloqueadores

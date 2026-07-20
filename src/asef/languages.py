@@ -83,15 +83,20 @@ LANGUAGE_PROFILES = {
         ecosystem="node",
         image="mcr.microsoft.com/playwright@sha256:57b65fdc9ceabe0ef613124c7bbe2babcf9362c4d85e382fe3b03604e84b428a",
         version_command=("node", "--version"),
-        current_support_level="planned",
+        current_support_level="experimental",
         target_support_level="supported",
         project_markers=("package.json", "package-lock.json", "tsconfig.json"),
-        capabilities=tuple(
-            CapabilityDeclaration(capability, "planned", None, None)
-            for capability in ("unit", "web-ui", "backend-api", "coverage", "mutation", "performance")
+        capabilities=(
+            CapabilityDeclaration("unit", "partial", "node-test-tap", "NormalizedExecutionResult"),
+            CapabilityDeclaration("web-ui", "partial", "playwright-docker", "WebUiExecutionResult"),
+            CapabilityDeclaration("backend-api", "planned", None, None),
+            CapabilityDeclaration("coverage", "planned", None, None),
+            CapabilityDeclaration("mutation", "planned", None, None),
+            CapabilityDeclaration("performance", "planned", None, None),
         ),
         limitations=(
-            "Web UI contracts, local fixture, compilation and a bounded Playwright execution exist, but natural-language runs and end-to-end conformance are pending Stage 6.4",
+            "web-ui is limited to the packaged local fixture and Chromium; external sites are unavailable",
+            "unit is limited to the arithmetic conformance plan and has no independent public CLI",
         ),
     ),
     "java-junit": LanguageProfile(
@@ -99,14 +104,21 @@ LANGUAGE_PROFILES = {
         ecosystem="java",
         image="eclipse-temurin@sha256:1ff763083f2993d57d0bf374ab10bb3e2cb873af6c13a04458ebbd3e0337dc76",
         version_command=("java", "-version"),
-        current_support_level="planned",
+        current_support_level="experimental",
         target_support_level="experimental",
         project_markers=("pom.xml", "build.gradle", "build.gradle.kts"),
-        capabilities=tuple(
-            CapabilityDeclaration(capability, "planned", None, None)
-            for capability in ("unit", "backend-api", "coverage", "mutation", "performance", "mobile")
+        capabilities=(
+            CapabilityDeclaration("unit", "partial", "maven-surefire-offline", "NormalizedExecutionResult"),
+            CapabilityDeclaration("backend-api", "planned", None, None),
+            CapabilityDeclaration("coverage", "planned", None, None),
+            CapabilityDeclaration("mutation", "planned", None, None),
+            CapabilityDeclaration("performance", "planned", None, None),
+            CapabilityDeclaration("mobile", "planned", None, None),
         ),
-        limitations=("container startup only; tooling selection pending Stage 6",),
+        limitations=(
+            "unit is limited to the packaged Calculator fixture, Maven and JUnit versions pinned by Stage 6",
+            "Gradle, Kotlin, Spring, Android, external projects, coverage and mutation remain unavailable",
+        ),
     ),
 }
 

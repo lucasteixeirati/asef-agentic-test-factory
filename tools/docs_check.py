@@ -333,7 +333,7 @@ class DocumentationChecker:
         for target in required_readme_links:
             if target not in readme:
                 self._add("README_CANONICAL_LINK_MISSING", "README.md", target)
-        for phrase in ("`python-pytest` | experimental", "`node-typescript` | planejado", "`java-junit` | planejado"):
+        for phrase in ("`python-pytest` | experimental", "`node-typescript` | experimental", "`java-junit` | experimental"):
             if phrase not in support:
                 self._add("SUPPORT_MATRIX_DIVERGENCE", self._relative(support_path), phrase)
 

@@ -1,7 +1,7 @@
 # Skill `web-ui`
 
 - **Versão:** 0.1.0-draft
-- **Estado:** candidata local completa; capability continua `planned` até a revisão final autorizar promoção documental.
+- **Estado:** partial no perfil experimental `node-typescript`, somente no recorte local comprovado.
 - **Propósito:** gerar e executar automações de fluxos web autorizados com evidência compreensível.
 - **Escopo inicial:** aplicação fictícia local, Chromium, TypeScript e Playwright.
 - **Fora do escopo inicial:** bypass de controles, scraping irrestrito, CAPTCHA, produção e dispositivos móveis reais.

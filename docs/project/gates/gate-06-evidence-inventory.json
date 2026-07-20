@@ -2,10 +2,13 @@
   "schema_version": "1.0.0",
   "gate_id": "GATE-06",
   "candidate_date_local": "2026-07-19",
-  "decision": "WAITING_FOR_HUMAN_VALIDATION",
+  "decision": "APPROVED",
+  "approval_date_local": "2026-07-20",
+  "approval_statement": "aprovo gate 6",
   "candidate_implementation_commit": "8418712447c0d08ce7d0ed50aaefe9056e35c243",
   "origin_main_observed": "244c817bbabd76d3efa0a4fe7e505212df1ccd6b",
   "regression": {"tests": 495, "skipped": 41, "coverage_percent": 85},
+  "approval_closure_regression": {"tests": 496, "skipped": 41, "coverage_percent": 85, "docs_files": 169, "docs_links": 128},
   "suites": {
     "smoke": {"suite_id": "smoke-20260720T141205Z-ee591469", "matched": 20, "total": 20},
     "security": {"suite_id": "security-20260720T141227Z-6878314a", "passed": 12, "total": 12},
@@ -21,7 +24,8 @@
     "docs/quality/stage-06-quality-consolidation.md",
     "docs/reviews/2026-07-19-retrospectiva-etapa-06.md",
     "docs/project/gates/gate-06-acceptance-plan.md",
-    "docs/project/gates/gate-06-evidence-package.md"
+    "docs/project/gates/gate-06-evidence-package.md",
+    "docs/reviews/2026-07-20-aprovacao-gate-06.md"
   ],
   "boundaries": ["no_push", "no_tag", "no_release", "no_live_provider_call", "no_external_target"]
 }

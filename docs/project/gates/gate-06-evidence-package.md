@@ -1,7 +1,7 @@
 # Pacote de evidências — Gate 6
 
 **Data da candidata:** 19/07/2026  
-**Decisão atual:** aguardando validação humana final de Lucas.
+**Decisão:** aprovado por Lucas em 20/07/2026 (`aprovo gate 6`).
 
 ## Resultado técnico
 
@@ -24,11 +24,16 @@
 - Security `security-20260720T141227Z-6878314a`: 12/12, hash `e3865388…1818`;
 - Java Docker 3/3; Web UI Docker 3/3; TypeScript unit 1/1; quality Docker 3/3;
 - wheel instalado fora do checkout para Web UI e Java;
-- docs 167 arquivos/128 links e secret scan sem findings;
+- docs 167 arquivos/128 links e secret scan sem findings na candidata técnica;
 - nenhum provider live, alvo externo, push, tag ou release.
+
+Após o registro da aprovação, a regressão de fechamento passou com 496 testes, 41
+skips condicionais e cobertura global de 85%; o checker aprovou 169 arquivos e 128
+links, e o secret scan permaneceu sem findings.
 
 ## Limites da decisão
 
-O Gate não prova compatibilidade geral com projetos, produção, sites externos,
+Esta aprovação promove `node-typescript` e `java-junit` a experimentais somente nas
+capabilities comprovadas. O Gate não prova compatibilidade geral com projetos, produção, sites externos,
 Gradle, Kotlin, `.bat`, Spring, autenticação, múltiplos browsers ou segurança contra
 código arbitrariamente hostil. Avaliação externa permanece lacuna deliberada.

@@ -119,10 +119,10 @@ asef smoke      dataset funcional offline
 asef security   dataset de controles offline
 asef cleanup    planejamento/aplicação conservadora sob .asef
 asef api-generate intenção natural para plano REST revisável por cassette (6.3 em desenvolvimento)
-asef api        plano REST declarativo contra fixture loopback autorizada (6.3 em desenvolvimento)
-asef web-generate intenção natural gravada para plano Web UI revisável (6.4 em desenvolvimento)
+asef api        plano REST declarativo contra fixture loopback autorizada (6.3 parcial)
+asef web-generate intenção natural gravada para plano Web UI revisável (6.4 experimental)
 asef web        retoma por run-id e executa a fixture Web UI isolada após revisão
-asef java-generate intenção natural gravada para plano JUnit revisável (6.5 candidata local)
+asef java-generate intenção natural gravada para plano JUnit revisável (6.5 experimental)
 asef java       retoma por run-id e executa a fixture Java isolada após revisão
 ```
 
@@ -136,7 +136,7 @@ Checkpoint humano requer o extra opcional:
 
 ## Suporte e limitações
 
-O único workflow promovido continua sendo `unit` no perfil experimental `python-pytest`, com o SUT fictício calculator e Docker Desktop local. `backend-api` é parcial. `web-ui` e o recorte `java-unit` possuem candidatas locais completas contra fixtures fictícias, mas `node-typescript` e `java-junit` permanecem planejados até a revisão final da Etapa 6. A [matriz canônica](docs/project/support-and-limitations.md) distingue capability comprovada de alvo futuro.
+Os perfis `python-pytest`, `node-typescript` e `java-junit` são experimentais nos recortes comprovados. Em Python, `unit` e `backend-api` são parciais; em Node, `unit` e `web-ui` são parciais; em Java, somente `unit` é parcial. As demais capabilities permanecem planejadas. A [matriz canônica](docs/project/support-and-limitations.md) distingue capability comprovada de alvo futuro.
 
 O modo live exige provider/modelo disponível, tarifas atuais informadas pelo operador e budget positivo. Disponibilidade, preço e câmbio não são congelados no repositório. Nunca coloque chave real em arquivo, argumento, contexto, cassette, report ou issue.
 

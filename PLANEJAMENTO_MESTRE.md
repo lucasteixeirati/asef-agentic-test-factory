@@ -2,7 +2,7 @@
 
 > Documento vivo para orientar a construção da aplicação, da documentação pública e do futuro livro.
 
-**Status:** vigente — Etapa 5 concluída e Gate 5 aprovado com condições em 2026-07-18; Etapa 6 concluída tecnicamente em candidata local, aguardando a única validação humana final do Gate 6
+**Status:** vigente — Etapa 5 concluída e Gate 5 aprovado com condições em 2026-07-18; Etapa 6 concluída e Gate 6 aprovado em 2026-07-20
 **Data de início:** 2026-07-11  
 **Responsável:** Lucas  
 **Natureza:** projeto open source, educacional, experimental e de portfólio  
@@ -787,10 +787,11 @@ As datas serão estimadas após a baseline das primeiras sessões. Os gates são
 
 **Objetivo:** transformar a fundação do Alpha Python em uma experiência cotidiana multiskill, provar a arquitetura com ecossistemas distintos e aprofundar a avaliação de qualidade.
 
-**Status:** candidata técnica local concluída. 6.0–6.6 possuem evidência; API, Web
-UI, Java/JUnit e unit TypeScript de conformance passaram nos recortes autorizados.
-O pacote do Gate 6 aguarda uma única validação humana final, sem promoção, push, tag
-ou release antecipados. A fonte operacional é `docs/project/stage-06-plan.md`.
+**Status:** concluída. 6.0–6.6 possuem evidência; API, Web UI, Java/JUnit e unit
+TypeScript de conformance passaram nos recortes autorizados. Lucas aprovou o Gate 6
+em 2026-07-20. `node-typescript` e `java-junit` foram promovidos a experimentais
+somente nas capabilities comprovadas, sem autorização para push, tag ou release. A
+fonte operacional é `docs/project/stage-06-plan.md`.
 
 **Aplicação**
 
@@ -823,13 +824,13 @@ ou release antecipados. A fonte operacional é `docs/project/stage-06-plan.md`.
 
 **Gate 6**
 
-- [ ] A jornada em linguagem natural é compreensível e auditável?
+- [x] A jornada em linguagem natural é compreensível e auditável?
 - [x] `backend-api` e `web-ui` funcionam ponta a ponta em alvos fictícios autorizados?
-- [ ] O workflow unitário equivalente funciona em Python, TypeScript e Java experimental?
-- [ ] Adicionar a segunda linguagem exigiu mudanças indevidas no core?
-- [ ] Skills e papéis agênticos permanecem limitados por contratos e checkpoints?
-- [ ] Mutation e demais técnicas produzem evidência útil, não apenas métricas decorativas?
-- [ ] Datasets distinguem regressão rápida, benchmark e segurança?
+- [x] O workflow unitário equivalente funciona em Python, TypeScript e Java experimental?
+- [x] O core permaneceu livre de mudanças indevidas ao adicionar outros ecossistemas?
+- [x] Skills e papéis agênticos permanecem limitados por contratos e checkpoints?
+- [x] Mutation e demais técnicas produzem evidência útil, não apenas métricas decorativas?
+- [x] Datasets distinguem regressão rápida, benchmark e segurança?
 
 ### Etapa 7 — Developer preview
 
@@ -955,13 +956,13 @@ Cada nova versão deverá declarar hipótese, baseline, mudança, resultado, lim
 
 ## 22. Backlog priorizado vigente
 
-### Agora — Etapa 6 em execução
+### Agora — transição após a Etapa 6
 
 1. 6.0–6.2 concluídos: roadmap, mapa, jornada e contratos visíveis;
 2. 6.3 `backend-api` concluído como primeira fatia cotidiana;
-3. 6.4 concluído localmente: TypeScript/Playwright e `web-ui` candidatos à revisão final;
-4. 6.5 Java/JUnit concluído localmente;
-5. 6.6 consolidado; obter a validação humana final do Gate 6;
+3. 6.4 concluído: TypeScript/Playwright e `web-ui` parcial no perfil Node experimental;
+4. 6.5 concluído: `unit` parcial no perfil Java experimental;
+5. 6.6 e Gate 6 concluídos e aprovados em 2026-07-20;
 6. preservar e reconciliar as condições do Gate 5 em todas as fatias.
 
 ### Sequência aprovada
@@ -1080,6 +1081,6 @@ Decisões já encerradas e registradas: nome público ASEF; licença MIT; Python
 
 ## 27. Próxima decisão
 
-Submeter o pacote local do Gate 6 a uma única validação humana final. Até a decisão,
-nenhum perfil/skill é promovido e não há autorização implícita para push, tag,
-release, provider live ou alvo externo.
+Planejar detalhadamente a Etapa 7 antes de iniciar sua execução. A aprovação do Gate
+6 não autoriza implicitamente push, tag, release, provider live, alvo externo ou
+participação de avaliadores externos.

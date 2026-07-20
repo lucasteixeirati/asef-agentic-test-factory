@@ -1,10 +1,10 @@
 # Plano de aceitação do Gate 6
 
-**Estado:** candidata local pronta para uma única validação humana final.
+**Estado:** aprovado por Lucas em 20/07/2026, com a declaração `aprovo gate 6`.
 
-Lucas deve revisar o pacote, confirmar que a jornada e os limites correspondem ao
-produto desejado e decidir `APROVAR`, `APROVAR COM CONDIÇÕES` ou `REJEITAR`. Esta
-validação não autoriza automaticamente push, tag ou release.
+Lucas revisou o pacote e aprovou o Gate 6. A decisão promove somente os recortes
+comprovados e não autoriza automaticamente push, tag, release, provider live ou alvo
+externo.
 
 ## Checklist humano final
 
@@ -14,4 +14,6 @@ validação não autoriza automaticamente push, tag ou release.
 - skills/agentes não escolhem comandos, rede, dependências ou promoção;
 - quality/metamórfico ajudam análise sem virar threshold decorativo;
 - lacunas externas continuam visíveis: usuários externos, Kotlin, `.bat` e projetos reais;
-- níveis candidatos (`node-typescript`, `java-junit`) só serão promovidos após esta decisão.
+- `node-typescript` é experimental com `unit` e `web-ui` parciais;
+- `java-junit` é experimental somente com `unit` parcial;
+- as demais capabilities e lacunas permanecem planejadas ou abertas.
