@@ -108,6 +108,12 @@ timeout, ausência de testes, tamper e identidade divergente permanecem distinto
 
 ### 6.5.4 — linguagem natural, run e revisão
 
+**Status em 19/07/2026:** concluída localmente. `java-generate` cria a run antes da
+geração, usa cassette por padrão, contabiliza usage/budgets, persiste o plano por
+hash e para em `WAITING_FOR_HUMAN_REVIEW`; `java --run-id` é a aprovação explícita,
+executa somente o plano reconciliado e persiste resultado normalizado mais XML
+Surefire. O modo live existe sob orçamento/preço explícitos, mas não foi chamado.
+
 **Entrega:** `java-generate` por cassette, plano persistido por hash e `java --run-id`
 após checkpoint; live permanece não chamado até prova separada futura.
 

@@ -1,0 +1,10 @@
+{
+  "schema_name": "java_unit_plan_v1",
+  "model": "recorded-demo",
+  "response_id": "java-unit-plan-demo-001",
+  "usage": {"input_tokens": 72, "output_tokens": 58},
+  "output": {"scenarios": [
+    {"description": "Add two positive values", "operation": "add", "left": 2, "right": 3, "expected": 5},
+    {"description": "Reject division by zero", "operation": "divide", "left": 1, "right": 0, "expected": "ArithmeticException"}
+  ]}
+}

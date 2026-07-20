@@ -9,6 +9,8 @@ from uuid import uuid4
 from ..api_contracts import ApiExecutionResult, ApiTestPlan, api_plan_from_dict
 from ..capability_runs import CapabilityRunContractError, CapabilityRunState, capability_run_from_dict
 from ..contracts import EvidenceRef
+from ..application.ports import ExecutionOutput
+from ..java_unit_contracts import JavaUnitTestPlan, java_unit_plan_from_dict
 from ..openapi_contracts import OpenApiSummary
 from ..web_ui_contracts import WebUiExecutionResult, WebUiTestPlan, web_ui_plan_from_dict
 
@@ -110,6 +112,43 @@ class CapabilityRunStore:
         state.evidence_refs.append(ref)
         self.save_state(state)
         return ref
+
+    def save_java_plan(self, state: CapabilityRunState, plan: JavaUnitTestPlan) -> EvidenceRef:
+        plan.validate()
+        path = self._run_dir(state.run_id, require_existing=True) / "artifacts" / "java-unit-plan.json"
+        self._write_json(path, plan.to_dict())
+        ref = EvidenceRef("java_unit_test_plan", "artifacts/java-unit-plan.json", self._sha256(path))
+        state.plan_id, state.plan_sha256 = plan.plan_id, ref.sha256
+        state.evidence_refs.append(ref); self.save_state(state)
+        return ref
+
+    def load_java_plan(self, state: CapabilityRunState) -> JavaUnitTestPlan:
+        if state.plan_sha256 is None: raise CapabilityRunContractError("capability run has no Java unit plan")
+        path = self._run_dir(state.run_id, require_existing=True) / "artifacts" / "java-unit-plan.json"
+        if not path.is_file() or self._sha256(path) != state.plan_sha256:
+            raise CapabilityRunContractError("persisted Java unit plan integrity mismatch")
+        plan = java_unit_plan_from_dict(self._read_json(path))
+        if plan.plan_id != state.plan_id: raise CapabilityRunContractError("persisted Java unit plan identity mismatch")
+        return plan
+
+    def save_java_result(self, state: CapabilityRunState, result: ExecutionOutput) -> tuple[EvidenceRef, ...]:
+        run_dir = self._run_dir(state.run_id, require_existing=True)
+        value = {
+            "schema_version": "1.0.0", "image": result.image, "command": list(result.command),
+            "exit_code": result.exit_code, "duration_ms": result.duration_ms, "tests": result.tests,
+            "passed": result.passed, "failed": result.failed, "errors": result.errors,
+            "skipped": result.skipped, "tool_id": result.tool_id, "tool_version": result.tool_version,
+            "outcome": result.outcome.value, "timed_out": result.timed_out,
+            "stdout_truncated": result.stdout_truncated, "stderr_truncated": result.stderr_truncated,
+        }
+        path = run_dir / "results" / "java-unit-result.json"; self._write_json(path, value)
+        refs = [EvidenceRef("java_unit_execution_result", "results/java-unit-result.json", self._sha256(path))]
+        if result.raw_result_content is not None:
+            native = run_dir / "results" / "surefire.xml"
+            native.write_text(result.raw_result_content, encoding="utf-8")
+            refs.append(EvidenceRef("java_unit_surefire_xml", "results/surefire.xml", self._sha256(native)))
+        state.evidence_refs.extend(refs); self.save_state(state)
+        return tuple(refs)
 
     def register_evidence(self, state: CapabilityRunState, kind: str, path: Path) -> EvidenceRef:
         run_dir = self._run_dir(state.run_id, require_existing=True)
