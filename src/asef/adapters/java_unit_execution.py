@@ -38,7 +38,7 @@ class DockerJavaUnitExecutor:
     def stage(plan: JavaUnitTestPlan, root: Path) -> tuple[Path, Path]:
         JavaUnitSkill().validate(plan)
         artifact = JavaUnitTestCompiler.compile(plan)
-        public_fixture = Path(__file__).resolve().parents[3] / "examples" / "java-junit"
+        public_fixture = Path(__file__).resolve().parents[1] / "fixtures" / "java_junit"
         JavaMavenProjectDetector().detect(public_fixture)
         workspace, output = root / "workspace", root / "output"
         reports = output / "surefire"

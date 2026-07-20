@@ -38,6 +38,20 @@ class JavaUnitToolchainTests(unittest.TestCase):
                 "asef.adapters.java_unit_toolchain", fromlist=["_strict_object"]
             )._strict_object)
 
+    def test_error_probe_and_infrastructure_fallback_are_strict(self):
+        raw = {field: getattr(JavaUnitToolchainProbeResult.infrastructure_error(), field)
+               for field in JavaUnitToolchainProbeResult.__dataclass_fields__}
+        self.assertEqual("SANDBOX_EXECUTION_ERROR", java_unit_toolchain_probe_from_dict(raw).diagnostic_code)
+        raw["diagnostic_code"] = "UNKNOWN"
+        with self.assertRaises(JavaUnitToolchainError): java_unit_toolchain_probe_from_dict(raw)
+
+    def test_missing_image_is_rejected_before_probe(self):
+        def executor(command, **kwargs):
+            del kwargs
+            return subprocess.CompletedProcess(command, 1, "", "missing")
+        with TemporaryDirectory() as temporary:
+            with self.assertRaises(OSError): DockerJavaUnitToolchainProbe(Path(temporary), executor)._resolve_image_id()
+
     def test_adapter_resolves_tag_to_image_id_and_returns_native_result(self):
         image_id = "sha256:" + "a" * 64
         probe = self.valid()

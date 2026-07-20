@@ -24,7 +24,7 @@ A CI executa testes do core e provas delimitadas em Linux x86-64, incluindo Secu
 |---|---|---|---|
 | `python-pytest` | experimental | `unit` parcial; `backend-api` parcial em loopback; detecção de projeto parcial; coverage e mutation disponíveis no recorte de referência | API ainda executa no host somente contra loopback; imagem pytest precisa de build local; projetos externos não têm compatibilidade geral prometida |
 | `node-typescript` | planejado, candidato a parcial | `web-ui` com contrato, toolchain, execução, jornada gravada, conformance adversarial e fixture empacotada | somente Chromium e fixture local; promoção depende da revisão final; live exige autorização, budget, tarifas e chave somente no host |
-| `java-junit` | planejado | inicialização histórica de container Java 21 por digest | sem detecção, build, test runner, normalização ou quality end-to-end |
+| `java-junit` | planejado, candidato a experimental | `unit` com contrato, detector Maven, compilador JUnit, toolchain offline, run revisável, Surefire e conformance repetida | somente fixture Calculator empacotada; promoção depende da revisão final; sem projetos externos, Gradle, Kotlin, Spring, API, coverage ou mutation Java |
 | Go / .NET | planejado | nenhuma capability executável | seleção de tooling e conformance futuras |
 
 Níveis significam:
@@ -56,6 +56,22 @@ fingerprint funcional estável. Isso não autoriza sites externos, login, upload
 pagamento, múltiplos browsers, visual regression, auditoria completa de acessibilidade
 ou compatibilidade geral com projetos TypeScript.
 
+### Java/JUnit candidato local
+
+`java-generate` transforma uma intenção pública em operações declarativas da fixture
+Calculator usando cassette por padrão. O plano é persistido por hash e precisa ser
+revisado antes de `java --run-id`. Um compilador determinístico — não o modelo —
+define package, imports, classe e métodos JUnit. Maven 3.9.16, Java 21.0.11, JUnit
+5.13.4, compiler 3.14.1 e Surefire 3.5.5 ficam na imagem dedicada; a run usa cache
+offline, rede desligada, UID/GID não-root, rootfs/workspace read-only e output
+separado. O XML Surefire é a evidência nativa autoritativa.
+
+A conformance distingue sucesso, assertion failure e rejeições adversariais/de
+segurança; os casos executáveis repetiram duas vezes com fingerprint estável. O
+recorte não aceita Java livre, POM do usuário, dependências, repositórios, Gradle,
+Kotlin, Spring, Android, API Java, coverage, mutation ou projetos externos. O modo
+live permanece opt-in e não foi chamado nesta validação.
+
 ## Sandbox e segurança
 
 O código gerado executa em container efêmero, com usuário não privilegiado, rede desabilitada, workspace read-only, output separado, imagem/argv controlados e budgets. O daemon Docker e o host permanecem parte da fronteira confiável. No ambiente de referência existe o diagnóstico `DOCKER_INSECURE_NO_IPTABLES_RAW`; os controles reduzem risco, mas não provam ausência de escape, vulnerabilidade do daemon, canal lateral ou negação de serviço no host.
@@ -79,7 +95,10 @@ Não há secure erase, backup, recuperação ou garantia de espaço físico libe
 - **Smoke:** dez casos públicos e pequenos do WF-001, executados duas vezes na baseline publicada (20/20). Eles provam regressão determinística desses casos, não eficácia geral, ausência de vazamento, qualidade estatística ou desempenho em projetos reais.
 - **Security:** doze controles enumerados (12/12 no ambiente registrado). O resultado prova apenas os controles, versões e precondições observados; não é certificação, pentest ou garantia contra código hostil.
 - **Quality:** coverage e mutation usam fixtures e budgets delimitados. Percentuais e mutation score não são limiares universais de aceitação do produto.
-- Evaluation, Holdout e Language Conformance completos continuam futuros.
+- **Java Language Conformance:** quatro casos versionados (positivo, negativo,
+  adversarial e segurança); os dois executáveis foram repetidos duas vezes. É prova
+  somente da fixture Calculator, não uma matriz geral de projetos Java.
+- Evaluation e Holdout completos continuam futuros.
 
 ## Evidência e operação
 

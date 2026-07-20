@@ -36,7 +36,7 @@
       "category": "security",
       "expected_outcome": "POLICY_REJECTED",
       "plan": {"schema_version": "1.0.0", "plan_id": "JAV-CONF-SECRET", "fixture_id": "JAVA-CALCULATOR-001", "scenarios": [
-        {"scenario_id": "SCN-SECRET", "description": "password=example", "operation": "add", "left": 1, "right": 1, "expected": 2}
+        {"scenario_id": "SCN-SECRET", "description": "password marker", "operation": "add", "left": 1, "right": 1, "expected": 2}
       ]}
     }
   ]

@@ -4,6 +4,7 @@ import hashlib
 from pathlib import Path
 from tempfile import TemporaryDirectory
 import unittest
+import subprocess
 
 from asef.adapters.java_unit_compiler import JavaUnitTestCompiler
 from asef.adapters.java_unit_execution import DockerJavaUnitExecutor, normalize_surefire_result
@@ -67,6 +68,49 @@ class JavaUnitCompilerTests(unittest.TestCase):
         duplicate = '<testsuite tests="2" failures="0" errors="0" skipped="0"><testcase name="case_001_a"/><testcase name="case_001_a"/></testsuite>'
         self.assertIs(normalize_surefire_result(shuffled, 0, names)[-1], TestExecutionOutcome.PASSED)
         self.assertIs(normalize_surefire_result(duplicate, 0, names)[-1], TestExecutionOutcome.TOOL_ERROR)
+
+    def test_executor_resolves_image_runs_hardened_and_reads_single_native_report(self):
+        image_id = "sha256:" + "c" * 64
+        captured = []
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            workspace, output = DockerJavaUnitExecutor.stage(plan(), root)
+            artifact = JavaUnitTestCompiler.compile(plan())
+            native = (
+                '<testsuite tests="2" failures="0" errors="0" skipped="0">'
+                + "".join(f'<testcase name="{name}"/>' for name in reversed(artifact.test_names))
+                + "</testsuite>"
+            )
+            def executor(command, **kwargs):
+                del kwargs
+                captured.append(command)
+                if command[:3] == ["docker", "image", "inspect"]:
+                    return subprocess.CompletedProcess(command, 0, image_id + "\n", "")
+                if command[:3] == ["docker", "ps", "-aq"]:
+                    return subprocess.CompletedProcess(command, 0, "", "")
+                spec = next(item for item in command if "dst=/asef-output" in item)
+                output_path = Path(spec.split("src=", 1)[1].split(",dst=", 1)[0])
+                (output_path / "surefire/TEST-generated.xml").write_text(native, encoding="utf-8")
+                return subprocess.CompletedProcess(command, 0, "BUILD SUCCESS", "")
+            adapter = DockerJavaUnitExecutor(root, executor)
+            result = adapter.execute(workspace, output)
+        self.assertIs(result.outcome, TestExecutionOutcome.PASSED)
+        self.assertEqual((result.image, result.tests, result.tool_version), (image_id, 2, "3.5.5"))
+        docker_run = next(command for command in captured if command[:2] == ["docker", "run"])
+        self.assertIn("none", docker_run)
+        self.assertIn("--read-only", docker_run)
+
+    def test_executor_rejects_invalid_image_and_output_allowlist(self):
+        def missing(command, **kwargs):
+            del kwargs
+            return subprocess.CompletedProcess(command, 1, "", "missing")
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            with self.assertRaises(OSError): DockerJavaUnitExecutor(root, missing)._resolve_image_id()
+            report = root / "reports"; report.mkdir()
+            (report / "unexpected.txt").write_text("x", encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "allowlist"):
+                DockerJavaUnitExecutor._read_single_report(report)
 
 
 if __name__ == "__main__": unittest.main()

@@ -136,6 +136,11 @@ imports ou branches de Maven/JUnit/Java.
 
 ### 6.5.6 — documentação e experiência instalada
 
+**Status em 19/07/2026:** concluída localmente. Tutorial, arquitetura, matriz,
+limitações, skill, mapa, README, journal, livro e revisão foram reconciliados. O
+wheel contém cassette, POM, manifest e Calculator; instalado em venv temporário fora
+do checkout, gerou uma run revisável e executou 2/2 como `SUCCEEDED/ACCEPTED`.
+
 **Entrega:** tutorial, arquitetura, matriz, limitações, journal, livro, wheel/sdist e
 revisão local.
 

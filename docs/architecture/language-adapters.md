@@ -61,6 +61,22 @@ Conformidade não significa gerar código idêntico ou ignorar práticas idiomá
 
 `pytest-docker-junit` é o primeiro adapter real de test runner do perfil Python. Ele usa imagem derivada pinada, JUnit XML nativo, workspace read-only e output mount separado. O perfil continua experimental/parcial até o adapter ser integrado ao workflow completo, à distribuição da imagem e ao oracle independente.
 
+## Implementação Java candidata no 6.5
+
+O recorte `java-junit` materializa a composição sem alterar o core neutro:
+
+```text
+JavaUnitPlanAgent -> JavaUnitSkill -> JavaMavenProjectDetector
+                  -> JavaUnitTestCompiler -> DockerJavaUnitExecutor
+                  -> Surefire XML -> ExecutionOutput / capability run evidence
+```
+
+O plano contém somente operações da fixture Calculator. O runtime controla POM,
+source, package, imports, Maven argv, imagem e budgets. A imagem por digest prepara
+as dependências no build; a run é offline e aceita somente um XML Surefire
+allowlisted. Esta implementação não é um `JavaMavenProfile` geral e não inclui
+dependency manager configurável, Gradle, coverage ou mutation.
+
 ## Níveis de suporte
 
 - **Referência:** todas as capacidades obrigatórias e documentação completa.

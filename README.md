@@ -90,6 +90,7 @@ Para usar o Alpha atual:
 - [tutorial live](docs/tutorials/wf-001-live.md) — provider opt-in, secret no host e budget explícito.
 - [tutorial backend API local](docs/tutorials/backend-api-local.md) — intenção natural gravada, revisão por run, execução loopback e evidências da Etapa 6.
 - [tutorial Web UI local](docs/tutorials/web-ui-local.md) — geração gravada, revisão do plano e Chromium isolado contra fixture fictícia.
+- [tutorial Java/JUnit local](docs/tutorials/java-junit-local.md) — intenção gravada, revisão por hash e Maven/JUnit offline na fixture Calculator.
 
 Referências técnicas atuais:
 
@@ -121,6 +122,8 @@ asef api-generate intenção natural para plano REST revisável por cassette (6.
 asef api        plano REST declarativo contra fixture loopback autorizada (6.3 em desenvolvimento)
 asef web-generate intenção natural gravada para plano Web UI revisável (6.4 em desenvolvimento)
 asef web        retoma por run-id e executa a fixture Web UI isolada após revisão
+asef java-generate intenção natural gravada para plano JUnit revisável (6.5 candidata local)
+asef java       retoma por run-id e executa a fixture Java isolada após revisão
 ```
 
 Exit codes: `0` sucesso, `2` input/contexto, `3` espera humana, `4` falha funcional, `5` policy, `6` budget, `7` provider/infraestrutura e `130` cancelamento.
@@ -133,7 +136,7 @@ Checkpoint humano requer o extra opcional:
 
 ## Suporte e limitações
 
-O único workflow promovido continua sendo `unit` no perfil experimental `python-pytest`, com o SUT fictício calculator e Docker Desktop local. `backend-api` é parcial: cassette, plano revisável, retomada por run, budgets/evidências e REST read-only contra loopback no host. `web-ui` possui candidata local completa contra fixture fictícia, incluindo conformance adversarial, mas `node-typescript` permanece planejado até a revisão final da Etapa 6. Java continua planejado. A [matriz canônica](docs/project/support-and-limitations.md) distingue capability comprovada de alvo futuro.
+O único workflow promovido continua sendo `unit` no perfil experimental `python-pytest`, com o SUT fictício calculator e Docker Desktop local. `backend-api` é parcial. `web-ui` e o recorte `java-unit` possuem candidatas locais completas contra fixtures fictícias, mas `node-typescript` e `java-junit` permanecem planejados até a revisão final da Etapa 6. A [matriz canônica](docs/project/support-and-limitations.md) distingue capability comprovada de alvo futuro.
 
 O modo live exige provider/modelo disponível, tarifas atuais informadas pelo operador e budget positivo. Disponibilidade, preço e câmbio não são congelados no repositório. Nunca coloque chave real em arquivo, argumento, contexto, cassette, report ou issue.
 

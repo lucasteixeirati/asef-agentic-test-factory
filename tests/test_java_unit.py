@@ -10,6 +10,7 @@ import json
 from asef.adapters.java_maven_project import JavaMavenProjectDetector, JavaMavenProjectError
 from asef.java_unit_contracts import JavaUnitContractError, JavaUnitScenario, JavaUnitTestPlan, java_unit_plan_from_dict
 from asef.skills.java_unit import JavaUnitPolicy, JavaUnitPolicyError, JavaUnitSkill
+from asef.adapters.java_unit_plan_file import JavaUnitPlanFileAdapter
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -97,6 +98,34 @@ class JavaMavenProjectDetectorTests(unittest.TestCase):
         bootstrap = ROOT / "tooling/java-junit/bootstrap"
         for relative in ("pom.xml", "src/main/java/com/asef/fixture/Calculator.java"):
             self.assertEqual((public / relative).read_bytes(), (bootstrap / relative).read_bytes())
+
+    def test_packaged_fixture_matches_the_public_fixture(self):
+        public = ROOT / "examples/java-junit"
+        packaged = ROOT / "src/asef/fixtures/java_junit"
+        for relative in ("pom.xml", "fixture-manifest.json", "src/main/java/com/asef/fixture/Calculator.java"):
+            self.assertEqual((public / relative).read_bytes(), (packaged / relative).read_bytes())
+
+
+class JavaUnitPlanFileTests(unittest.TestCase):
+    def test_file_adapter_round_trips_and_rejects_duplicate_keys(self):
+        scenario = JavaUnitScenario("SCN-001", "Add", "add", 1, 2, 3)
+        plan = JavaUnitTestPlan("JAV-FILE-001", (scenario,))
+        with TemporaryDirectory() as temporary:
+            path = Path(temporary) / "nested/plan.json"
+            adapter = JavaUnitPlanFileAdapter()
+            self.assertEqual(plan, adapter.load(adapter.save(path, plan)))
+            path.write_text('{"schema_version":"1.0.0","schema_version":"1.0.0"}', encoding="utf-8")
+            with self.assertRaises(JavaUnitContractError): adapter.load(path)
+
+    def test_file_adapter_rejects_missing_empty_and_invalid_json(self):
+        with TemporaryDirectory() as temporary:
+            path = Path(temporary) / "plan.json"
+            adapter = JavaUnitPlanFileAdapter()
+            with self.assertRaises(JavaUnitContractError): adapter.load(path)
+            path.write_text("", encoding="utf-8")
+            with self.assertRaises(JavaUnitContractError): adapter.load(path)
+            path.write_text("{", encoding="utf-8")
+            with self.assertRaises(JavaUnitContractError): adapter.load(path)
 
 
 if __name__ == "__main__": unittest.main()

@@ -57,6 +57,11 @@ Transformar a fundação do Alpha Python em uma experiência cotidiana verificá
 
 ### 6.5 — Java/JUnit experimental
 
+**Progresso:** 6.5.1–6.5.6 concluídas localmente como candidata técnica. Contratos,
+fixture empacotada, toolchain Maven offline, compilação JUnit determinística, run
+revisável, Surefire normalizado, conformance repetida e experiência instalada estão
+comprovados. O perfil continua planned até a validação final da Etapa 6.
+
 **Progresso:** plano executável detalhado em
 `docs/project/stage-06-increment-65-plan.md`; implementação iniciará por contrato,
 fixture e threat model, sem promoção antecipada.

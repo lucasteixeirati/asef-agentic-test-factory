@@ -7,10 +7,10 @@ import unittest
 
 from asef.adapters.capability_run_store import CapabilityRunStore
 from asef.adapters.gateway import ModelResult
-from asef.adapters.java_unit_plan_agent import JavaUnitPlanAgentAdapter, JavaUnitPlanOutputError
+from asef.adapters.java_unit_plan_agent import JavaUnitPlanAgentAdapter, JavaUnitPlanAgentPricing, JavaUnitPlanOutputError
 from asef.application.java_unit_run import ExecuteJavaUnitPlanService, GenerateJavaUnitPlanService
-from asef.application.ports import ExecutionOutput
-from asef.capability_runs import CapabilityRunClassification, CapabilityRunContractError, CapabilityRunStatus
+from asef.application.ports import ExecutionOutput, ProviderTransientError
+from asef.capability_runs import CapabilityRunBudgets, CapabilityRunClassification, CapabilityRunContractError, CapabilityRunStatus
 from asef.contracts import TestExecutionOutcome
 
 
@@ -56,6 +56,49 @@ class CapabilityJavaUnitRunTests(unittest.TestCase):
         for value in malformed:
             with self.subTest(value=value), self.assertRaises(JavaUnitPlanOutputError):
                 JavaUnitPlanAgentAdapter(Gateway(value)).generate("Test arithmetic")
+
+    def test_zero_and_token_budgets_stop_at_the_correct_boundary(self):
+        with tempfile.TemporaryDirectory(dir=".asef") as directory:
+            store = CapabilityRunStore(Path(directory)); gateway = Gateway()
+            stopped = GenerateJavaUnitPlanService(JavaUnitPlanAgentAdapter(gateway), store).execute(
+                "Test arithmetic", CapabilityRunBudgets(max_model_calls=0)
+            )
+            self.assertEqual(CapabilityRunStatus.BUDGET_EXHAUSTED, stopped.state.status)
+            self.assertEqual(0, gateway.calls)
+        with tempfile.TemporaryDirectory(dir=".asef") as directory:
+            store = CapabilityRunStore(Path(directory))
+            stopped = GenerateJavaUnitPlanService(JavaUnitPlanAgentAdapter(Gateway()), store).execute(
+                "Test arithmetic", CapabilityRunBudgets(max_input_tokens=1, max_output_tokens=1)
+            )
+            self.assertEqual((CapabilityRunStatus.BUDGET_EXHAUSTED, 70, 50),
+                             (stopped.state.status, stopped.state.usage.input_tokens, stopped.state.usage.output_tokens))
+
+    def test_transient_retry_and_live_pricing_are_accounted(self):
+        class RetryGateway(Gateway):
+            def generate(self, **kwargs):
+                self.calls += 1
+                if self.calls == 1: raise ProviderTransientError("temporary")
+                return ModelResult(output(), "live-test", "response-live", 70, 50, provider="openai")
+        pricing = JavaUnitPlanAgentPricing(1000.0, 2000.0); pricing.validate_live()
+        with tempfile.TemporaryDirectory(dir=".asef") as directory:
+            gateway = RetryGateway(); store = CapabilityRunStore(Path(directory))
+            generated = GenerateJavaUnitPlanService(JavaUnitPlanAgentAdapter(gateway, pricing=pricing), store).execute(
+                "Test arithmetic", CapabilityRunBudgets(max_model_calls=2, max_provider_retries=1, api_budget_brl=1.0)
+            )
+            self.assertEqual((2, 1, 0.17), (generated.state.usage.model_calls, generated.state.usage.provider_retries, generated.state.usage.estimated_cost_brl))
+
+    def test_scenario_budget_blocks_before_executor(self):
+        with tempfile.TemporaryDirectory(dir=".asef") as directory:
+            store = CapabilityRunStore(Path(directory))
+            generated = GenerateJavaUnitPlanService(JavaUnitPlanAgentAdapter(Gateway()), store).execute(
+                "Test arithmetic", CapabilityRunBudgets(max_requests=1)
+            )
+            called = False
+            def factory(root):
+                nonlocal called; called = True; return object()
+            stopped = ExecuteJavaUnitPlanService(store, factory).execute(generated.state.run_id)
+            self.assertEqual(CapabilityRunStatus.BUDGET_EXHAUSTED, stopped.state.status)
+            self.assertIsNone(stopped.result); self.assertFalse(called)
 
     def test_plan_tamper_blocks_execution(self):
         with tempfile.TemporaryDirectory(dir=".asef") as directory:
