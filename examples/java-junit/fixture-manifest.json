@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0.0",
+  "fixture_id": "JAVA-CALCULATOR-001",
+  "language": "java",
+  "java_release": "21",
+  "build_system": "maven",
+  "test_framework": "junit-jupiter",
+  "files": {
+    "pom.xml": "sha256:7a5732de16ad437f9fbfb0e9545104078c7b887d073b4a914c985cb044cb5be0",
+    "src/main/java/com/asef/fixture/Calculator.java": "sha256:5f8028a1e41f4ec2b39f0ce48e333e42e39c00b02f949cf403b4b2b834e79d58"
+  },
+  "operational_network": "none",
+  "mutable_source": false
+}

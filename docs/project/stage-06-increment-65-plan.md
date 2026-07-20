@@ -71,6 +71,10 @@ antes da compilação.
 
 ### 6.5.1 — contratos, fixture, detecção e threat model
 
+**Status em 19/07/2026:** concluída localmente. Contrato declarativo, parser estrito,
+política anti-secrets, limites de overflow, detector Maven fechado, fixture Java 21,
+manifest por hash e threat model foram implementados e cobertos por testes.
+
 **Entrega:** plano/resultado estritos, parser, política, fixture Maven e ameaças Java.
 
 **Aceite:** entradas ambíguas, scripts, secrets, paths, operações e budgets fora do
