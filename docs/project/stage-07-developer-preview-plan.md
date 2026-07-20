@@ -1,6 +1,7 @@
 # Plano detalhado da Etapa 7 — Developer Preview
 
-**Status:** proposta de planejamento; execução depende de aprovação explícita de Lucas.
+**Status:** aprovado por Lucas em 20/07/2026; 7.1 executada localmente e pronta para
+checkpoint de commit, sem push, tag ou release.
 
 **Data do planejamento:** 20/07/2026
 
@@ -163,6 +164,12 @@ estratégia open source reconciliados.
 Lucas; nenhuma implementação, publicação ou abordagem externa é iniciada.
 
 ### 7.1 — baseline e candidata do Developer Preview
+
+**Progresso em 20/07/2026:** delta desde a7 inventariado, identidade `0.1.0a8`
+reconciliada, artifacts construídos e escaneados, wheel final instalado fora do
+checkout e jornadas demo/API/Web/Java aprovadas. Regressão, Docker, Smoke, Security e
+docs passaram. A candidata está `READY_FOR_COMMIT_CHECKPOINT`; os artifacts continuam
+locais e mutáveis até um commit e uma reconstrução posterior.
 
 **Entregas planejadas:** inventário das mudanças desde `v0.1.0a7`; decisão de versão
 da candidata (esperada `0.1.0a8`, sem antecipar tag); release state coerente; build de

@@ -2,7 +2,8 @@
 
 Este tutorial usa somente a fixture fictícia empacotada, cassette público e Chromium
 local. Não acesse sites externos, não use credenciais e não forneça dados privados.
-O suporte permanece candidato e experimental até a revisão final da Etapa 6.
+O Gate 6 promoveu `web-ui` a partial no perfil experimental `node-typescript`,
+somente neste recorte local.
 
 ## Pré-requisitos
 

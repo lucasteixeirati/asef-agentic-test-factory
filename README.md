@@ -10,7 +10,7 @@ O ASEF investiga como LLMs podem propor análises e testes sem receber autoridad
 
 A última pré-release publicada é [`v0.1.0a7`](https://github.com/lucasteixeirati/asef-agentic-test-factory/releases/tag/v0.1.0a7), com os incrementos 5.1 a 5.8 e a correção documental identificada no preflight 5.9.2. Ela permanece experimental, pré-alpha e inadequada para produção ou código arbitrariamente hostil.
 
-A versão atual do package é `0.1.0a7`. Use sempre código, documentação, wheel, sdist e imagem da mesma tag para preservar a identidade da evidência.
+A versão em desenvolvimento do package é `0.1.0a8`, candidata local do Developer Preview e ainda não publicada. `v0.1.0a7` continua sendo a última release. Não misture código, documentação, wheel, sdist ou imagens de revisões diferentes.
 
 Comprovado até aqui:
 
@@ -118,7 +118,7 @@ asef doctor     diagnóstico read-only do ambiente
 asef smoke      dataset funcional offline
 asef security   dataset de controles offline
 asef cleanup    planejamento/aplicação conservadora sob .asef
-asef api-generate intenção natural para plano REST revisável por cassette (6.3 em desenvolvimento)
+asef api-generate intenção natural para plano REST revisável por cassette (6.3 parcial)
 asef api        plano REST declarativo contra fixture loopback autorizada (6.3 parcial)
 asef web-generate intenção natural gravada para plano Web UI revisável (6.4 experimental)
 asef web        retoma por run-id e executa a fixture Web UI isolada após revisão

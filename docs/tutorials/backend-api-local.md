@@ -1,6 +1,9 @@
 # Tutorial experimental — backend API local
 
-Esta é a fatia experimental 6.3 em desenvolvimento. Ela comprova intenção natural gravada, contrato, revisão humana, runtime, política, execução e relatório para um plano REST declarativo.
+Esta é a capability `backend-api` parcial no perfil experimental Python, aprovada no
+Gate 6 somente para o recorte local descrito abaixo. Ela comprova intenção natural
+gravada, contrato, revisão humana, runtime, política, execução e relatório para um
+plano REST declarativo.
 
 ## Limites
 

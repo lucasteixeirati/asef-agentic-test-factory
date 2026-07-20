@@ -623,7 +623,7 @@ class BuildAlphaReportService:
         try:
             return version(_DISTRIBUTION)
         except PackageNotFoundError:
-            return "0.1.0a7"
+            return "0.1.0a8"
 
 
 def evidence_by_path_to_items(value: Mapping[str, str]) -> tuple[tuple[str, str], ...]:

@@ -2,6 +2,6 @@
   "schema_version": "1.0.0",
   "latest_published_version": "0.1.0a7",
   "latest_published_tag": "v0.1.0a7",
-  "development_version": "0.1.0a7",
-  "development_status": "PUBLISHED"
+  "development_version": "0.1.0a8",
+  "development_status": "CANDIDATE_LOCAL"
 }

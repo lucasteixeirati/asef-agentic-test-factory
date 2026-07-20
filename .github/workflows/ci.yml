@@ -49,8 +49,9 @@ jobs:
         run: |
           docker build --tag asef/python-pytest:8.3.3 tooling/python-pytest
           docker build --build-arg SOURCE_DATE_EPOCH=0 --tag asef/web-ui-playwright:1.61.0 tooling/web-ui-playwright
+          docker build --tag asef/java-junit:21.0.11 tooling/java-junit
       - name: Run Docker integration tests
-        run: PYTHONPATH=src ASEF_RUN_DOCKER_TESTS=1 ASEF_RUN_WEB_UI_DOCKER_TESTS=1 python -m unittest discover -s tests/integration -v
+        run: PYTHONPATH=src ASEF_RUN_DOCKER_TESTS=1 ASEF_RUN_WEB_UI_DOCKER_TESTS=1 ASEF_RUN_JAVA_DOCKER_TESTS=1 python -m unittest discover -s tests/integration -v
       - name: Install the public package
         run: python -m pip install .
       - name: Run keyless demo outside the checkout

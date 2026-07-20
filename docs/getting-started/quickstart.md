@@ -16,7 +16,7 @@ Você precisa de:
 
 A última pré-release publicada é `v0.1.0a7`. Use wheel, source archive, documentação e imagem construídos da mesma tag para manter a evidência atribuível à release.
 
-A versão atual do package é `0.1.0a7`. Não misture seus artefatos com os de outra versão; use sempre pacote, documentação e imagem da mesma revisão.
+A versão em desenvolvimento do package é `0.1.0a8`, candidata local ainda não publicada. Para essa candidata, use somente pacote, documentação e imagens construídos da mesma revisão; para a release pública, preserve todos os artifacts de `v0.1.0a7`.
 
 ## 1. Criar um diretório vazio
 
