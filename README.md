@@ -161,7 +161,8 @@ O [mapa do produto](docs/PROJECT_MAP.md) explica a árvore completa e indica qua
 3. Alpha Python 5.1 a 5.7 — concluído;
 4. relatórios e experiência pública 5.8 — publicado em `v0.1.0a6`;
 5. avaliação interna/fechamento 5.9 e Gate 5 — concluídos com condições registradas;
-6. experiência multiskill — jornada cotidiana, API, TypeScript/Playwright, Java/JUnit e técnicas avançadas, conforme o [plano da Etapa 6](docs/project/stage-06-plan.md).
+6. experiência multiskill e Gate 6 — concluídos, conforme o [plano da Etapa 6](docs/project/stage-06-plan.md);
+7. Developer Preview — planejamento proposto para 3–5 QEs externos, conforme o [plano da Etapa 7](docs/project/stage-07-developer-preview-plan.md).
 
 Veja o [planejamento mestre](PLANEJAMENTO_MESTRE.md) para gates, dependências e critérios completos.
 

@@ -836,6 +836,12 @@ fonte operacional é `docs/project/stage-06-plan.md`.
 
 **Objetivo:** validar instalação, compreensão, utilidade e extensibilidade com 3–5 engenheiros de qualidade antes da v0.1.
 
+**Plano executável:** `docs/project/stage-07-developer-preview-plan.md`
+
+**Plano de aceite:** `docs/project/gates/gate-07-acceptance-plan.md`
+**Status:** planejamento detalhado proposto em 2026-07-20; execução, publicação e
+contato com participantes aguardam decisões explícitas próprias.
+
 **Aplicação**
 
 - distribuir uma versão alpha identificada como experimental;
@@ -858,10 +864,15 @@ fonte operacional é `docs/project/stage-06-plan.md`.
 
 **Gate 7**
 
-- [ ] Entre 3 e 5 QEs tentaram instalar e executar o projeto?
+- [ ] Uma candidata imutável contendo a Etapa 6 passou por CI e postflight?
+- [ ] Entre 3 e 5 QEs externos elegíveis tentaram a jornada comum?
+- [ ] API, Web UI e Java foram observados ao menos uma vez no conjunto válido?
+- [ ] Ao menos um participante tentou modificar exemplo ou iniciar uma extensão?
 - [ ] Os principais pontos de atrito foram registrados e classificados?
 - [ ] Findings críticos e altos foram resolvidos ou bloquearam corretamente a continuidade?
 - [ ] Os relatórios foram compreendidos sem explicação individual do autor?
+- [ ] Consentimento, anonimização, retirada e secret scan foram preservados?
+- [ ] A síntese apresenta contagens e limitações sem alegar representatividade?
 
 ### Etapa 8 — Hardening e v0.1 pública robusta
 
@@ -956,21 +967,23 @@ Cada nova versão deverá declarar hipótese, baseline, mudança, resultado, lim
 
 ## 22. Backlog priorizado vigente
 
-### Agora — transição após a Etapa 6
+### Agora — planejamento da Etapa 7
 
-1. 6.0–6.2 concluídos: roadmap, mapa, jornada e contratos visíveis;
-2. 6.3 `backend-api` concluído como primeira fatia cotidiana;
-3. 6.4 concluído: TypeScript/Playwright e `web-ui` parcial no perfil Node experimental;
-4. 6.5 concluído: `unit` parcial no perfil Java experimental;
-5. 6.6 e Gate 6 concluídos e aprovados em 2026-07-20;
-6. preservar e reconciliar as condições do Gate 5 em todas as fatias.
+1. revisar e aprovar o plano executável e o Gate 7;
+2. preparar localmente uma candidata que represente integralmente a Etapa 6;
+3. congelar protocolo, kit, rubrica, consentimento e instrumentos antes das sessões;
+4. executar ensaio interno e preflight sem contá-los como evidência externa;
+5. decidir separadamente publicação, recrutamento e cada ação externa;
+6. preservar as condições dos Gates 5 e 6 e a lacuna sem prazo para participantes.
 
-### Sequência aprovada
+### Sequência proposta para a Etapa 7
 
-1. backend API REST local e autorizada;
-2. TypeScript/Playwright web local e autorizado;
-3. Java/JUnit unitário experimental;
-4. conformance multilíngue e evidência comparável.
+1. baseline/candidata local;
+2. protocolo e instrumentos;
+3. ensaio interno e preflight;
+4. candidata remota imutável, se autorizada;
+5. 3–5 sessões externas válidas, sem prazo artificial;
+6. triagem/correções, síntese e Gate 7.
 
 ### Não iniciar ainda
 
@@ -1081,6 +1094,6 @@ Decisões já encerradas e registradas: nome público ASEF; licença MIT; Python
 
 ## 27. Próxima decisão
 
-Planejar detalhadamente a Etapa 7 antes de iniciar sua execução. A aprovação do Gate
-6 não autoriza implicitamente push, tag, release, provider live, alvo externo ou
-participação de avaliadores externos.
+Revisar e aprovar o plano detalhado da Etapa 7. Uma aprovação do planejamento
+autoriza somente iniciar a fatia 7.1 local; push, tag, release, provider live, alvo
+externo, recrutamento, contato e sessões exigem autorizações próprias.

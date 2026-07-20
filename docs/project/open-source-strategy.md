@@ -35,3 +35,9 @@ Uma pessoa deverá conseguir:
 
 Uma developer preview será executada com 3–5 engenheiros de qualidade antes do hardening final. O feedback deverá produzir findings, decisões e correções rastreáveis.
 
+O estudo será controlado, com candidata imutável, protocolo congelado, consentimento,
+coleta mínima e resultados anonimizados. Todos os participantes percorrem descoberta,
+instalação, diagnóstico, demo, reports e cleanup; API, Web UI, Java e extensibilidade
+são distribuídos pelo conjunto. Amostra por conveniência e contagens pequenas não
+serão apresentadas como representativas. O plano executável está em
+[`stage-07-developer-preview-plan.md`](stage-07-developer-preview-plan.md).

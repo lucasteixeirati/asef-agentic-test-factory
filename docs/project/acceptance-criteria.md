@@ -46,12 +46,17 @@ Os critérios abaixo foram detalhados na matriz executável `docs/project/gates/
 
 ## Developer preview — Gate 7 futuro
 
-- 3–5 engenheiros de qualidade participaram;
+Os critérios executáveis e bloqueadores estão em
+[`gates/gate-07-acceptance-plan.md`](gates/gate-07-acceptance-plan.md).
+
+- candidata imutável contendo a Etapa 6 passou por CI e postflight;
+- 3–5 engenheiros de qualidade externos e elegíveis participaram;
 - instalação e primeira run observadas;
 - compreensão do relatório avaliada;
 - findings registrados por severidade;
 - críticos e altos resolvidos ou transformados em bloqueio;
-- ao menos uma tentativa externa de usar ou modificar exemplo/adapter;
+- API, Web UI e Java observados ao menos uma vez no conjunto;
+- ao menos uma tentativa externa de modificar exemplo ou iniciar extensão;
 - feedback e dados publicados de forma anonimizada.
 
 ## v0.1 — Gate 8 futuro

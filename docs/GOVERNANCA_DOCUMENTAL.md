@@ -59,6 +59,8 @@ Toda mudança relevante deve verificar impactos em:
 | `docs/project/gates/gate-06-acceptance-plan.md` | Critérios e decisão humana do Gate 6 |
 | `docs/project/gates/gate-06-evidence-inventory.json` | Inventário mecânico da candidata e decisão do Gate 6 |
 | `docs/project/gates/gate-06-evidence-package.md` | Evidências, limites e resultado técnico do Gate 6 |
+| `docs/project/stage-07-developer-preview-plan.md` | Escopo, protocolo, fatias, riscos e checkpoints do Developer Preview |
+| `docs/project/gates/gate-07-acceptance-plan.md` | Critérios objetivos, validade e bloqueadores do Gate 7 |
 | `docs/evaluations/` | Protocolos, templates, preflights e resultados anonimizados das avaliações externas |
 | `docs/project/release-state.json` | Separação canônica entre release pública vigente e versão em desenvolvimento |
 | `docs/releases/` | Manifestos, checklists e pareceres auditáveis de cada release |
