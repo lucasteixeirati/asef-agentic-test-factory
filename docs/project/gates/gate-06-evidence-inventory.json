@@ -3,6 +3,8 @@
   "gate_id": "GATE-06",
   "candidate_date_local": "2026-07-19",
   "decision": "WAITING_FOR_HUMAN_VALIDATION",
+  "candidate_implementation_commit": "8418712447c0d08ce7d0ed50aaefe9056e35c243",
+  "origin_main_observed": "244c817bbabd76d3efa0a4fe7e505212df1ccd6b",
   "regression": {"tests": 495, "skipped": 41, "coverage_percent": 85},
   "suites": {
     "smoke": {"suite_id": "smoke-20260720T141205Z-ee591469", "matched": 20, "total": 20},
