@@ -57,6 +57,10 @@ Transformar a fundação do Alpha Python em uma experiência cotidiana verificá
 
 ### 6.5 — Java/JUnit experimental
 
+**Progresso:** plano executável detalhado em
+`docs/project/stage-06-increment-65-plan.md`; implementação iniciará por contrato,
+fixture e threat model, sem promoção antecipada.
+
 **Escopo inicial:** projeto Maven fictício e testes JUnit 5; Gradle, Spring completo e API Java ficam como expansão condicionada.
 
 **Entrega:** detecção Maven, geração de teste unitário, build/test adapter, resultado normalizado e caminho documentado para JaCoCo/PIT.
