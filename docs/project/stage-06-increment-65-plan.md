@@ -82,6 +82,11 @@ vocabulário falham fechados; fixture não possui dependência operacional exter
 
 ### 6.5.2 — toolchain Maven/JUnit reproduzível
 
+**Status em 19/07/2026:** concluída localmente. A imagem dedicada usa a base Maven
+3.9.16/Temurin 21 por digest, Java 21.0.11, JUnit 5.13.4, compiler 3.14.1 e Surefire
+3.5.5 estável. O cache foi materializado no build; o probe real passou como UID/GID
+65534, rede desligada, rootfs/workspace read-only e Maven apto a operar offline.
+
 **Entrega:** imagem por digest, versões pinadas, cache offline, driver fechado e probe.
 
 **Aceite:** Java/Maven iniciam como não-root; dependências resolvem offline; rede,

@@ -63,14 +63,20 @@ class JavaMavenProjectDetector:
         junit = self._text(document, "properties/junit.version")
         plugins = document.findall("m:build/m:plugins/m:plugin", self._NS)
         dependencies = document.findall("m:dependencies/m:dependency", self._NS)
-        if len(plugins) != 1 or len(dependencies) != 1:
-            raise JavaMavenProjectError("fixture requires exactly one plugin and one dependency")
-        plugin = plugins[0]
+        if len(plugins) != 2 or len(dependencies) != 1:
+            raise JavaMavenProjectError("fixture requires exactly two plugins and one dependency")
+        compiler, plugin = plugins
         dependency = dependencies[0]
+        if (
+            self._child(compiler, "groupId") != "org.apache.maven.plugins"
+            or self._child(compiler, "artifactId") != "maven-compiler-plugin"
+            or self._child(compiler, "version") != "3.14.1"
+        ):
+            raise JavaMavenProjectError("unsupported Maven compiler plugin")
         if (
             self._child(plugin, "groupId") != "org.apache.maven.plugins"
             or self._child(plugin, "artifactId") != "maven-surefire-plugin"
-            or self._child(plugin, "version") != "3.6.0"
+            or self._child(plugin, "version") != "3.5.5"
         ):
             raise JavaMavenProjectError("unsupported Maven plugin")
         if (
@@ -84,7 +90,7 @@ class JavaMavenProjectDetector:
             raise JavaMavenProjectError("custom Maven repositories are forbidden")
         if release != "21" or junit != "5.13.4":
             raise JavaMavenProjectError("Java or JUnit version is outside the pinned fixture")
-        return JavaMavenProject(resolved, pom, resolved / "src/main/java", release, junit, "3.6.0")
+        return JavaMavenProject(resolved, pom, resolved / "src/main/java", release, junit, "3.5.5")
 
     def _text(self, root: ET.Element, path: str) -> str:
         node = root.find("/".join(f"m:{part}" for part in path.split("/")), self._NS)

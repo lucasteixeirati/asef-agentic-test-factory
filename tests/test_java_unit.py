@@ -63,7 +63,7 @@ class JavaUnitContractTests(unittest.TestCase):
 class JavaMavenProjectDetectorTests(unittest.TestCase):
     def test_detects_the_closed_java_21_maven_fixture(self):
         project = JavaMavenProjectDetector().detect(ROOT / "examples/java-junit")
-        self.assertEqual((project.java_release, project.junit_version, project.surefire_version), ("21", "5.13.4", "3.6.0"))
+        self.assertEqual((project.java_release, project.junit_version, project.surefire_version), ("21", "5.13.4", "3.5.5"))
 
     def test_rejects_custom_repository_and_symlink_source(self):
         with TemporaryDirectory() as temporary:
@@ -91,6 +91,12 @@ class JavaMavenProjectDetectorTests(unittest.TestCase):
         for relative, expected in manifest["files"].items():
             actual = "sha256:" + hashlib.sha256((root / relative).read_bytes()).hexdigest()
             self.assertEqual(actual, expected)
+
+    def test_toolchain_bootstrap_matches_the_public_fixture(self):
+        public = ROOT / "examples/java-junit"
+        bootstrap = ROOT / "tooling/java-junit/bootstrap"
+        for relative in ("pom.xml", "src/main/java/com/asef/fixture/Calculator.java"):
+            self.assertEqual((public / relative).read_bytes(), (bootstrap / relative).read_bytes())
 
 
 if __name__ == "__main__": unittest.main()
