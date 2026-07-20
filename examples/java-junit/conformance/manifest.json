@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0.0",
+  "dataset_id": "JAVA-UNIT-CONFORMANCE-001",
+  "dataset_kind": "conformance",
+  "fixture_id": "JAVA-CALCULATOR-001",
+  "repetitions": 2,
+  "cases": [
+    {
+      "case_id": "JAVA-CONF-PASS",
+      "category": "positive",
+      "expected_outcome": "PASSED",
+      "plan": {"schema_version": "1.0.0", "plan_id": "JAV-CONF-PASS", "fixture_id": "JAVA-CALCULATOR-001", "scenarios": [
+        {"scenario_id": "SCN-ADD", "description": "Add values", "operation": "add", "left": 2, "right": 3, "expected": 5},
+        {"scenario_id": "SCN-SUB", "description": "Subtract values", "operation": "subtract", "left": 7, "right": 4, "expected": 3},
+        {"scenario_id": "SCN-MUL", "description": "Multiply values", "operation": "multiply", "left": -3, "right": 4, "expected": -12},
+        {"scenario_id": "SCN-DIV", "description": "Divide values", "operation": "divide", "left": 9, "right": 2, "expected": 4},
+        {"scenario_id": "SCN-ZERO", "description": "Reject zero division", "operation": "divide", "left": 1, "right": 0, "expected": "ArithmeticException"}
+      ]}
+    },
+    {
+      "case_id": "JAVA-CONF-ASSERTION",
+      "category": "negative",
+      "expected_outcome": "ASSERTION_FAILURE",
+      "plan": {"schema_version": "1.0.0", "plan_id": "JAV-CONF-FAIL", "fixture_id": "JAVA-CALCULATOR-001", "scenarios": [
+        {"scenario_id": "SCN-WRONG", "description": "Expose an incorrect oracle", "operation": "add", "left": 2, "right": 3, "expected": 99}
+      ]}
+    },
+    {
+      "case_id": "JAVA-CONF-SCRIPT",
+      "category": "adversarial",
+      "expected_outcome": "CONTRACT_REJECTED",
+      "plan": {"schema_version": "1.0.0", "plan_id": "JAV-CONF-SCRIPT", "fixture_id": "JAVA-CALCULATOR-001", "scenarios": [], "script": "System.exit(0)"}
+    },
+    {
+      "case_id": "JAVA-CONF-SECRET",
+      "category": "security",
+      "expected_outcome": "POLICY_REJECTED",
+      "plan": {"schema_version": "1.0.0", "plan_id": "JAV-CONF-SECRET", "fixture_id": "JAVA-CALCULATOR-001", "scenarios": [
+        {"scenario_id": "SCN-SECRET", "description": "password=example", "operation": "add", "left": 1, "right": 1, "expected": 2}
+      ]}
+    }
+  ]
+}

@@ -152,7 +152,9 @@ def normalize_surefire_result(xml: str | None, exit_code: int, expected_names: t
         counts = tuple(_count(root.get(name, "0")) for name in ("tests", "failures", "errors", "skipped"))
         tests, failed, errors, skipped = counts
         names = tuple(node.get("name", "") for node in root if node.tag == "testcase")
-        if names != expected_names or tests != len(expected_names): raise ValueError("test identity mismatch")
+        if (len(names) != tests or tests != len(expected_names)
+                or len(set(names)) != len(names) or set(names) != set(expected_names)):
+            raise ValueError("test identity mismatch")
         passed = tests - failed - errors - skipped
         if passed < 0: raise ValueError("invalid counters")
     except (ElementTree.ParseError, ValueError):
@@ -178,3 +180,19 @@ def _strict_object(pairs):
         if key in value: raise ValueError(f"duplicate JSON key in Java unit input: {key}")
         value[key] = item
     return value
+
+
+def java_unit_functional_fingerprint(result: ExecutionOutput) -> str:
+    functional = {
+        "schema_version": "1.0.0",
+        "tool_id": result.tool_id,
+        "tool_version": result.tool_version,
+        "outcome": result.outcome.value,
+        "counters": {
+            "tests": result.tests, "passed": result.passed, "failed": result.failed,
+            "errors": result.errors, "skipped": result.skipped,
+        },
+        "timed_out": result.timed_out,
+    }
+    encoded = json.dumps(functional, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(encoded.encode("utf-8")).hexdigest()

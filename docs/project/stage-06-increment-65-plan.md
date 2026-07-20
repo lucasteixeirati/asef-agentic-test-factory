@@ -122,6 +122,12 @@ execução precede revisão e artifact reconcilia com o plano.
 
 ### 6.5.5 — conformance e equivalência
 
+**Status em 19/07/2026:** concluída localmente. O dataset versionado distingue casos
+positivo, negativo, adversarial e de segurança. Sucesso e assertion failure foram
+repetidos duas vezes no Docker com fingerprints funcionais estáveis. A equivalência
+factual preserva plano revisável, compilação determinística, sandbox sem rede,
+resultado JUnit nativo e taxonomia neutra sem imports Java/Maven/JUnit no core.
+
 **Entrega:** dataset positivo/negativo/adversarial, repetição e comparação factual com
 o workflow unitário Python e a compilação TypeScript já observada.
 

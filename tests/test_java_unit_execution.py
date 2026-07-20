@@ -61,5 +61,12 @@ class JavaUnitCompilerTests(unittest.TestCase):
             with self.subTest(expected=expected):
                 self.assertIs(normalize_surefire_result(native, exit_code, names, infra)[-1], expected)
 
+    def test_surefire_identity_allows_runtime_order_but_rejects_duplicates(self):
+        names = ("case_001_a", "case_002_b")
+        shuffled = '<testsuite tests="2" failures="0" errors="0" skipped="0"><testcase name="case_002_b"/><testcase name="case_001_a"/></testsuite>'
+        duplicate = '<testsuite tests="2" failures="0" errors="0" skipped="0"><testcase name="case_001_a"/><testcase name="case_001_a"/></testsuite>'
+        self.assertIs(normalize_surefire_result(shuffled, 0, names)[-1], TestExecutionOutcome.PASSED)
+        self.assertIs(normalize_surefire_result(duplicate, 0, names)[-1], TestExecutionOutcome.TOOL_ERROR)
+
 
 if __name__ == "__main__": unittest.main()
