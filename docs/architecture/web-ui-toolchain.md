@@ -16,8 +16,12 @@ contra a fixture local. O probe continua carregando apenas HTML constante em
 | Playwright npm | 1.61.0, instalado por `npm ci` e lockfile |
 | Chromium | 149.0.7827.55 observado no digest |
 | imagem ASEF | tag local `asef/web-ui-playwright:1.61.0`, resolvida para image ID antes da run |
-| driver | `asef_web_ui_driver.mjs`, comandos fechados `version`, `probe` e `run` |
+| driver | `asef_web_ui_driver.mjs`, comandos fechados `version`, `probe`, `run` e `unit-run` |
 | adapter | `DockerWebUiToolchainProbe` |
+
+`unit-run` foi acrescentado na consolidação 6.6 para executar somente o path fixo do
+teste TypeScript compilado pelo runtime, via `node --test --test-reporter=tap`. Ele
+não aceita argv, path ou source do modelo e não altera a superfície do browser.
 
 ## Execução funcional 6.4.3
 

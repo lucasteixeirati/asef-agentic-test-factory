@@ -74,6 +74,13 @@ fixture e threat model, sem promoção antecipada.
 
 ### 6.6 — técnicas de qualidade, regressão e Gate 6
 
+**Progresso:** consolidação local concluída. O caminho unitário TypeScript foi
+materializado sobre a mesma intenção aritmética revisada do Java, com compilação
+determinística, Node test/TAP nativo e sandbox comum. Coverage/mutation foram
+reconciliados por aplicabilidade (disponíveis em Python; indisponibilidade explícita
+nos demais), relações metamórficas válidas foram versionadas e o pacote Gate 6 foi
+preparado. Falta somente a validação humana final.
+
 **Entrega:** coverage e mutation aplicáveis por perfil, relações metamórficas justificadas, datasets estratificados, regressão de segurança, matriz comparativa, retrospectiva, livro e pacote do Gate 6.
 
 **Aceite:** métricas não alteram aceitação funcional silenciosamente; resultados nativos mantêm evidência; níveis de suporte são reconciliados com a implementação observada.
@@ -84,12 +91,15 @@ Cada fatia segue: contrato → threat model → implementação mínima → test
 
 ## Gate 6 revisado
 
-- [ ] A jornada em linguagem natural é compreensível e auditável?
-- [ ] `backend-api` funciona ponta a ponta em alvo fictício autorizado?
-- [ ] `web-ui` funciona ponta a ponta com TypeScript/Playwright?
-- [ ] O workflow unitário equivalente funciona em Python, TypeScript e Java experimental?
-- [ ] Adicionar perfis e skills não contaminou o core com lógica de tooling?
-- [ ] Agentes permanecem limitados a saídas tipadas, sem autoridade operacional implícita?
-- [ ] Coverage, mutation e relações metamórficas produzem evidência útil?
-- [ ] Datasets distinguem regressão, conformance, benchmark e segurança?
-- [ ] Condições herdadas do Gate 5 foram resolvidas ou permanecem explicitamente abertas?
+- [x] A jornada em linguagem natural é compreensível e auditável tecnicamente?
+- [x] `backend-api` funciona ponta a ponta em alvo fictício autorizado?
+- [x] `web-ui` funciona ponta a ponta com TypeScript/Playwright?
+- [x] O workflow unitário equivalente funciona em Python, TypeScript e Java experimental no recorte aritmético?
+- [x] Adicionar perfis e skills não contaminou o core com lógica de tooling?
+- [x] Agentes permanecem limitados a saídas tipadas, sem autoridade operacional implícita?
+- [x] Coverage, mutation e relações metamórficas produzem evidência útil ou ausência explícita?
+- [x] Datasets distinguem regressão, conformance, benchmark e segurança?
+- [x] Condições herdadas do Gate 5 permanecem explicitamente abertas onde não resolvidas?
+
+O checklist técnico não é a decisão do Gate. A candidata aguarda a validação humana
+única definida em `gates/gate-06-acceptance-plan.md`.

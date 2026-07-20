@@ -4,6 +4,7 @@ import http from "node:http";
 import process from "node:process";
 import { isDeepStrictEqual } from "node:util";
 import { createRequire } from "node:module";
+import { spawnSync } from "node:child_process";
 import { chromium } from "@playwright/test";
 
 const require = createRequire(import.meta.url);
@@ -251,14 +252,25 @@ async function runPlan() {
   }
 }
 
+function runUnitPlan() {
+  const result = spawnSync(process.execPath, [
+    "--test", "--test-reporter=tap", "/workspace/generated/asef-generated.test.ts",
+  ], { encoding: "utf8", timeout: 30000, maxBuffer: 1024 * 1024 });
+  fs.writeFileSync("/asef-output/node-unit.tap", result.stdout || "", "utf8");
+  if (result.stderr) process.stderr.write(result.stderr);
+  process.exitCode = result.error ? 2 : (result.status ?? 2);
+}
+
 const [command, ...extra] = process.argv.slice(2);
-if (extra.length || !["version", "probe", "run"].includes(command)) {
-  process.stderr.write("usage: asef_web_ui_driver.mjs version|probe|run\n");
+if (extra.length || !["version", "probe", "run", "unit-run"].includes(command)) {
+  process.stderr.write("usage: asef_web_ui_driver.mjs version|probe|run|unit-run\n");
   process.exitCode = 2;
 } else if (command === "version") {
   printVersion();
 } else if (command === "probe") {
   await probe();
-} else {
+} else if (command === "run") {
   await runPlan();
+} else {
+  runUnitPlan();
 }

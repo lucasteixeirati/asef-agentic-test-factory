@@ -109,3 +109,7 @@ datasets/<tipo>/<case-id>/
 ```
 
 `case.json` segue contratos neutros em JSON, evitando dependência YAML. Os dez casos Smoke foram materializados no 5.5. `SEC-001` a `SEC-012` foram materializados na 5.7.2 com executores internos fechados, loader estrito, hash efetivo e runner público `asef security`.
+
+Na Etapa 6, API, Web UI e Java ganharam manifests de conformance próprios. O dataset
+`META-ARITHMETIC-001` mantém relações metamórficas separadas. Evaluation, Holdout e
+benchmark continuam classificados como futuros, e não são inferidos desses casos.

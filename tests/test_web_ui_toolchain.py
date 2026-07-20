@@ -78,8 +78,9 @@ class WebUiToolchainContractTests(unittest.TestCase):
         self.assertEqual("1.61.0", lock["packages"]["node_modules/@playwright/test"]["version"])
         self.assertEqual("1.61.0", lock["packages"]["node_modules/playwright"]["version"])
         self.assertEqual("1.61.0", lock["packages"]["node_modules/playwright-core"]["version"])
-        self.assertIn('["version", "probe", "run"]', driver)
-        for forbidden in ("child_process", "eval(", "new Function", "process.env.OPENAI"):
+        self.assertIn('["version", "probe", "run", "unit-run"]', driver)
+        self.assertIn('"--test", "--test-reporter=tap", "/workspace/generated/asef-generated.test.ts"', driver)
+        for forbidden in ("eval(", "new Function", "process.env.OPENAI"):
             self.assertNotIn(forbidden, driver)
         error = WebUiToolchainProbeResult.infrastructure_error()
         error.validate()

@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0.0",
+  "dataset_id": "META-ARITHMETIC-001",
+  "dataset_kind": "metamorphic",
+  "profiles": ["python-pytest", "node-typescript", "java-junit"],
+  "relations": [
+    {"relation_id": "MR-ADD-COMMUTATIVE", "operation": "add", "left": 7, "right": -3, "expected_relation": "f(a,b)=f(b,a)"},
+    {"relation_id": "MR-SUB-INVERSE", "operation": "subtract", "left": 9, "right": 4, "expected_relation": "f(a,b)+b=a"},
+    {"relation_id": "MR-MUL-ZERO", "operation": "multiply", "left": -11, "right": 0, "expected_relation": "f(a,0)=0"}
+  ],
+  "limitations": "Valid only for bounded int32 Calculator operations without overflow."
+}

@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0",
+  "gate_id": "GATE-06",
+  "candidate_date_local": "2026-07-19",
+  "decision": "WAITING_FOR_HUMAN_VALIDATION",
+  "regression": {"tests": 495, "skipped": 41, "coverage_percent": 85},
+  "suites": {
+    "smoke": {"suite_id": "smoke-20260720T141205Z-ee591469", "matched": 20, "total": 20},
+    "security": {"suite_id": "security-20260720T141227Z-6878314a", "passed": 12, "total": 12},
+    "java_docker": {"passed": 3, "total": 3},
+    "web_ui_docker": {"passed": 3, "total": 3},
+    "typescript_unit_docker": {"passed": 1, "total": 1},
+    "quality_docker": {"passed": 3, "total": 3}
+  },
+  "documents": [
+    "docs/project/stage-06-plan.md",
+    "docs/project/stage-06-increment-64-plan.md",
+    "docs/project/stage-06-increment-65-plan.md",
+    "docs/quality/stage-06-quality-consolidation.md",
+    "docs/reviews/2026-07-19-retrospectiva-etapa-06.md",
+    "docs/project/gates/gate-06-acceptance-plan.md",
+    "docs/project/gates/gate-06-evidence-package.md"
+  ],
+  "boundaries": ["no_push", "no_tag", "no_release", "no_live_provider_call", "no_external_target"]
+}

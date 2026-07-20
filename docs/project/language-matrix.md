@@ -7,7 +7,7 @@ Esta matriz descreve implementação, não intenção de roadmap. Definições p
 | Perfil | Ecossistema | Nível atual | Alvo declarado | Evidência |
 |---|---|---|---|---|
 | `python-pytest` | Python 3.13 / pytest | experimental | reference | WF-001, Smoke, adapter pytest, coverage/mutation delimitados |
-| `node-typescript` | Node 24.16 | planned (partial candidate) | supported | `web-ui` local completo, conformance 18/18 e fixture empacotada; promoção pendente |
+| `node-typescript` | Node 24.16 | planned (partial candidate) | supported | `web-ui` local completo + unit aritmético de conformance com TAP nativo; promoção pendente |
 | `java-junit` | Java 21.0.11 / Maven 3.9.16 | planned (experimental candidate) | experimental | `unit` local completo, Surefire, conformance repetida e fixture empacotada; promoção pendente |
 | Go | Go | planned | não declarado no código | nenhuma capability executável |
 | .NET | .NET | planned | não declarado no código | nenhuma capability executável |

@@ -23,7 +23,7 @@ A CI executa testes do core e provas delimitadas em Linux x86-64, incluindo Secu
 | Perfil | Nível atual | Capabilities comprovadas | Limites |
 |---|---|---|---|
 | `python-pytest` | experimental | `unit` parcial; `backend-api` parcial em loopback; detecção de projeto parcial; coverage e mutation disponíveis no recorte de referência | API ainda executa no host somente contra loopback; imagem pytest precisa de build local; projetos externos não têm compatibilidade geral prometida |
-| `node-typescript` | planejado, candidato a parcial | `web-ui` com contrato, toolchain, execução, jornada gravada, conformance adversarial e fixture empacotada | somente Chromium e fixture local; promoção depende da revisão final; live exige autorização, budget, tarifas e chave somente no host |
+| `node-typescript` | planejado, candidato a parcial | `web-ui` completa no recorte e unit aritmético de conformance com Node test/TAP | somente Chromium/fixtures locais; unit não possui CLI própria; promoção depende da revisão final; live exige autorização, budget e chave somente no host |
 | `java-junit` | planejado, candidato a experimental | `unit` com contrato, detector Maven, compilador JUnit, toolchain offline, run revisável, Surefire e conformance repetida | somente fixture Calculator empacotada; promoção depende da revisão final; sem projetos externos, Gradle, Kotlin, Spring, API, coverage ou mutation Java |
 | Go / .NET | planejado | nenhuma capability executável | seleção de tooling e conformance futuras |
 
